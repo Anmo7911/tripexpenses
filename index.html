@@ -4570,22 +4570,7 @@ if (urlParams.get('preview') === 'admin') {
        const h1Title1 = document.getElementById('ui-title-1');
        const h1Title2 = document.getElementById('ui-title-2');
 
-       // -------------------------------------------------------------
-       // DUAL HEADER 0.9s DISSOLVE ENGINE (6-second loop with fallback)
-       // -------------------------------------------------------------
-       const layer1 = document.getElementById('header-bg-layer-1');
-       const layer2 = document.getElementById('header-bg-layer-2');
-       
-       if (layer1 && layer2) {
-         const isDesktop = window.innerWidth >= 1024;
-         const img1 = isDesktop ? (data.styles.headerImgDesk1 || data.styles.headerImgMob1) : (data.styles.headerImgMob1 || data.styles.headerImgDesk1);
-         const img2 = isDesktop ? (data.styles.headerImgDesk2 || data.styles.headerImgMob2) : (data.styles.headerImgMob2 || data.styles.headerImgDesk2);
-
-         if (img1) layer1.style.backgroundImage = `url('${img1}')`;
-         if (img2) layer2.style.backgroundImage = `url('${img2}')`;
-
-         // Dynamic Header Background (Background images removed in favor of theme container)
-      // Dynamic Header Background (Background images removed in favor of theme container)
+       // Dynamic Header Background (Background images removed in favor of theme container)
        if (headerDissolveTimer) {
          clearInterval(headerDissolveTimer);
          headerDissolveTimer = null;
@@ -4613,7 +4598,8 @@ if (urlParams.get('preview') === 'admin') {
          h1Title1.style.color = "";
          h1Title2.style.color = "";
        }
-       }
+     }// <-- Properly closing if (data.styles)
+    
       
      // 2. Check the global trip live status
       const lockScreen = document.getElementById('live-lock-screen');
