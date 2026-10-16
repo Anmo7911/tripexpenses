@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upcoming Trip Announcement</title>
+  <!-- Google Fonts: Oswald, Inter, and Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@300;400;800&family=Playfair+Display:ital,wght@1,600;1,800&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    /* Responsive Fullscreen Wrapper */
+    .announcement-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    /* Top Controls (Mute/Audio) */
+    .top-controls {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      z-index: 50;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background: rgba(0, 0, 0, 0.75);
+    }
+    
+    .icon-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Full-Screen Dissolve Image Carousel */
+    .carousel-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .slide-bg {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .slide-bg.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Vignette Gradient Overlay */
+    .overlay-gradient {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.75) 0%,
+        rgba(0, 0, 0, 0.2) 35%,
+        rgba(0, 0, 0, 0.4) 60%,
+        rgba(0, 0, 0, 0.95) 100%
+      );
+    }
+
+    /* Static Header Text */
+    .hero-announcement-header {
+      position: absolute;
+      top: 100px;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      pointer-events: none;
+      padding: 0 20px;
+    }
+
+    .hero-title-top {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85), 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-title-bottom {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #f8fafc;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85), 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Static Bottom Content */
+    .static-bottom-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #ffffff;
+      padding: 32px 24px clamp(32px, 5vh, 60px);
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .trip-tag {
+      font-size: clamp(11px, 1.2vw, 13px);
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+
+    .trip-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(24px, 3.5vw, 38px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+      color: #ffffff;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    .trip-desc {
+      font-size: clamp(13px, 1.4vw, 16px);
+      line-height: 1.6;
+      color: #cbd5e1;
+      margin-bottom: 24px;
+      max-width: 480px;
+    }
+
+    /* Dynamic Dots Container */
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      transition: all 0.35s ease;
+    }
+
+    .dot.active {
+      width: 28px;
+      border-radius: 4px;
+      background: #ffffff;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      width: 100%;
+      max-width: 360px;
+      padding: 16px 28px;
+      background: #0d9488;
+      color: #ffffff;
+      text-decoration: none;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(13, 148, 136, 0.45);
+      transition: transform 0.15s ease, background-color 0.2s ease;
+    }
+
+    .cta-btn:hover {
+      background: #0f766e;
+    }
+
+    .cta-btn:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="announcement-container" id="container">
+    <!-- Continuous Background Audio -->
+    <audio id="bgAudio" loop preload="auto" autoplay playsinline>
+      <source src="https://mp3tourl.com/audio/1787490314369-2935fd5a-159c-4b61-aafa-28d505597ed3.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Top Action Button -->
+    <div class="top-controls">
+      <button class="icon-btn" id="soundBtn" aria-label="Toggle Sound">🔊</button>
+    </div>
+
+    <!-- Static Header -->
+    <div class="hero-announcement-header">
+      <div class="hero-title-top">UPCOMING TRIP</div>
+      <div class="hero-title-bottom">ANNOUNCEMENT</div>
+    </div>
+
+   <!-- Background Images (HD Munnar & Western Ghats direct CDNs) -->
+<div class="carousel-container" id="carousel">
+  <!-- Munnar Tea Plantations -->
+  <div class="slide-bg active" style="background-image: url('https://images.unsplash.com/photo-1648019811552-5afa663ef016?auto=format&fit=crop&w=1920&q=80');"></div>
+
+  <!-- Rolling Hills & Green Valleys -->
+  <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1736959453077-c6bfb10a60cd?auto=format&fit=crop&w=1920&q=80');"></div>
+
+  <!-- Forest Canopy & Mountain Pass Road -->
+  <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1716896428199-9342a11a4b1c?auto=format&fit=crop&w=1920&q=80');"></div>
+
+  <!-- Misty Ghat Road -->
+  <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?auto=format&fit=crop&w=1920&q=80');"></div>
+  
+  <!-- Tea Estate Horizons -->  
+    <div class="slide-bg" style="background-image: url('https://images.unsplash.com/photo-1604214797312-d65d6cf91408?auto=format&fit=crop&w=1920&q=80');"></div>
+    </div>
+
+    <!-- Vignette Shadow Layer -->
+    <div class="overlay-gradient"></div>
+
+    <!-- Static Bottom Content -->
+    <div class="static-bottom-content">
+      <div class="content-wrapper">
+        <div class="trip-tag">07.10.2026</div>
+        <h2 class="trip-title">Taj - e - Fateh
+تاج فتح</h2>
+        <p class="trip-desc">Discover Agra’s timeless beauty, where the magnificent Taj Mahal, rich heritage, vibrant culture, and unforgettable memories come together beautifully.
+</p>
+        
+        <!-- Generated Dynamically by JS -->
+        <div class="carousel-dots" id="dotsContainer"></div>
+        
+        <a href="https://www.youtube.com/watch?v=JHrZVpnARWw" target="_blank" rel="noopener noreferrer" class="cta-btn">Explore Journey</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide-bg');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const audio = document.getElementById('bgAudio');
+    const soundBtn = document.getElementById('soundBtn');
+    const container = document.getElementById('container');
+
+    // Set initial audio volume to 40%
+    audio.volume = 0.4;
+
+    let currentIndex = 0;
+    let autoSlideTimer;
+    let isMuted = false;
+
+    // Generate pagination dots automatically based on slide count
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      if (idx === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => setSlide(idx));
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    // Carousel Display Logic
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+
+      slides[index].classList.add('active');
+      dots[index].classList.add('active');
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      const nextIndex = (currentIndex + 1) % slides.length;
+      showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+      const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+      showSlide(prevIndex);
+    }
+
+    function setSlide(index) {
+      showSlide(index);
+      resetAutoSlide();
+    }
+
+    function startAutoSlide() {
+      autoSlideTimer = setInterval(nextSlide, 4500);
+    }
+
+    function resetAutoSlide() {
+      clearInterval(autoSlideTimer);
+      startAutoSlide();
+    }
+
+    // Audio Autoplay Management
+    function attemptPlayAudio() {
+      if (!isMuted) {
+        audio.volume = 0.4;
+        audio.play().then(() => {
+          soundBtn.textContent = '🔊';
+        }).catch(() => {
+          audio.muted = true;
+          audio.play().then(() => {
+            soundBtn.textContent = '🔇';
+          }).catch(() => {});
+        });
+      }
+    }
+
+    const unlockAudio = () => {
+      if (!isMuted) {
+        audio.muted = false;
+        audio.volume = 0.4;
+        audio.play();
+        soundBtn.textContent = '🔊';
+      }
+      window.removeEventListener('click', unlockAudio);
+      window.removeEventListener('touchstart', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+    };
+
+    window.addEventListener('click', unlockAudio, { once: true });
+    window.addEventListener('touchstart', unlockAudio, { once: true });
+    window.addEventListener('keydown', unlockAudio, { once: true });
+
+    // Sound Toggle Button
+    soundBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (audio.paused || audio.muted) {
+        audio.muted = false;
+        audio.volume = 0.4;
+        audio.play();
+        isMuted = false;
+        soundBtn.textContent = '🔊';
+      } else {
+        audio.pause();
+        isMuted = true;
+        soundBtn.textContent = '🔇';
+      }
+    });
+
+    // Touch & Swipe Gestures
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    container.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeDistance = touchEndX - touchStartX;
+      if (swipeDistance < -40) {
+        nextSlide();
+        resetAutoSlide();
+      } else if (swipeDistance > 40) {
+        prevSlide();
+        resetAutoSlide();
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        nextSlide();
+        resetAutoSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+        resetAutoSlide();
+      }
+    });
+
+    // Initialize
+    attemptPlayAudio();
+    startAutoSlide();
+
+    // ==========================================
+    // ANNOUNCEMENT MODE SYNC & REVERSE REDIRECT
+    // ==========================================
+    async function checkAnnouncementStatus() {
+      try {
+        const res = await fetch('/api/index?action=dashboard');
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        // If Admin toggles Announcement Mode to DISABLED, redirect to main app
+        if (data && data.announcementMode !== 'ENABLED') {
+          window.location.replace('/');
+        }
+      } catch (err) {
+        console.error('Status check failed:', err);
+      }
+    }
+
+    // Check immediately on load and poll every 15 seconds
+    checkAnnouncementStatus();
+    setInterval(checkAnnouncementStatus, 15000);
+
+    
+  </script>
+</body>
+</html>
