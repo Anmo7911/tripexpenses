@@ -1198,12 +1198,12 @@
       text-transform: uppercase;
     }
 
-    .title-accent-gradient {
+   .title-accent-gradient {
       display: inline-block;
-      background: linear-gradient(180deg, #818cf8 0%, #6366f1 50%, #4f46e5 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #e0e7ff 45%, #c7d2fe 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 2px 8px rgba(99, 102, 241, 0.25));
+      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.25));
     }
 
     
@@ -2544,45 +2544,38 @@
  <!-- =========================================
        SCENIC EXPEDITION APP HEADER (Sticky Mode with Dissolve Fade)
        ========================================= -->
-  <header id="app-header" class="relative lg:sticky top-0 z-30 w-full overflow-hidden shadow-sm select-none">
+  <!-- =========================================
+       APP HEADER CONTAINER (Theme Color with Rounded Bottom)
+       ========================================= -->
+  <header id="app-header" class="relative lg:sticky top-0 z-30 w-full overflow-hidden select-none bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-800 text-white rounded-b-[28px] sm:rounded-b-[36px] lg:rounded-b-[40px] shadow-lg shadow-indigo-950/15" style="border-bottom-left-radius: 2.25rem; border-bottom-right-radius: 2.25rem;">
     
-    <!-- Dissolve Layer 1 -->
-    <div id="header-bg-layer-1" class="absolute inset-0 bg-cover bg-center transition-opacity duration-[900ms] ease-in-out z-0 opacity-100"></div>
+    <!-- Subtle Ambient Lighting and Depth -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/15 via-transparent to-black/15 pointer-events-none"></div>
+    <div class="absolute -top-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -top-16 -right-16 w-64 h-64 bg-purple-400/15 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- Dissolve Layer 2 -->
-    <div id="header-bg-layer-2" class="absolute inset-0 bg-cover bg-center transition-opacity duration-[900ms] ease-in-out z-0 opacity-0"></div>
-
-    <!-- Soft Sunlight & Sky Gradient Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-b from-sky-400/25 via-sky-100/10 to-transparent backdrop-blur-[0.5px] z-[1]"></div>
-    
-
-    <!-- Bottom Dissolve / Fade Overlay -->
-    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-slate-100 via-slate-100/60 to-transparent pointer-events-none z-10"></div>
-
-    <!-- Outer header container height locked so cards below never shift -->
-    <!-- Outer header container with increased height for desktop -->
-<div class="relative z-20 w-full max-w-md lg:max-w-5xl mx-auto px-4 pt-2.5 pb-8 flex flex-col justify-start h-[190px] sm:h-[210px] lg:h-[235px]">
+    <!-- Outer header container with bottom padding extending behind top summary cards -->
+    <div class="relative z-20 w-full max-w-md lg:max-w-5xl mx-auto px-4 pt-2.5 pb-14 sm:pb-16 lg:pb-20 flex flex-col justify-start min-h-[200px] sm:min-h-[220px] lg:min-h-[245px]">
       
-    <!-- Top Action Bar: Bell Notification Button (Chat removed & replaced by Bell) -->
-<div class="flex items-center justify-end w-full h-9 sm:h-10">
-  <button type="button" onclick="showTab('notices', this)" class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/80 hover:bg-white/95 backdrop-blur-md border border-white/80 shadow-md flex items-center justify-center text-slate-800 active:scale-95 transition-all outline-none" title="Official Notices">
-    <i data-lucide="bell" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-800 stroke-[2.2]"></i>
-    <span id="notices-unread-dot" class="absolute top-0 right-0 w-2.5 h-2.5 bg-indigo-600 border-2 border-white rounded-full hidden shadow-sm"></span>
-  </button>
-</div>
-
+      <!-- Top Action Bar: Bell Notification Button -->
+      <div class="flex items-center justify-end w-full h-9 sm:h-10">
+        <button type="button" onclick="showTab('notices', this)" class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 shadow-sm flex items-center justify-center text-white active:scale-95 transition-all outline-none" title="Official Notices">
+          <i data-lucide="bell" class="w-4 h-4 sm:w-5 sm:h-5 text-white stroke-[2.2]"></i>
+          <span id="notices-unread-dot" class="absolute top-0 right-0 w-2.5 h-2.5 bg-rose-500 border-2 border-indigo-700 rounded-full hidden shadow-sm"></span>
+        </button>
+      </div>
       
-    <!-- Dynamic Trip Title -->
-<div id="ui-header-title-container" class="flex flex-col items-center justify-center -mt-2.5 sm:mt-2 relative">
+      <!-- Dynamic Trip Title -->
+      <div id="ui-header-title-container" class="flex flex-col items-center justify-center -mt-2.5 sm:mt-1 relative">
         <div id="ui-title-alignment-box" class="headline-scene h-14 w-full flex items-center justify-center px-2">
           <div id="ui-headline-flipper" class="headline-flipper w-full h-full">
             <div class="headline-front flex items-center justify-center w-full h-full">
-              <h1 id="ui-title-1" class="expedition-title-font text-[42px] sm:text-5xl lg:text-6xl text-slate-900 uppercase text-center leading-none">
+              <h1 id="ui-title-1" class="expedition-title-font text-[42px] sm:text-5xl lg:text-6xl text-white uppercase text-center leading-none tracking-wide drop-shadow-sm">
                 TRIP <br><span class="title-accent-gradient">TITLE</span>
               </h1>
             </div>
             <div class="headline-back flex items-center justify-center w-full h-full">
-              <h1 id="ui-title-2" class="expedition-title-font text-[42px] sm:text-5xl lg:text-6xl text-slate-900 uppercase text-center leading-none">
+              <h1 id="ui-title-2" class="expedition-title-font text-[42px] sm:text-5xl lg:text-6xl text-white uppercase text-center leading-none tracking-wide drop-shadow-sm">
                 TRIP <br><span class="title-accent-gradient">TITLE</span>
               </h1>
             </div>
@@ -2590,37 +2583,37 @@
         </div>
       </div>
       
-   
-<!-- Live Notice Container (Expanded Size for Desktop) -->
-<div id="notice-container"
-  class="hidden overflow-hidden w-screen relative left-1/2 -translate-x-1/2 mt-[40px] lg:mt-[45px] pb-1 lg:pb-3 z-20 pointer-events-none">
-  <div id="notice-slider" class="carousel-track pointer-events-auto">
-    <!-- Standard Notice Slot -->
-    <div class="carousel-item px-4 pb-1">
-      <div
-        class="bg-indigo-50/90 backdrop-blur-md border border-indigo-100/80 shadow-sm rounded-full px-3 py-1 lg:px-5 lg:py-2 flex items-center gap-2 lg:gap-2.5 justify-center max-w-md lg:max-w-xl mx-auto">
-        <span class="relative flex h-2 w-2 lg:h-2.5 lg:w-2.5 flex-shrink-0"></span>
-        <p id="ui-trip-notice" class="text-[11px] lg:text-xs font-bold text-indigo-700 truncate text-center"></p>
+      <!-- Live Notice Container -->
+      <div id="notice-container"
+        class="hidden overflow-hidden w-screen relative left-1/2 -translate-x-1/2 mt-[24px] lg:mt-[28px] pb-1 lg:pb-3 z-20 pointer-events-none">
+        <div id="notice-slider" class="carousel-track pointer-events-auto">
+          <!-- Standard Notice Slot -->
+          <div class="carousel-item px-4 pb-1">
+            <div
+              class="bg-white/95 backdrop-blur-md border border-white/80 shadow-md rounded-full px-3 py-1 lg:px-5 lg:py-2 flex items-center gap-2 lg:gap-2.5 justify-center max-w-md lg:max-w-xl mx-auto">
+              <span class="relative flex h-2 w-2 lg:h-2.5 lg:w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 lg:h-2.5 lg:w-2.5 bg-indigo-600"></span></span>
+              <p id="ui-trip-notice" class="text-[11px] lg:text-xs font-bold text-indigo-900 truncate text-center"></p>
+            </div>
+          </div>
+          <!-- Warning Notice Slot -->
+          <div class="carousel-item px-4 pb-1">
+            <div
+              class="bg-white/95 backdrop-blur-md border border-rose-200 shadow-md rounded-full px-3 py-1 lg:px-5 lg:py-2 flex items-center gap-2 lg:gap-2.5 justify-center max-w-md lg:max-w-xl mx-auto warning-pulse">
+              <span class="relative flex h-2 w-2 lg:h-2.5 lg:w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 lg:h-2.5 lg:w-2.5 bg-rose-500"></span></span>
+              <p id="ui-warning-notice" class="text-[11px] lg:text-xs font-bold text-rose-700 truncate text-center"></p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <!-- Warning Notice Slot -->
-    <div class="carousel-item px-4 pb-1">
-      <div
-        class="bg-rose-50/90 backdrop-blur-md border border-rose-100/80 shadow-sm rounded-full px-3 py-1 lg:px-5 lg:py-2 flex items-center gap-2 lg:gap-2.5 justify-center max-w-md lg:max-w-xl mx-auto warning-pulse">
-        <span class="relative flex h-2 w-2 lg:h-2.5 lg:w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 lg:h-2.5 lg:w-2.5 bg-rose-500"></span></span>
-        <p id="ui-warning-notice" class="text-[11px] lg:text-xs font-bold text-rose-700 truncate text-center"></p>
-      </div>
-    </div>
-  </div>
-</div>
       
+    </div>
   </header>
 
     
  <!-- =========================================
      TAB 1: SPEND VIEW (Side-by-Side on Desktop)
      ========================================= -->
-  <main id="view-spend" class="tab-content active-tab w-full max-w-md lg:max-w-6xl mx-auto -mt-10 lg:mt-0 pt-4 lg:pt-6 px-4 lg:px-8 relative z-40 lg:z-20">
+  <main id="view-spend" class="tab-content active-tab w-full max-w-md lg:max-w-6xl mx-auto -mt-12 sm:-mt-14 lg:-mt-16 pt-0 px-4 lg:px-8 relative z-40">
 
     <!-- DESKTOP 2-COLUMN GRID WRAPPER (Mobile Stacks Identically) -->
     <div class="flex flex-col lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start space-y-4 lg:space-y-0">
@@ -3027,7 +3020,7 @@
   <!-- =========================================
      TAB: ITINERARY CHECKLIST VIEW
      ========================================= -->
-<main id="view-checklist" class="tab-content w-full max-w-md lg:max-w-3xl mx-auto -mt-10 lg:mt-0 pt-4 lg:pt-8 px-4 lg:px-8 space-y-4 pb-24 relative z-20">
+<main id="view-checklist" class="tab-content w-full max-w-md lg:max-w-3xl mx-auto -mt-12 sm:-mt-14 lg:-mt-16 pt-0 px-4 lg:px-8 space-y-4 pb-24 relative z-40">
   
   <div class="flex items-center justify-between px-1 mt-[50px]">
     <div>
@@ -4591,47 +4584,11 @@ if (urlParams.get('preview') === 'admin') {
          if (img1) layer1.style.backgroundImage = `url('${img1}')`;
          if (img2) layer2.style.backgroundImage = `url('${img2}')`;
 
-         if (headerDissolveTimer) {
-           clearInterval(headerDissolveTimer);
-           headerDissolveTimer = null;
-         }
-
-         if (!img2 || img2.trim() === '') {
-           layer1.classList.remove('opacity-0');
-           layer1.classList.add('opacity-100');
-           layer2.classList.remove('opacity-100');
-           layer2.classList.add('opacity-0');
-         } else {
-           headerActiveLayer = 1;
-           layer1.classList.remove('opacity-0');
-           layer1.classList.add('opacity-100');
-           layer2.classList.remove('opacity-100');
-           layer2.classList.add('opacity-0');
-
-           headerDissolveTimer = setInterval(() => {
-             if (headerActiveLayer === 1) {
-               layer1.classList.replace('opacity-100', 'opacity-0');
-               layer2.classList.replace('opacity-0', 'opacity-100');
-               headerActiveLayer = 2;
-             } else {
-               layer2.classList.replace('opacity-100', 'opacity-0');
-               layer1.classList.replace('opacity-0', 'opacity-100');
-               headerActiveLayer = 1;
-             }
-           }, 6000);
-         }
-       }
-
-       // Dynamic Header Image (Mobile vs Desktop)
-       if (headerEl) {
-         const isDesktop = window.innerWidth >= 1024;
-         const targetImg = isDesktop 
-           ? (data.styles.headerImgDesktop || data.styles.headerImgMobile) 
-           : (data.styles.headerImgMobile || data.styles.headerImgDesktop);
-           
-         if (targetImg) {
-           headerEl.style.backgroundImage = `url('${targetImg}')`;
-         }
+         // Dynamic Header Background (Background images removed in favor of theme container)
+      // Dynamic Header Background (Background images removed in favor of theme container)
+       if (headerDissolveTimer) {
+         clearInterval(headerDissolveTimer);
+         headerDissolveTimer = null;
        }
 
        // Title Visibility Toggle
@@ -4651,12 +4608,11 @@ if (urlParams.get('preview') === 'admin') {
 
        // Typography Configuration
        if (h1Title1 && h1Title2) {
-         h1Title1.className = "expedition-title-font text-[44px] sm:text-5xl lg:text-6xl text-slate-900 uppercase text-center leading-none tracking-wide";
-         h1Title2.className = "expedition-title-font text-[44px] sm:text-5xl lg:text-6xl text-slate-900 uppercase text-center leading-none tracking-wide";
+         h1Title1.className = "expedition-title-font text-[44px] sm:text-5xl lg:text-6xl text-white uppercase text-center leading-none tracking-wide drop-shadow-sm";
+         h1Title2.className = "expedition-title-font text-[44px] sm:text-5xl lg:text-6xl text-white uppercase text-center leading-none tracking-wide drop-shadow-sm";
          h1Title1.style.color = "";
          h1Title2.style.color = "";
        }
-     }// <-- Properly closing if (data.styles)
       
      // 2. Check the global trip live status
       const lockScreen = document.getElementById('live-lock-screen');
