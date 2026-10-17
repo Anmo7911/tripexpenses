@@ -128,7 +128,7 @@ async function dashboard() {
   const memberMeta = memberMetaResult?.data || {};
 
   const tripName = text(setting(2, 'b')) || 'App by Anmol';
-  const secondaryTitle = text(setting(2, 'c')) || '';
+  const secondaryTitle = text(setting(2, 'c')) || 'Zantar Mantar, Dilli';
   
   const titleColor = text(setting(2, 'd')) || '#064e3b';
   const subtitleColor = text(setting(2, 'e')) || '#047857';
