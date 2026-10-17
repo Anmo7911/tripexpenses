@@ -3660,8 +3660,7 @@
        BOTTOM NAVIGATION BAR
        Always fixed at the bottom
        ========================================= -->
-  <nav
-    <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md px-4 py-2.5 flex justify-between items-center z-[150] shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md px-4 py-2.5 flex justify-between items-center z-[150] shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
     <!-- Gradient accent line along the top of nav -->
     <div
       class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 opacity-80">
@@ -9581,12 +9580,17 @@ function goToShowcaseSlide(index) {
     }
   });
 
-  function updateCarouselCounter(current, total) {
-      const counterEl = document.getElementById('carousel-counter-badge');
-      if (counterEl) {
-        counterEl.innerText = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
-      }
-    }
+  if (typeof updateCarouselCounter === 'function') {
+    updateCarouselCounter(showcaseCurrentSlide, slides.length);
+  }
+}
+
+function updateCarouselCounter(current, total) {
+  const counterEl = document.getElementById('carousel-counter-badge');
+  if (counterEl) {
+    counterEl.innerText = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+  }
+}
 
 function nextShowcaseSlide() {
   goToShowcaseSlide(showcaseCurrentSlide + 1);
