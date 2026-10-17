@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-950">
 <head>
   <meta charset="UTF-8">
   <title>Admin Portal - Bharat Way</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#090d16">
 
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,73 +18,90 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    * {
+      box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
-      overscroll-behavior-y: none;
+    }
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
     }
 
     /* Custom smooth scrollbar */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #0b1120; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
 
-    /* Touch switch animations */
+    /* Instant touch switch animations */
     .switch-transition {
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .switch-thumb-transition {
+      transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Pulse animation */
     @keyframes pulse-dot {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
+      50% { transform: scale(1.35); opacity: 0.5; }
     }
     .pulse-live { animation: pulse-dot 2s infinite ease-in-out; }
 
-    /* Hide scrollbar for category tabs */
+    /* Hide scrollbars */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Safe bottom padding for mobile navigation */
+    /* Safe bottom space for fixed mobile nav */
     .mobile-safe-bottom {
-      padding-bottom: calc(88px + env(safe-area-inset-bottom, 16px));
+      padding-bottom: calc(84px + env(safe-area-inset-bottom, 16px));
+    }
+
+    /* Modal bottom-sheet styling on mobile */
+    @media (max-width: 639px) {
+      .mobile-sheet {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        max-height: 88vh;
+      }
     }
   </style>
 </head>
 
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-[#090d16] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-600 selection:text-white overflow-x-hidden">
 
   <!-- =========================================
        LOGIN GATEWAY OVERLAY MODAL
        ========================================= -->
-  <div id="admin-login-modal" class="fixed inset-0 z-50 bg-slate-950 flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+  <div id="admin-login-modal" class="fixed inset-0 z-50 bg-[#090d16]/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-sm w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden">
       <!-- Glow ambient backdrop -->
-      <div class="absolute -top-12 -right-12 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-12 -right-12 w-36 h-36 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div class="text-center space-y-3 mb-6">
-        <div class="w-14 h-14 bg-indigo-600/20 border border-indigo-500/30 rounded-2xl flex items-center justify-center text-indigo-400 mx-auto shadow-inner">
-          <i data-lucide="shield-check" class="w-7 h-7 stroke-[2.2]"></i>
+      <div class="text-center space-y-2.5 mb-6">
+        <div class="w-13 h-13 w-12 h-12 bg-indigo-600/15 border border-indigo-500/30 rounded-2xl flex items-center justify-center text-indigo-400 mx-auto shadow-inner">
+          <i data-lucide="shield-check" class="w-6 h-6 stroke-[2.2]"></i>
         </div>
-        <h2 class="text-xl font-black uppercase tracking-wider text-white">Admin Control Portal</h2>
-        <p class="text-xs text-slate-400 font-medium">Please sign in to manage live trip controls & expenses</p>
+        <h2 class="text-lg font-black uppercase tracking-wider text-white">Admin Portal</h2>
+        <p class="text-xs text-slate-400 font-medium">Sign in to control live settings, route, and expenses</p>
       </div>
 
       <form onsubmit="handleAdminLogin(event)" class="space-y-4">
         <div>
-          <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Username</label>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Username</label>
           <input type="text" id="adminUser" required placeholder="admin" autocomplete="username"
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white font-medium outline-none focus:border-indigo-500 transition">
+            class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-3 text-sm text-white font-medium outline-none transition">
         </div>
 
         <div>
-          <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block mb-1.5">Password</label>
+          <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Password</label>
           <input type="password" id="adminPass" required placeholder="••••••••" autocomplete="current-password"
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white font-medium outline-none focus:border-indigo-500 transition">
+            class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-3 text-sm text-white font-medium outline-none transition">
         </div>
 
-        <p id="loginError" class="text-xs font-bold text-rose-400 text-center hidden bg-rose-500/10 border border-rose-500/20 py-2 rounded-lg"></p>
+        <p id="loginError" class="text-xs font-bold text-rose-400 text-center hidden bg-rose-500/10 border border-rose-500/20 py-2.5 rounded-xl"></p>
 
         <button type="submit" id="loginBtn"
           class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white font-black py-3.5 rounded-xl uppercase tracking-wider text-xs transition-all shadow-lg shadow-indigo-600/30 mt-2">
@@ -97,31 +114,31 @@
   <!-- =========================================
        TOP GLOBAL HEADER
        ========================================= -->
-  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 sticky top-0 z-40 flex items-center justify-between">
-    <div class="flex items-center gap-3">
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 sticky top-0 z-40 flex items-center justify-between w-full">
+    <div class="flex items-center gap-3 min-w-0">
       <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-600/30 shrink-0">
         <i data-lucide="shield" class="w-4 h-4 stroke-[2.5]"></i>
       </div>
       <div class="min-w-0">
         <div class="flex items-center gap-2">
-          <h1 id="headerTripName" class="text-sm font-black uppercase tracking-wide text-white truncate max-w-[150px] sm:max-w-xs">Admin Control</h1>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
+          <h1 id="headerTripName" class="text-sm font-black uppercase tracking-wide text-white truncate max-w-[140px] sm:max-w-xs">Admin Control</h1>
+          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> Live
           </span>
         </div>
-        <p class="text-[10px] text-slate-400 font-semibold truncate hidden sm:block">Easy Mobile Management</p>
+        <p class="text-[10px] text-slate-400 font-semibold truncate hidden sm:block">Easy Mobile Expedition Management</p>
       </div>
     </div>
 
     <!-- Header Actions -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 shrink-0">
       <a href="/" target="_blank"
-        class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700/60 shadow-sm">
+        class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700/60 shadow-sm active:scale-95">
         <i data-lucide="external-link" class="w-3.5 h-3.5 text-indigo-400"></i>
         <span>Member App</span>
       </a>
       <button onclick="adminLogout()"
-        class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+        class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
         <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Logout</span>
       </button>
@@ -131,7 +148,7 @@
   <!-- =========================================
        DESKTOP TOP CATEGORY PILLS (Hidden on Mobile)
        ========================================= -->
-  <nav class="hidden md:flex bg-slate-900/60 border-b border-slate-800/80 px-4 py-2 gap-2 overflow-x-auto no-scrollbar justify-center">
+  <nav class="hidden md:flex bg-slate-900/60 border-b border-slate-800/80 px-4 py-2 gap-2 overflow-x-auto no-scrollbar justify-center w-full">
     <button onclick="switchCategory('operations')" id="deskBtn-operations" class="desk-cat-btn px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition bg-indigo-600 text-white shadow-md">
       <i data-lucide="zap" class="w-4 h-4"></i> Controls & Switches
     </button>
@@ -152,202 +169,202 @@
   <!-- =========================================
        MAIN CONTENT CONTAINER
        ========================================= -->
-  <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6 mobile-safe-bottom">
+  <main class="flex-1 max-w-4xl w-full mx-auto px-3.5 sm:px-6 py-4 space-y-5 mobile-safe-bottom overflow-x-hidden">
 
     <!-- ====================================================
          SECTION 1: OPERATIONS & LIVE CONTROLS
          ==================================================== -->
-    <section id="section-operations" class="category-section space-y-6">
+    <section id="section-operations" class="category-section space-y-4">
 
-      <!-- Sub-Tabs: Operations Pills -->
-      <div class="flex items-center gap-2 bg-slate-900 border border-slate-800/80 p-1 rounded-2xl overflow-x-auto no-scrollbar">
-        <button onclick="switchOpSubTab('switches')" id="opSubBtn-switches" class="flex-1 min-w-[130px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm">
-          Master Switches
+      <!-- Responsive Segmented Control for Subtabs (No horizontal blowout) -->
+      <div class="grid grid-cols-3 gap-1.5 bg-slate-900/90 border border-slate-800/80 p-1 rounded-2xl w-full">
+        <button onclick="switchOpSubTab('switches')" id="opSubBtn-switches" class="w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm truncate">
+          Switches
         </button>
-        <button onclick="switchOpSubTab('broadcast')" id="opSubBtn-broadcast" class="flex-1 min-w-[130px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
-          Instant Alerts
+        <button onclick="switchOpSubTab('broadcast')" id="opSubBtn-broadcast" class="w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center truncate">
+          Alerts
         </button>
-        <button onclick="switchOpSubTab('upcoming')" id="opSubBtn-upcoming" class="flex-1 min-w-[130px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
-          Next Expedition
+        <button onclick="switchOpSubTab('upcoming')" id="opSubBtn-upcoming" class="w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center truncate">
+          Next Trip
         </button>
       </div>
 
       <!-- OP SUB-VIEW 1: MASTER SWITCHES & BASIC INFO -->
-      <div id="opSubView-switches" class="op-subview space-y-5">
+      <div id="opSubView-switches" class="op-subview space-y-4">
 
         <!-- Trip Details Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-4 shadow-sm">
-          <div class="flex items-center gap-2.5 pb-3 border-b border-slate-800">
-            <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
+          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
+            <div class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
               <i data-lucide="tag" class="w-4 h-4"></i>
             </div>
-            <div>
-              <h2 class="text-sm font-black uppercase tracking-wider text-white">Current Trip Information</h2>
-              <p class="text-xs text-slate-400">Title, subtitle, and top notification ticker</p>
+            <div class="min-w-0">
+              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Trip Titles & Notification Banners</h2>
+              <p class="text-xs text-slate-400 truncate">Controls headings and warning tickers shown to all members</p>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Main Trip Name</label>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Main Trip Title</label>
               <textarea id="setTripName" rows="2" placeholder="e.g. Valley of Flowers" onchange="saveSetting(2, 'b', this.value, 'Trip name saved')"
-                class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-sm text-white font-bold outline-none focus:border-indigo-500 transition"></textarea>
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white font-bold outline-none transition"></textarea>
             </div>
 
             <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Destination Subtitle</label>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Destination Subtitle</label>
               <input type="text" id="setTripSub" placeholder="e.g. Uttarakhand Expedition" onchange="saveSetting(2, 'c', this.value, 'Subtitle saved')"
-                class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white font-bold outline-none focus:border-indigo-500 transition">
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold outline-none transition">
             </div>
 
             <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Normal Notice Banner (Blue)</label>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Blue Notice Banner</label>
               <input type="text" id="setNotice" placeholder="Important announcement or gathering point" onchange="saveSetting(7, 'b', this.value, 'Notice banner updated')"
-                class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white font-bold outline-none focus:border-indigo-500 transition">
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium outline-none transition">
             </div>
 
             <div>
-              <label class="text-xs font-bold text-rose-400 uppercase tracking-wide block mb-1.5">Emergency Warning Banner (Red)</label>
-              <input type="text" id="setWarning" placeholder="Immediate weather or schedule alert" onchange="saveSetting(8, 'b', this.value, 'Alert banner updated')"
-                class="w-full bg-slate-950 border border-rose-500/30 rounded-2xl px-4 py-3 text-sm text-rose-200 font-bold outline-none focus:border-rose-500 transition">
+              <label class="text-xs font-bold text-rose-400 uppercase tracking-wide block mb-1">Red Emergency Alert Banner</label>
+              <input type="text" id="setWarning" placeholder="Immediate weather or safety warning" onchange="saveSetting(8, 'b', this.value, 'Alert banner updated')"
+                class="w-full bg-slate-950/80 border border-rose-500/40 focus:border-rose-500 rounded-xl px-3.5 py-2.5 text-sm text-rose-200 font-medium outline-none transition">
             </div>
           </div>
         </div>
 
-        <!-- Master Toggles Grid -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-4 shadow-sm">
-          <div class="flex items-center gap-2.5 pb-3 border-b border-slate-800">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+        <!-- Master Toggles Grid (Clean, instant-action list rows) -->
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3 shadow-sm">
+          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
               <i data-lucide="sliders" class="w-4 h-4"></i>
             </div>
-            <div>
-              <h2 class="text-sm font-black uppercase tracking-wider text-white">Live App Controls</h2>
-              <p class="text-xs text-slate-400">One-tap switches to manage app behavior in real-time</p>
+            <div class="min-w-0">
+              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Master Feature Switches</h2>
+              <p class="text-xs text-slate-400 truncate">Tap any switch for instant action (auto-saved)</p>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
 
             <!-- Switch 1: Expense Adding -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Allow Member Expenses</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Allow squad members to log new spending</p>
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Allow Member Expenses</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Let squad members record spending</p>
               </div>
               <button type="button" onclick="toggleSimpleSwitch('setExpenseStatus', ['ALLOW Expense', 'STOP Expense'], 22, 'b', 'Expense entries')" id="uiBtn-setExpenseStatus"
-                class="switch-transition w-14 h-8 rounded-full bg-emerald-600 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-6"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-emerald-600 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-5"></span>
               </button>
             </div>
 
             <!-- Switch 2: Lock Whole App (Concluded) -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Trip Finished Lock</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Locks entire app in cold storage mode</p>
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Trip Finished Lock</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Lock app after trip ends (read-only)</p>
               </div>
               <button type="button" onclick="toggleSimpleSwitch('setAppStatus', ['LOCKED', 'OPEN'], 19, 'b', 'Trip lock mode')" id="uiBtn-setAppStatus"
-                class="switch-transition w-14 h-8 rounded-full bg-slate-800 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
               </button>
             </div>
 
             <!-- Switch 3: Maintenance Screen -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Maintenance Mode</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Shows "Under Maintenance" to all members</p>
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Maintenance Mode</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Show "Under Maintenance" screen</p>
               </div>
               <button type="button" onclick="toggleSimpleSwitch('setMaintenanceMode', ['ENABLED', 'DISABLED'], 30, 'b', 'Maintenance mode')" id="uiBtn-setMaintenanceMode"
-                class="switch-transition w-14 h-8 rounded-full bg-slate-800 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
               </button>
             </div>
 
             <!-- Switch 4: Announcement Screen -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Announcement Mode</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Redirects members to full-screen poster</p>
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Announcement Mode</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Show full-screen notice poster</p>
               </div>
               <button type="button" onclick="toggleSimpleSwitch('setAnnouncementMode', ['ENABLED', 'DISABLED'], 29, 'b', 'Announcement mode')" id="uiBtn-setAnnouncementMode"
-                class="switch-transition w-14 h-8 rounded-full bg-slate-800 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
               </button>
             </div>
 
-            <!-- Switch 5: Security Pass (VIP Wristband) -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Member PIN Login</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Require 4-digit PIN authentication to enter</p>
+            <!-- Switch 5: Security Pass (PIN Login) -->
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Member PIN Login</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Require 4-digit PIN authentication</p>
               </div>
               <button type="button" onclick="toggleMetaSecuritySwitch()" id="uiBtn-setSecurityStatus"
-                class="switch-transition w-14 h-8 rounded-full bg-emerald-600 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-6"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-emerald-600 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-5"></span>
               </button>
             </div>
 
             <!-- Switch 6: Final Sign-Off -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Final Ledger Sign-off</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Prompts members to electronically sign expenses</p>
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Final Ledger Sign-off</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Ask members for digital signatures</p>
               </div>
               <button type="button" onclick="toggleSimpleSwitch('setSignOffStatus', ['signing off', 'closed'], 21, 'b', 'Sign-off status')" id="uiBtn-setSignOffStatus"
-                class="switch-transition w-14 h-8 rounded-full bg-slate-800 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
               </button>
             </div>
 
             <!-- Switch 7: Contribution Badges -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Member Contribution Badges</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Show financial contribution under squad cards</p>
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Contribution Badges</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Show financial badges under cards</p>
               </div>
               <button type="button" onclick="toggleSimpleSwitch('setContriStatus', ['ACTIVE', 'PAUSED'], 23, 'b', 'Contribution badges')" id="uiBtn-setContriStatus"
-                class="switch-transition w-14 h-8 rounded-full bg-emerald-600 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-6"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-emerald-600 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-5"></span>
               </button>
             </div>
 
             <!-- Switch 8: Checklist Tasks Tab -->
-            <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between gap-3">
-              <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Show Checklist Tab</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Display preparation & packing tasks to members</p>
+            <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
+              <div class="min-w-0 flex-1 pr-1">
+                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Show Checklist Tab</p>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Display packing & prep list</p>
               </div>
               <button type="button" onclick="toggleSimpleSwitch('setChecklistVisibility', ['VISIBLE', 'HIDDEN'], 24, 'b', 'Checklist visibility')" id="uiBtn-setChecklistVisibility"
-                class="switch-transition w-14 h-8 rounded-full bg-emerald-600 p-1 flex items-center shadow-inner shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-6"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-emerald-600 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-5"></span>
               </button>
             </div>
 
           </div>
 
-          <!-- 3-State Control: Route & Navigation Standby -->
-          <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl space-y-2.5 pt-3">
+          <!-- 3-State Control: Route Mode -->
+          <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl space-y-2 mt-1">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-xs font-black uppercase tracking-wider text-white">Route & GPS Tracker Mode</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Control live transit visibility for members</p>
+                <p class="text-xs font-black uppercase tracking-wider text-white">Route & Stops Visibility</p>
+                <p class="text-[11px] text-slate-400">Controls live transit display for squad</p>
               </div>
-              <span id="routeBadgeText" class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Active</span>
+              <span id="routeBadgeText" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Active</span>
             </div>
 
-            <div class="grid grid-cols-3 gap-2 pt-1">
+            <div class="grid grid-cols-3 gap-1.5 pt-1">
               <button type="button" onclick="setRouteSegmentMode('ACTIVE')" id="btnRoute-ACTIVE"
-                class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-emerald-600 text-white shadow-md">
+                class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-emerald-600 text-white shadow-md cursor-pointer">
                 Active
               </button>
               <button type="button" onclick="setRouteSegmentMode('LOCKED')" id="btnRoute-LOCKED"
-                class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
-                Standby (Vault)
+                class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white cursor-pointer">
+                Standby
               </button>
               <button type="button" onclick="setRouteSegmentMode('STEALTH')" id="btnRoute-STEALTH"
-                class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white">
-                Hidden (Stealth)
+                class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white cursor-pointer">
+                Hidden
               </button>
             </div>
           </div>
@@ -355,86 +372,86 @@
 
       </div>
 
-      <!-- OP SUB-VIEW 2: INSTANT BROADCASTS (Relocated out of checklist!) -->
-      <div id="opSubView-broadcast" class="op-subview hidden space-y-5">
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-4 shadow-sm">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+      <!-- OP SUB-VIEW 2: INSTANT BROADCASTS -->
+      <div id="opSubView-broadcast" class="op-subview hidden space-y-4">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2.5 border-b border-slate-800">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
                 <i data-lucide="bell-ring" class="w-4 h-4"></i>
               </div>
-              <div>
-                <h2 class="text-sm font-black uppercase tracking-wider text-white">Instant Team Broadcast</h2>
-                <p class="text-xs text-slate-400">Pushes a priority popup directly onto every member's screen</p>
+              <div class="min-w-0">
+                <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Instant Team Broadcast</h2>
+                <p class="text-xs text-slate-400 truncate">Pushes priority alert popup directly to squad phones</p>
               </div>
             </div>
 
             <!-- Enable/Disable Broadcast Toggle -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 shrink-0">
               <span id="broadcastStatusLabel" class="text-xs font-bold text-slate-400 uppercase">OFF</span>
               <button type="button" onclick="toggleSimpleSwitch('setPopupStatus', ['ENABLED', 'DISABLED'], 28, 'e', 'Broadcast alert')" id="uiBtn-setPopupStatus"
-                class="switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shrink-0">
-                <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
               </button>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-            <!-- Left Form Controls (7 cols) -->
-            <div class="lg:col-span-7 space-y-3.5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            <!-- Left Form Controls -->
+            <div class="space-y-3">
               <div>
-                <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Alert Level / Type</label>
-                <div class="grid grid-cols-3 gap-2">
-                  <button type="button" onclick="selectBroadcastType('NOTIFICATION')" id="bType-NOTIFICATION" class="py-2.5 rounded-xl text-xs font-black uppercase bg-indigo-600 text-white transition text-center shadow-sm">
-                    Blue Info
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Alert Level</label>
+                <div class="grid grid-cols-3 gap-1.5">
+                  <button type="button" onclick="selectBroadcastType('NOTIFICATION')" id="bType-NOTIFICATION" class="py-2 rounded-xl text-xs font-black uppercase bg-indigo-600 text-white transition text-center shadow-sm">
+                    Info
                   </button>
-                  <button type="button" onclick="selectBroadcastType('ANNOUNCEMENT')" id="bType-ANNOUNCEMENT" class="py-2.5 rounded-xl text-xs font-black uppercase bg-slate-950 border border-slate-800 text-slate-400 hover:text-white transition text-center">
-                    Green News
+                  <button type="button" onclick="selectBroadcastType('ANNOUNCEMENT')" id="bType-ANNOUNCEMENT" class="py-2 rounded-xl text-xs font-black uppercase bg-slate-950 border border-slate-800 text-slate-400 hover:text-white transition text-center">
+                    Notice
                   </button>
-                  <button type="button" onclick="selectBroadcastType('ALERT')" id="bType-ALERT" class="py-2.5 rounded-xl text-xs font-black uppercase bg-slate-950 border border-slate-800 text-slate-400 hover:text-white transition text-center">
-                    Red Urgent
+                  <button type="button" onclick="selectBroadcastType('ALERT')" id="bType-ALERT" class="py-2 rounded-xl text-xs font-black uppercase bg-slate-950 border border-slate-800 text-slate-400 hover:text-white transition text-center">
+                    Urgent
                   </button>
                 </div>
               </div>
 
               <div>
-                <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Popup Heading</label>
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Popup Heading</label>
                 <input type="text" id="setPopupTitle" placeholder="e.g. Schedule Update or Weather Alert" oninput="updateBroadcastPreview()" onchange="saveSetting(28, 'c', this.value, 'Broadcast heading saved')"
-                  class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white font-bold outline-none focus:border-indigo-500 transition">
+                  class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold outline-none transition">
               </div>
 
               <div>
-                <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Message Body</label>
-                <textarea id="setPopupMessage" rows="3" placeholder="Enter clear instructions for the squad..." oninput="updateBroadcastPreview()" onchange="saveSetting(28, 'd', this.value, 'Broadcast message saved')"
-                  class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-sm text-white font-medium outline-none focus:border-indigo-500 transition"></textarea>
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Message Body</label>
+                <textarea id="setPopupMessage" rows="3" placeholder="Enter instructions for squad members..." oninput="updateBroadcastPreview()" onchange="saveSetting(28, 'd', this.value, 'Broadcast message saved')"
+                  class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white font-medium outline-none transition"></textarea>
               </div>
 
               <button type="button" id="pushBroadcastBtn" onclick="pushInstantBroadcast()"
-                class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition">
-                <i data-lucide="send" class="w-4 h-4"></i> Send Live to Squad
+                class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-98 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/30 transition">
+                <i data-lucide="send" class="w-4 h-4"></i> Push Live Alert to Squad
               </button>
             </div>
 
-            <!-- Right Live Mobile Preview (5 cols) -->
-            <div class="lg:col-span-5 bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
-              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Live Member Phone Preview</span>
+            <!-- Right Live Mobile Preview -->
+            <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-4 flex flex-col justify-center items-center text-center">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2.5">Live Phone Popup Preview</span>
 
-              <div id="previewBroadcastCard" class="w-full max-w-xs bg-white rounded-3xl p-5 text-slate-900 text-center shadow-xl space-y-3">
-                <div id="previewBroadcastIconBox" class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mx-auto shadow-inner">
-                  <i data-lucide="bell" id="previewBroadcastIcon" class="w-6 h-6 stroke-[2.2]"></i>
+              <div id="previewBroadcastCard" class="w-full max-w-[260px] bg-white rounded-2xl p-4 text-slate-900 text-center shadow-xl space-y-2.5">
+                <div id="previewBroadcastIconBox" class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mx-auto shadow-inner">
+                  <i data-lucide="bell" id="previewBroadcastIcon" class="w-5 h-5 stroke-[2.2]"></i>
                 </div>
                 <div>
-                  <span id="previewBroadcastBadge" class="px-2.5 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-widest bg-indigo-50 text-indigo-600 border border-indigo-100">
+                  <span id="previewBroadcastBadge" class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-indigo-50 text-indigo-600 border border-indigo-100">
                     Notification
                   </span>
-                  <h3 id="previewBroadcastTitle" class="text-sm font-black uppercase tracking-tight text-slate-800 mt-1.5 leading-snug">
+                  <h3 id="previewBroadcastTitle" class="text-xs font-black uppercase tracking-tight text-slate-800 mt-1.5 leading-snug">
                     Schedule Update
                   </h3>
-                  <p id="previewBroadcastMessage" class="text-xs font-medium text-slate-500 mt-1 leading-relaxed">
-                    Message text will preview here...
+                  <p id="previewBroadcastMessage" class="text-[11px] font-medium text-slate-500 mt-1 leading-relaxed">
+                    Message text preview...
                   </p>
                 </div>
-                <div class="w-full py-2 bg-slate-900 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider opacity-90">
+                <div class="w-full py-1.5 bg-slate-900 text-white font-bold rounded-lg text-[9px] uppercase tracking-wider opacity-90">
                   Dismiss
                 </div>
               </div>
@@ -444,126 +461,126 @@
       </div>
 
       <!-- OP SUB-VIEW 3: UPCOMING SHOWCASE & BENTO STATS -->
-      <div id="opSubView-upcoming" class="op-subview hidden space-y-5">
+      <div id="opSubView-upcoming" class="op-subview hidden space-y-4">
         <!-- Trip Experience Mode Switch -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div class="space-y-1">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-3">
+          <div class="min-w-0 flex-1 pr-1">
             <div class="flex items-center gap-2">
-              <span class="text-sm font-black uppercase tracking-wider text-white">App Experience Mode</span>
+              <span class="text-xs font-black uppercase tracking-wider text-white">App Experience Mode</span>
               <span id="tripModeBadge" class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                 Live Operations
               </span>
             </div>
-            <p id="tripModeDesc" class="text-xs text-slate-400">
+            <p id="tripModeDesc" class="text-xs text-slate-400 mt-0.5 line-clamp-1">
               Members currently see the live expense tracker & route dashboard.
             </p>
           </div>
 
           <button type="button" id="btnTripModeSwitch" onclick="toggleTripModeSwitch()"
-            class="relative inline-flex h-9 w-16 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-slate-800 transition-colors duration-200 ease-in-out focus:outline-none">
+            class="switch-transition relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full bg-slate-800 p-0.5 items-center">
             <span id="tripModeToggleThumb"
-              class="pointer-events-none inline-block h-8 w-8 transform rounded-full bg-white shadow-lg transition duration-200 ease-in-out translate-x-0"></span>
+              class="switch-thumb-transition pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md translate-x-0"></span>
           </button>
         </div>
 
         <!-- Next Expedition Information -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-4">
-          <div class="flex items-center gap-2.5 pb-3 border-b border-slate-800">
-            <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3">
+          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
+            <div class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
               <i data-lucide="compass" class="w-4 h-4"></i>
             </div>
-            <div>
-              <h2 class="text-sm font-black uppercase tracking-wider text-white">Next Expedition Showcase</h2>
-              <p class="text-xs text-slate-400">Countdown timer and destination for upcoming trip</p>
+            <div class="min-w-0">
+              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Next Expedition Showcase</h2>
+              <p class="text-xs text-slate-400 truncate">Countdown timer & destination details for upcoming trip</p>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Expedition Title</label>
               <input type="text" id="setNextTripName" placeholder="e.g. Kedarkantha Winter Expedition" onchange="saveSetting(32, 'c', this.value, 'Next trip title saved')"
-                class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white font-bold outline-none focus:border-indigo-500">
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none">
             </div>
 
             <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Departure Countdown Date</label>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Countdown Date</label>
               <input type="datetime-local" id="setNextTripDate" onchange="saveSetting(32, 'd', this.value, 'Departure countdown saved')"
-                class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none">
             </div>
 
             <div>
               <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Basecamp / Subtitle</label>
               <input type="text" id="setNextTripSub" placeholder="e.g. Sankri Basecamp • Uttarakhand" onchange="saveSetting(32, 'e', this.value, 'Subtitle saved')"
-                class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs text-white font-bold outline-none focus:border-indigo-500">
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none">
             </div>
           </div>
         </div>
 
         <!-- Bento Stats Config -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-4">
-          <div class="flex items-center gap-2.5 pb-3 border-b border-slate-800">
-            <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3">
+          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
+            <div class="w-8 h-8 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0">
               <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
             </div>
-            <div>
-              <h2 class="text-sm font-black uppercase tracking-wider text-white">Track Record Highlight Numbers</h2>
-              <p class="text-xs text-slate-400">Values & labels shown in the 5 summary showcase tiles</p>
+            <div class="min-w-0">
+              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Track Record Showcase Numbers</h2>
+              <p class="text-xs text-slate-400 truncate">Values and labels for summary milestone tiles</p>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             <!-- Tile 1 -->
-            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-2xl space-y-2">
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl space-y-1.5">
               <span class="text-[10px] font-black uppercase text-indigo-400">Tile 1: Trips</span>
-              <input type="text" id="setStatTripsVal" placeholder="14" onchange="saveSetting(33, 'b', this.value, 'Trips stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold">
-              <input type="text" id="setStatTripsLabel" placeholder="Trips Completed" onchange="saveSetting(33, 'c', this.value, 'Trips stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 font-medium">
+              <input type="text" id="setStatTripsVal" placeholder="14" onchange="saveSetting(33, 'b', this.value, 'Trips stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white font-bold outline-none">
+              <input type="text" id="setStatTripsLabel" placeholder="Trips Completed" onchange="saveSetting(33, 'c', this.value, 'Trips stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 font-medium outline-none">
             </div>
 
             <!-- Tile 2 -->
-            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-2xl space-y-2">
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl space-y-1.5">
               <span class="text-[10px] font-black uppercase text-emerald-400">Tile 2: Managed Amount</span>
-              <input type="text" id="setStatSpentVal" placeholder="₹4.8L" onchange="saveSetting(33, 'd', this.value, 'Spent stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold">
-              <input type="text" id="setStatSpentLabel" placeholder="Total Managed" onchange="saveSetting(33, 'e', this.value, 'Spent stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 font-medium">
+              <input type="text" id="setStatSpentVal" placeholder="₹4.8L" onchange="saveSetting(33, 'd', this.value, 'Spent stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white font-bold outline-none">
+              <input type="text" id="setStatSpentLabel" placeholder="Total Managed" onchange="saveSetting(33, 'e', this.value, 'Spent stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 font-medium outline-none">
             </div>
 
             <!-- Tile 3 -->
-            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-2xl space-y-2">
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl space-y-1.5">
               <span class="text-[10px] font-black uppercase text-blue-400">Tile 3: Waypoints</span>
-              <input type="text" id="setStatLocationsVal" placeholder="85" onchange="saveSetting(34, 'b', this.value, 'Locations stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold">
-              <input type="text" id="setStatLocationsLabel" placeholder="Waypoints Reached" onchange="saveSetting(34, 'c', this.value, 'Locations stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 font-medium">
+              <input type="text" id="setStatLocationsVal" placeholder="85" onchange="saveSetting(34, 'b', this.value, 'Locations stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white font-bold outline-none">
+              <input type="text" id="setStatLocationsLabel" placeholder="Waypoints Reached" onchange="saveSetting(34, 'c', this.value, 'Locations stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 font-medium outline-none">
             </div>
 
             <!-- Tile 4 -->
-            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-2xl space-y-2">
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl space-y-1.5">
               <span class="text-[10px] font-black uppercase text-purple-400">Tile 4: States</span>
-              <input type="text" id="setStatStatesVal" placeholder="7" onchange="saveSetting(34, 'd', this.value, 'States stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold">
-              <input type="text" id="setStatStatesLabel" placeholder="States Traversed" onchange="saveSetting(34, 'e', this.value, 'States stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 font-medium">
+              <input type="text" id="setStatStatesVal" placeholder="7" onchange="saveSetting(34, 'd', this.value, 'States stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white font-bold outline-none">
+              <input type="text" id="setStatStatesLabel" placeholder="States Traversed" onchange="saveSetting(34, 'e', this.value, 'States stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 font-medium outline-none">
             </div>
 
             <!-- Tile 5 -->
-            <div class="bg-slate-950 border border-slate-800 p-3.5 rounded-2xl space-y-2">
+            <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-xl space-y-1.5 sm:col-span-2 lg:col-span-1">
               <span class="text-[10px] font-black uppercase text-amber-400">Tile 5: Kilometers</span>
-              <input type="text" id="setStatKmVal" placeholder="12,500" onchange="saveSetting(34, 'f', this.value, 'Km stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold">
-              <input type="text" id="setStatKmLabel" placeholder="Kilometers Covered" onchange="saveSetting(34, 'g', this.value, 'Km stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 font-medium">
+              <input type="text" id="setStatKmVal" placeholder="12,500" onchange="saveSetting(34, 'f', this.value, 'Km stat value saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white font-bold outline-none">
+              <input type="text" id="setStatKmLabel" placeholder="Kilometers Covered" onchange="saveSetting(34, 'g', this.value, 'Km stat label saved')" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-slate-300 font-medium outline-none">
             </div>
           </div>
         </div>
 
-        <!-- 3D Carousel Photo URLs -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-3">
+        <!-- Carousel Photos URLs -->
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-2.5">
           <div class="flex items-center justify-between pb-2 border-b border-slate-800">
             <div>
               <h2 class="text-sm font-black uppercase tracking-wider text-white">Showcase Carousel Photos</h2>
               <p class="text-xs text-slate-400">Paste direct image URLs (one per line)</p>
             </div>
-            <span id="carouselImageCount" class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">0 Photos</span>
+            <span id="carouselImageCount" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">0 Photos</span>
           </div>
 
           <textarea id="setCarouselImages" rows="3" placeholder="https://images.unsplash.com/photo-1...&#10;https://images.unsplash.com/photo-2..."
             oninput="updateCarouselPreview(this.value)" onchange="saveSetting(35, 'b', this.value, 'Carousel photos saved')"
-            class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-3 text-xs text-white font-mono outline-none focus:border-indigo-500"></textarea>
+            class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-xs text-white font-mono outline-none focus:border-indigo-500"></textarea>
 
-          <div id="carouselPreviewBox" class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800/80 min-h-[90px]"></div>
+          <div id="carouselPreviewBox" class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80 min-h-[80px]"></div>
         </div>
       </div>
 
@@ -572,80 +589,80 @@
     <!-- ====================================================
          SECTION 2: EXPEDITION & SQUAD (Route, Members, Checklist)
          ==================================================== -->
-    <section id="section-expedition" class="category-section hidden space-y-6">
+    <section id="section-expedition" class="category-section hidden space-y-4">
 
-      <!-- Sub-Tabs: Expedition Pills -->
-      <div class="flex items-center gap-2 bg-slate-900 border border-slate-800/80 p-1 rounded-2xl overflow-x-auto no-scrollbar">
-        <button onclick="switchExpSubTab('members')" id="expSubBtn-members" class="flex-1 min-w-[120px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm">
-          Squad Members
+      <!-- Responsive Subtabs -->
+      <div class="grid grid-cols-3 gap-1.5 bg-slate-900/90 border border-slate-800/80 p-1 rounded-2xl w-full">
+        <button onclick="switchExpSubTab('members')" id="expSubBtn-members" class="w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm truncate">
+          Members
         </button>
-        <button onclick="switchExpSubTab('route')" id="expSubBtn-route" class="flex-1 min-w-[120px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
-          Route & Stops
+        <button onclick="switchExpSubTab('route')" id="expSubBtn-route" class="w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center truncate">
+          Route
         </button>
-        <button onclick="switchExpSubTab('checklist')" id="expSubBtn-checklist" class="flex-1 min-w-[120px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
-          Trip Checklist
+        <button onclick="switchExpSubTab('checklist')" id="expSubBtn-checklist" class="w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center truncate">
+          Checklist
         </button>
       </div>
 
       <!-- EXP SUB-VIEW 1: MEMBERS -->
-      <div id="expSubView-members" class="exp-subview space-y-4">
+      <div id="expSubView-members" class="exp-subview space-y-3.5">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-sm font-black uppercase tracking-wider text-white">Squad Members List</h2>
-            <p class="text-xs text-slate-400">Manage names, PINs, posts, and verification</p>
+            <p class="text-xs text-slate-400">PINs, roles, and verification status</p>
           </div>
           <button type="button" onclick="openMemberModal()"
-            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
+            class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
             <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i> Add Member
           </button>
         </div>
 
-        <div id="membersAdminGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        <div id="membersAdminGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
       </div>
 
       <!-- EXP SUB-VIEW 2: ROUTE & TRANSIT STOPS -->
-      <div id="expSubView-route" class="exp-subview hidden space-y-4">
+      <div id="expSubView-route" class="exp-subview hidden space-y-3.5">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-sm font-black uppercase tracking-wider text-white">Route Stops & Timetable</h2>
-            <p class="text-xs text-slate-400">Reorder stops with arrows, set ETA and actual arrival</p>
+            <p class="text-xs text-slate-400">Reorder with arrows, set ETA and actual arrival</p>
           </div>
           <button type="button" onclick="openPlaceModal()"
-            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
+            class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
             <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i> Add Stop
           </button>
         </div>
 
-        <div id="placesAdminCards" class="space-y-3"></div>
+        <div id="placesAdminCards" class="space-y-2.5"></div>
       </div>
 
       <!-- EXP SUB-VIEW 3: CHECKLIST TASKS -->
-      <div id="expSubView-checklist" class="exp-subview hidden space-y-4">
+      <div id="expSubView-checklist" class="exp-subview hidden space-y-3.5">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-sm font-black uppercase tracking-wider text-white">Checklist & Responsibilities</h2>
             <p class="text-xs text-slate-400">Important vs optional items for squad readiness</p>
           </div>
           <button type="button" onclick="openChecklistModal()"
-            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
+            class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
             <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i> Add Task
           </button>
         </div>
 
         <!-- Revoke Switch Setting -->
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex items-center justify-between">
-          <div>
+        <div class="bg-slate-900/90 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3">
+          <div class="min-w-0 flex-1 pr-1">
             <p class="text-xs font-black uppercase tracking-wider text-white">Allow Members to Revoke Claims</p>
-            <p class="text-[11px] text-slate-400">Show or hide the "Revoke" button on the checklist</p>
+            <p class="text-[11px] text-slate-400 mt-0.5">Show or hide the "Revoke" button on checklist cards</p>
           </div>
           <button type="button" onclick="toggleSimpleSwitch('setChecklistRevoke', ['VISIBLE', 'HIDDEN'], 24, 'c', 'Revoke button visibility')" id="uiBtn-setChecklistRevoke"
-            class="switch-transition w-14 h-8 rounded-full bg-emerald-600 p-1 flex items-center shadow-inner shrink-0">
-            <span class="switch-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-6"></span>
+            class="switch-transition w-12 h-7 rounded-full bg-emerald-600 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+            <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-5"></span>
           </button>
         </div>
 
         <!-- Important Tasks Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-3">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-2.5">
           <div class="flex items-center gap-2">
             <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
             <h3 class="text-xs font-black uppercase tracking-wider text-white">Important Tasks</h3>
@@ -654,7 +671,7 @@
         </div>
 
         <!-- Optional Tasks Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 space-y-3">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-2.5">
           <div class="flex items-center gap-2">
             <i data-lucide="check-circle" class="w-4 h-4 text-slate-400"></i>
             <h3 class="text-xs font-black uppercase tracking-wider text-white">Optional Tasks</h3>
@@ -668,58 +685,58 @@
     <!-- ====================================================
          SECTION 3: FINANCES & BUDGET (Ledger & Allocations)
          ==================================================== -->
-    <section id="section-finance" class="category-section hidden space-y-6">
+    <section id="section-finance" class="category-section hidden space-y-4">
 
-      <!-- Sub-Tabs: Finance Pills -->
-      <div class="flex items-center gap-2 bg-slate-900 border border-slate-800/80 p-1 rounded-2xl">
-        <button onclick="switchFinSubTab('ledger')" id="finSubBtn-ledger" class="flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm">
+      <!-- Responsive Subtabs -->
+      <div class="grid grid-cols-2 gap-1.5 bg-slate-900/90 border border-slate-800/80 p-1 rounded-2xl w-full">
+        <button onclick="switchFinSubTab('ledger')" id="finSubBtn-ledger" class="w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm">
           Expense Ledger
         </button>
-        <button onclick="switchFinSubTab('budget')" id="finSubBtn-budget" class="flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
+        <button onclick="switchFinSubTab('budget')" id="finSubBtn-budget" class="w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
           Budget Allocations
         </button>
       </div>
 
       <!-- FIN SUB-VIEW 1: EXPENSE LEDGER -->
-      <div id="finSubView-ledger" class="fin-subview space-y-4">
+      <div id="finSubView-ledger" class="fin-subview space-y-3.5">
         <!-- Overview Stats Card -->
-        <div class="bg-gradient-to-br from-indigo-950/60 to-slate-900 border border-indigo-500/20 rounded-3xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+        <div class="bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/20 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center shrink-0">
               <i data-lucide="receipt" class="w-5 h-5"></i>
             </div>
             <div>
-              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Group Spending</p>
-              <div id="ledgerStats" class="text-base font-black text-emerald-400 mt-0.5">Spent: ₹0 / Budget: ₹0</div>
+              <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Group Spending Status</p>
+              <div id="ledgerStats" class="text-sm sm:text-base font-black text-emerald-400 mt-0.5">Spent: ₹0 / Budget: ₹0</div>
             </div>
           </div>
 
           <!-- Quick Search -->
-          <div class="w-full sm:w-64 relative">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <div class="w-full sm:w-60 relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
             <input type="text" id="ledgerSearchInput" oninput="filterLedger(this.value)" placeholder="Search notes, UTR, claimant..."
-              class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition">
+              class="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition">
           </div>
         </div>
 
         <!-- Ledger Cards Container -->
-        <div id="ledgerAdminCards" class="space-y-3"></div>
+        <div id="ledgerAdminCards" class="space-y-2.5"></div>
       </div>
 
       <!-- FIN SUB-VIEW 2: BUDGET ALLOCATIONS -->
-      <div id="finSubView-budget" class="fin-subview hidden space-y-4">
+      <div id="finSubView-budget" class="fin-subview hidden space-y-3.5">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-sm font-black uppercase tracking-wider text-white">Category Budget Limits</h2>
-            <p id="budgetOverviewText" class="text-xs font-bold text-indigo-400 mt-0.5">Manage Category Budget Limits</p>
+            <p id="budgetOverviewText" class="text-xs font-bold text-indigo-400 mt-0.5">Total Budget: ₹0</p>
           </div>
           <button type="button" onclick="openBudgetModal()"
-            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
+            class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
             <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i> Add Category
           </button>
         </div>
 
-        <div id="budgetAdminCards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+        <div id="budgetAdminCards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5"></div>
       </div>
 
     </section>
@@ -727,49 +744,48 @@
     <!-- ====================================================
          SECTION 4: MEDIA & ARCHIVES (Uploads, Stamp, Past Trips)
          ==================================================== -->
-    <section id="section-media" class="category-section hidden space-y-6">
+    <section id="section-media" class="category-section hidden space-y-4">
 
-      <!-- Sub-Tabs: Media Pills -->
-      <div class="flex items-center gap-2 bg-slate-900 border border-slate-800/80 p-1 rounded-2xl">
-        <button onclick="switchMediaSubTab('uploads')" id="mediaSubBtn-uploads" class="flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm">
-          Direct Uploads & Stamp
+      <!-- Responsive Subtabs -->
+      <div class="grid grid-cols-2 gap-1.5 bg-slate-900/90 border border-slate-800/80 p-1 rounded-2xl w-full">
+        <button onclick="switchMediaSubTab('uploads')" id="mediaSubBtn-uploads" class="w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm">
+          Uploads & Assets
         </button>
-        <button onclick="switchMediaSubTab('archives')" id="mediaSubBtn-archives" class="flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
+        <button onclick="switchMediaSubTab('archives')" id="mediaSubBtn-archives" class="w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
           Past Trips Archive
         </button>
       </div>
 
       <!-- MEDIA SUB-VIEW 1: DIRECT UPLOADS -->
-      <div id="mediaSubView-uploads" class="media-subview space-y-4">
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div id="mediaSubView-uploads" class="media-subview space-y-3.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
           <!-- 1. Guidelines Document -->
-          <div class="bg-slate-900 border border-slate-800 p-5 rounded-3xl space-y-3">
+          <div class="bg-slate-900/90 border border-slate-800/80 p-4 rounded-2xl space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black uppercase tracking-wider text-indigo-400 flex items-center gap-2">
                 <i data-lucide="file-text" class="w-4 h-4"></i> Trip Guidelines PDF / Image
               </span>
               <a id="previewGuideline" href="#" target="_blank" class="text-xs font-bold text-indigo-400 underline hidden">View Live</a>
             </div>
-            <p class="text-xs text-slate-400">Rules and trip instructions shown to members in the app</p>
+            <p class="text-xs text-slate-400">Rules and instructions shown to squad members</p>
             <input type="file" id="guidelineFileInput" accept="image/*,application/pdf" class="hidden" onchange="uploadDirectAsset(this, 'setting', 9, 'b', 'previewGuideline', 'Guidelines document updated')">
-            <button type="button" onclick="document.getElementById('guidelineFileInput').click()" class="w-full py-3 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+            <button type="button" onclick="document.getElementById('guidelineFileInput').click()" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
               <i data-lucide="upload" class="w-3.5 h-3.5 text-indigo-400"></i> Choose File & Upload
             </button>
           </div>
 
           <!-- 2. Trip Report Document -->
-          <div class="bg-slate-900 border border-slate-800 p-5 rounded-3xl space-y-3">
+          <div class="bg-slate-900/90 border border-slate-800/80 p-4 rounded-2xl space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-2">
                 <i data-lucide="file-pie-chart" class="w-4 h-4"></i> Trip Report PDF / Image
               </span>
               <a id="previewTripReport" href="#" target="_blank" class="text-xs font-bold text-amber-400 underline hidden">View Live</a>
             </div>
-            <p class="text-xs text-slate-400">Financial summary and expense audit report</p>
+            <p class="text-xs text-slate-400">Financial summary & expense audit report</p>
             <input type="file" id="reportFileInput" accept="image/*,application/pdf" class="hidden" onchange="uploadDirectAsset(this, 'setting', 13, 'b', 'previewTripReport', 'Trip report document updated')">
-            <button type="button" onclick="document.getElementById('reportFileInput').click()" class="w-full py-3 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+            <button type="button" onclick="document.getElementById('reportFileInput').click()" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
               <i data-lucide="upload" class="w-3.5 h-3.5 text-amber-400"></i> Choose File & Upload
             </button>
             <input type="text" id="reportSubInput" placeholder="Report subtitle (e.g. Audit complete)" onchange="saveSetting(13, 'c', this.value, 'Report subtitle updated')"
@@ -777,35 +793,35 @@
           </div>
 
           <!-- 3. E-ID Digital Stamp PNG -->
-          <div class="bg-slate-900 border border-slate-800 p-5 rounded-3xl space-y-3">
+          <div class="bg-slate-900/90 border border-slate-800/80 p-4 rounded-2xl space-y-2.5">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black uppercase tracking-wider text-rose-400 flex items-center gap-2">
-                <i data-lucide="stamp" class="w-4 h-4"></i> E-ID Official Digital Stamp PNG
+                <i data-lucide="stamp" class="w-4 h-4"></i> E-ID Official Stamp PNG
               </span>
               <a id="previewStamp" href="#" target="_blank" class="text-xs font-bold text-rose-400 underline hidden">View Live</a>
             </div>
-            <p class="text-xs text-slate-400">Transparent PNG stamp stamped across member digital ID passes</p>
+            <p class="text-xs text-slate-400">Transparent PNG stamped over digital member passes</p>
             <input type="file" id="stampFileInput" accept="image/png,image/webp,image/jpeg" class="hidden" onchange="uploadDirectAsset(this, 'setting', 14, 'b', 'previewStamp', 'Digital stamp PNG updated')">
-            <button type="button" onclick="document.getElementById('stampFileInput').click()" class="w-full py-3 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+            <button type="button" onclick="document.getElementById('stampFileInput').click()" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
               <i data-lucide="upload" class="w-3.5 h-3.5 text-rose-400"></i> Choose Stamp PNG & Upload
             </button>
           </div>
 
           <!-- 4. Card Backgrounds -->
-          <div class="bg-slate-900 border border-slate-800 p-5 rounded-3xl space-y-3">
+          <div class="bg-slate-900/90 border border-slate-800/80 p-4 rounded-2xl space-y-2.5">
             <span class="text-xs font-black uppercase tracking-wider text-purple-400 flex items-center gap-2">
               <i data-lucide="image" class="w-4 h-4"></i> Card Custom Backgrounds
             </span>
-            <p class="text-xs text-slate-400">Background wallpaper for chief coordinator & members</p>
+            <p class="text-xs text-slate-400">Custom wallpaper for coordinator & members</p>
             <div class="grid grid-cols-2 gap-2 pt-1">
               <input type="file" id="coordBgInput" accept="image/*" class="hidden" onchange="uploadDirectAsset(this, 'member_meta', 'coordBg', null, null, 'Coordinator background updated')">
               <button type="button" onclick="document.getElementById('coordBgInput').click()" class="w-full py-2.5 bg-slate-950 text-slate-300 border border-slate-800 rounded-xl text-xs font-bold hover:bg-slate-800 transition">
-                Leader Card BG
+                Leader BG
               </button>
 
               <input type="file" id="memberBgInput" accept="image/*" class="hidden" onchange="uploadDirectAsset(this, 'member_meta', 'memberBg', null, null, 'Squad members background updated')">
               <button type="button" onclick="document.getElementById('memberBgInput').click()" class="w-full py-2.5 bg-slate-950 text-slate-300 border border-slate-800 rounded-xl text-xs font-bold hover:bg-slate-800 transition">
-                Members Card BG
+                Members BG
               </button>
             </div>
           </div>
@@ -814,19 +830,19 @@
       </div>
 
       <!-- MEDIA SUB-VIEW 2: PAST TRIPS ARCHIVE -->
-      <div id="mediaSubView-archives" class="media-subview hidden space-y-4">
+      <div id="mediaSubView-archives" class="media-subview hidden space-y-3.5">
         <div class="flex items-center justify-between">
           <div>
             <h2 class="text-sm font-black uppercase tracking-wider text-white">Past Trips Archive Vault</h2>
             <p class="text-xs text-slate-400">Historical records, report links, and media photo folders</p>
           </div>
           <button type="button" onclick="openArchiveModal()"
-            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
+            class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 shadow-md shadow-indigo-600/30 transition">
             <i data-lucide="plus" class="w-4 h-4 stroke-[3]"></i> Add Past Trip
           </button>
         </div>
 
-        <div id="archivesAdminCards" class="space-y-3"></div>
+        <div id="archivesAdminCards" class="space-y-2.5"></div>
       </div>
 
     </section>
@@ -834,41 +850,41 @@
     <!-- ====================================================
          SECTION 5: TEAM CHAT MANAGER
          ==================================================== -->
-    <section id="section-chat" class="category-section hidden space-y-4">
+    <section id="section-chat" class="category-section hidden space-y-3.5">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-sm font-black uppercase tracking-wider text-white">Trip Chat Moderation</h2>
-          <p class="text-xs text-slate-400">Broadcast official admin updates, reply, edit, or delete messages</p>
+          <p class="text-xs text-slate-400">Broadcast updates, reply, edit, or delete messages</p>
         </div>
         <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-          Live Messenger
+          Live
         </span>
       </div>
 
       <!-- Responsive Chat Console Box -->
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden flex flex-col h-[70vh] min-h-[460px] shadow-xl">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[65vh] sm:h-[520px] shadow-xl">
         <!-- Messages Area -->
-        <div id="adminChatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/60"></div>
+        <div id="adminChatMessages" class="flex-1 p-3.5 overflow-y-auto space-y-2.5 bg-slate-950/70"></div>
 
         <!-- Replying Context Banner -->
-        <div id="adminReplyBanner" class="hidden px-4 py-2.5 bg-slate-800/90 border-t border-slate-700/80 flex items-center justify-between text-xs">
-          <div class="flex items-center gap-2 truncate">
-            <i data-lucide="reply" class="w-4 h-4 text-indigo-400 shrink-0"></i>
-            <span class="font-bold text-slate-400">Replying to <b id="adminReplySender" class="text-indigo-400"></b>:</span>
-            <span id="adminReplyText" class="text-slate-300 truncate max-w-xs sm:max-w-md italic"></span>
+        <div id="adminReplyBanner" class="hidden px-3.5 py-2 bg-slate-800/90 border-t border-slate-700/80 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2 truncate min-w-0">
+            <i data-lucide="reply" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
+            <span class="font-bold text-slate-400 shrink-0">Replying to <b id="adminReplySender" class="text-indigo-400"></b>:</span>
+            <span id="adminReplyText" class="text-slate-300 truncate italic"></span>
           </div>
-          <button type="button" onclick="cancelAdminReply()" class="text-slate-400 hover:text-white transition">
+          <button type="button" onclick="cancelAdminReply()" class="text-slate-400 hover:text-white transition p-1">
             <i data-lucide="x" class="w-4 h-4"></i>
           </button>
         </div>
 
         <!-- Chat Input Form -->
-        <form id="adminChatForm" onsubmit="sendAdminMessage(event)" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
+        <form id="adminChatForm" onsubmit="sendAdminMessage(event)" class="p-2.5 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
           <input type="text" id="adminChatInput" placeholder="Type a message or announcement as Admin..."
-            class="flex-1 bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition">
+            class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition">
           <button type="submit" id="adminSendBtn"
-            class="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-black rounded-2xl text-xs uppercase tracking-wider flex items-center gap-1.5 transition shadow-md shadow-indigo-600/30 shrink-0">
-            <i data-lucide="send" class="w-4 h-4"></i> <span class="hidden sm:inline">Send</span>
+            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-black rounded-xl text-xs uppercase tracking-wider flex items-center gap-1.5 transition shadow-md shadow-indigo-600/30 shrink-0">
+            <i data-lucide="send" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Send</span>
           </button>
         </form>
       </div>
@@ -879,24 +895,24 @@
   <!-- =========================================
        MOBILE BOTTOM NAVIGATION BAR (Sticky Thumb Bar)
        ========================================= -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800/90 px-2 py-2 flex items-center justify-around z-40 shadow-2xl">
-    <button onclick="switchCategory('operations')" id="mobBtn-operations" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-indigo-400 transition">
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/90 px-1 py-1.5 flex items-center justify-around z-40 shadow-2xl">
+    <button onclick="switchCategory('operations')" id="mobBtn-operations" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-indigo-400 transition cursor-pointer min-w-[56px]">
       <i data-lucide="zap" class="w-5 h-5"></i>
       <span class="text-[9px] font-black uppercase tracking-wider">Controls</span>
     </button>
-    <button onclick="switchCategory('expedition')" id="mobBtn-expedition" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition">
+    <button onclick="switchCategory('expedition')" id="mobBtn-expedition" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
       <i data-lucide="map-pin" class="w-5 h-5"></i>
       <span class="text-[9px] font-bold uppercase tracking-wider">Route</span>
     </button>
-    <button onclick="switchCategory('finance')" id="mobBtn-finance" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition">
+    <button onclick="switchCategory('finance')" id="mobBtn-finance" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
       <i data-lucide="wallet" class="w-5 h-5"></i>
       <span class="text-[9px] font-bold uppercase tracking-wider">Ledger</span>
     </button>
-    <button onclick="switchCategory('media')" id="mobBtn-media" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition">
+    <button onclick="switchCategory('media')" id="mobBtn-media" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
       <i data-lucide="folder" class="w-5 h-5"></i>
       <span class="text-[9px] font-bold uppercase tracking-wider">Vault</span>
     </button>
-    <button onclick="switchCategory('chat')" id="mobBtn-chat" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition">
+    <button onclick="switchCategory('chat')" id="mobBtn-chat" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
       <i data-lucide="message-square" class="w-5 h-5"></i>
       <span class="text-[9px] font-bold uppercase tracking-wider">Chat</span>
     </button>
@@ -922,26 +938,26 @@
   </div>
 
   <!-- =========================================
-       MODALS ENGINE
+       MODALS ENGINE (Clean mobile bottom-sheet style)
        ========================================= -->
 
   <!-- 1. CHECKLIST MODAL -->
-  <div id="checklistModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+  <div id="checklistModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl mobile-sheet">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 id="checklistModalTitle" class="text-sm font-black uppercase tracking-wider text-white">Add Task</h3>
-        <button onclick="closeChecklistModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeChecklistModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <form id="checklistForm" onsubmit="saveChecklistForm(event)" class="space-y-4 pt-4">
+      <form id="checklistForm" onsubmit="saveChecklistForm(event)" class="space-y-3.5 pt-3.5">
         <input type="hidden" id="chkId">
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase block mb-1">Task Title</label>
           <input type="text" id="chkTitle" required placeholder="e.g. Bring Raincoat & Trekking Shoes"
-            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white outline-none focus:border-indigo-500 font-bold">
+            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-indigo-500 font-bold">
         </div>
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase block mb-1">Section Priority</label>
-          <select id="chkSection" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white outline-none focus:border-indigo-500 font-bold">
+          <select id="chkSection" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-indigo-500 font-bold">
             <option value="Important">Important Tasks (Star Marked)</option>
             <option value="Optional">Optional Tasks</option>
           </select>
@@ -955,22 +971,22 @@
   </div>
 
   <!-- 2. MEMBER MODAL -->
-  <div id="memberModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+  <div id="memberModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto mobile-sheet">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 id="memberModalTitle" class="text-sm font-black uppercase tracking-wider text-white">Add Member</h3>
-        <button onclick="closeMemberModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeMemberModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
-      <form id="memberForm" onsubmit="saveMemberForm(event)" class="space-y-3.5 pt-4">
+      <form id="memberForm" onsubmit="saveMemberForm(event)" class="space-y-3 pt-3">
         <input type="hidden" id="memId">
         <input type="hidden" id="memImgUrl">
 
         <!-- Photo Upload Zone -->
         <div class="flex items-center gap-3">
-          <div id="dropZone" onclick="document.getElementById('memPhotoFile').click()" class="w-20 h-20 border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-slate-950 overflow-hidden shrink-0">
+          <div id="dropZone" onclick="document.getElementById('memPhotoFile').click()" class="w-16 h-16 border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-slate-950 overflow-hidden shrink-0">
             <div id="uploadPreview" class="flex flex-col items-center justify-center h-full w-full p-1">
-              <i data-lucide="user" class="w-6 h-6 text-slate-500 mb-0.5"></i>
+              <i data-lucide="user" class="w-5 h-5 text-slate-500 mb-0.5"></i>
               <span class="text-[8px] font-bold text-slate-400 text-center">Photo</span>
             </div>
           </div>
@@ -981,32 +997,32 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Name</label>
-            <input type="text" id="memName" required placeholder="Full Name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+            <input type="text" id="memName" required placeholder="Full Name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Role / Post</label>
-            <input type="text" id="memRole" placeholder="e.g. Chief Coordinator" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+            <input type="text" id="memRole" placeholder="e.g. Coordinator" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
           </div>
         </div>
 
         <div class="grid grid-cols-3 gap-2">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">PIN (4-Digit)</label>
-            <input type="text" id="memPin" maxlength="4" placeholder="1234" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500 text-center">
+            <input type="text" id="memPin" maxlength="4" placeholder="1234" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500 text-center">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Status</label>
-            <select id="memVerification" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+            <select id="memVerification" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
               <option value="Verified">Verified</option>
               <option value="Unverified">Unverified</option>
             </select>
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Attendance</label>
-            <select id="memAttendance" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+            <select id="memAttendance" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-1 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
               <option value="Attendance Confirmed">Confirmed</option>
               <option value="Awaiting Confirmation">Awaiting</option>
               <option value="Not Attending">Cancelled</option>
@@ -1014,7 +1030,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Phone</label>
             <input type="text" id="memMobile" placeholder="+91 9876543210" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500">
@@ -1026,7 +1042,7 @@
         </div>
 
         <div>
-          <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Assigned Tasks / Detail Description</label>
+          <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Assigned Tasks / Description</label>
           <textarea id="memRoleDetail" rows="2" placeholder="Responsibilities for this member..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-white outline-none focus:border-indigo-500"></textarea>
         </div>
 
@@ -1039,33 +1055,33 @@
   </div>
 
   <!-- 3. ROUTE PLACE MODAL -->
-  <div id="placeModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+  <div id="placeModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl mobile-sheet">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 id="placeModalTitle" class="text-sm font-black uppercase tracking-wider text-white">Add Stop</h3>
-        <button onclick="closePlaceModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closePlaceModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
-      <form id="placeForm" onsubmit="savePlaceForm(event)" class="space-y-3.5 pt-4">
+      <form id="placeForm" onsubmit="savePlaceForm(event)" class="space-y-3 pt-3">
         <input type="hidden" id="placeId">
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Trip Day</label>
-            <input type="text" id="placeDay" placeholder="e.g. Day 1" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+            <input type="text" id="placeDay" placeholder="e.g. Day 1" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Date</label>
-            <input type="text" id="placeDate" placeholder="e.g. 15 Oct" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+            <input type="text" id="placeDate" placeholder="e.g. 15 Oct" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
           </div>
         </div>
 
         <div>
           <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Stop Name / Waypoint</label>
-          <input type="text" id="placeLocation" required placeholder="e.g. Haridwar Railway Station" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+          <input type="text" id="placeLocation" required placeholder="e.g. Haridwar Railway Station" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Expected Time (ETA)</label>
             <input type="text" id="placeEta" placeholder="06:30 AM" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500">
@@ -1076,7 +1092,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Transit Details</label>
             <input type="text" id="placeDetails" placeholder="e.g. Train 12055 or Bus" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500">
@@ -1099,24 +1115,24 @@
   </div>
 
   <!-- 4. EDIT TRANSACTION MODAL -->
-  <div id="txEditModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+  <div id="txEditModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl mobile-sheet">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 class="text-sm font-black uppercase tracking-wider text-white">Edit Expense Record</h3>
-        <button onclick="closeTxModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeTxModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
-      <form onsubmit="saveTxForm(event)" class="space-y-3.5 pt-4">
+      <form onsubmit="saveTxForm(event)" class="space-y-3 pt-3">
         <input type="hidden" id="editTxId">
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Amount (₹)</label>
-            <input type="number" id="editTxAmount" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-black outline-none focus:border-indigo-500">
+            <input type="number" id="editTxAmount" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-black outline-none focus:border-indigo-500">
           </div>
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Category</label>
-            <select id="editTxCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
+            <select id="editTxCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
               <option value="Food">Food</option>
               <option value="Stay">Stay</option>
               <option value="Fare">Fare</option>
@@ -1127,7 +1143,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Payment Method</label>
             <select id="editTxPaidVia" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
@@ -1165,24 +1181,24 @@
   </div>
 
   <!-- 5. BUDGET MODAL -->
-  <div id="budgetModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+  <div id="budgetModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl mobile-sheet">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 id="budgetModalTitle" class="text-sm font-black uppercase tracking-wider text-white">Budget Category</h3>
-        <button onclick="closeBudgetModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeBudgetModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
-      <form id="budgetForm" onsubmit="saveBudgetForm(event)" class="space-y-4 pt-4">
+      <form id="budgetForm" onsubmit="saveBudgetForm(event)" class="space-y-3.5 pt-3.5">
         <input type="hidden" id="budgetId">
 
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase block mb-1">Category Name</label>
-          <input type="text" id="budgetCategory" required placeholder="e.g. Food or Stay" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white font-bold outline-none focus:border-indigo-500">
+          <input type="text" id="budgetCategory" required placeholder="e.g. Food or Stay" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none focus:border-indigo-500">
         </div>
 
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase block mb-1">Allocated Amount (₹)</label>
-          <input type="number" id="budgetAmount" required placeholder="5000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-xs text-white font-black outline-none focus:border-indigo-500">
+          <input type="number" id="budgetAmount" required placeholder="5000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white font-black outline-none focus:border-indigo-500">
         </div>
 
         <div class="flex gap-2 pt-2">
@@ -1194,19 +1210,19 @@
   </div>
 
   <!-- 6. PAST TRIP ARCHIVE MODAL -->
-  <div id="archiveModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+  <div id="archiveModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto mobile-sheet">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 id="archiveModalTitle" class="text-sm font-black uppercase tracking-wider text-white">Add Past Trip</h3>
-        <button onclick="closeArchiveModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeArchiveModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
-      <form id="archiveForm" onsubmit="saveArchiveForm(event)" class="space-y-3.5 pt-4">
+      <form id="archiveForm" onsubmit="saveArchiveForm(event)" class="space-y-3 pt-3">
         <input type="hidden" id="archId">
         <input type="hidden" id="archReport">
         <input type="hidden" id="archGallery">
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Trip Name</label>
             <input type="text" id="archName" required placeholder="e.g. Kedarkantha 2025" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white font-bold outline-none focus:border-indigo-500">
@@ -1217,7 +1233,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Dates</label>
             <input type="text" id="archDates" placeholder="10 - 15 Jan 2025" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-indigo-500">
@@ -1254,14 +1270,14 @@
   </div>
 
   <!-- 7. EDIT CHAT MESSAGE MODAL -->
-  <div id="editMessageModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+  <div id="editMessageModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl mobile-sheet">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <h3 class="text-sm font-black uppercase tracking-wider text-white">Edit Chat Message</h3>
-        <button onclick="closeEditMessageModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <button onclick="closeEditMessageModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
-      <form onsubmit="saveEditMessage(event)" class="space-y-4 pt-4">
+      <form onsubmit="saveEditMessage(event)" class="space-y-3.5 pt-3.5">
         <input type="hidden" id="editMsgId">
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase block mb-1">Message Text</label>
@@ -1279,7 +1295,7 @@
   <!-- =========================================
        POPUP ALERT TOAST NOTIFICATION
        ========================================= -->
-  <div id="adminAlertToast" class="fixed top-4 right-4 z-50 max-w-sm w-full bg-slate-900 border border-indigo-500/40 rounded-2xl p-4 shadow-2xl transition-all duration-300 transform translate-y-[-120%] opacity-0 pointer-events-none flex items-start gap-3">
+  <div id="adminAlertToast" class="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 sm:max-w-sm w-auto bg-slate-900 border border-indigo-500/40 rounded-2xl p-3.5 shadow-2xl transition-all duration-300 transform translate-y-[-140%] opacity-0 pointer-events-none flex items-start gap-3">
     <div id="toastIconBox" class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
       <i data-lucide="check" class="w-4 h-4"></i>
     </div>
@@ -1308,11 +1324,11 @@
       toastMsg.innerText = message;
 
       if (isError) {
-        toast.className = "fixed top-4 right-4 z-50 max-w-sm w-full bg-slate-900 border border-rose-500/50 rounded-2xl p-4 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-start gap-3";
+        toast.className = "fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 sm:max-w-sm w-auto bg-slate-900 border border-rose-500/50 rounded-2xl p-3.5 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-start gap-3";
         iconBox.className = "w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0";
         iconBox.innerHTML = '<i data-lucide="alert-triangle" class="w-4 h-4"></i>';
       } else {
-        toast.className = "fixed top-4 right-4 z-50 max-w-sm w-full bg-slate-900 border border-indigo-500/40 rounded-2xl p-4 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-start gap-3";
+        toast.className = "fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 sm:max-w-sm w-auto bg-slate-900 border border-indigo-500/40 rounded-2xl p-3.5 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-start gap-3";
         iconBox.className = "w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0";
         iconBox.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
       }
@@ -1320,9 +1336,9 @@
 
       if (window.toastTimer) clearTimeout(window.toastTimer);
       window.toastTimer = setTimeout(() => {
-        toast.classList.replace('translate-y-0', 'translate-y-[-120%]');
+        toast.classList.replace('translate-y-0', 'translate-y-[-140%]');
         toast.classList.replace('opacity-100', 'opacity-0');
-      }, 3500);
+      }, 3000);
     }
 
     // Auto-Logout Timer (15 Minutes)
@@ -1335,7 +1351,7 @@
     }
     window.addEventListener('mousemove', resetAutoLogout);
     window.addEventListener('keydown', resetAutoLogout);
-    window.addEventListener('touchstart', resetAutoLogout);
+    window.addEventListener('touchstart', resetAutoLogout, { passive: true });
 
     // API Gateway
     async function adminApi(action, payload = {}) {
@@ -1388,6 +1404,7 @@
     // 5-CATEGORY NAVIGATION SYSTEM (Desktop + Mobile)
     // ==========================================
     function switchCategory(catName) {
+      if (navigator.vibrate) navigator.vibrate(8);
       // 1. Hide all category sections
       document.querySelectorAll('.category-section').forEach(sec => sec.classList.add('hidden'));
       const targetSec = document.getElementById(`section-${catName}`);
@@ -1419,6 +1436,7 @@
 
     // Sub-Tabs: Operations
     function switchOpSubTab(tab) {
+      if (navigator.vibrate) navigator.vibrate(6);
       document.querySelectorAll('.op-subview').forEach(v => v.classList.add('hidden'));
       const target = document.getElementById(`opSubView-${tab}`);
       if (target) target.classList.remove('hidden');
@@ -1427,9 +1445,9 @@
         const btn = document.getElementById(`opSubBtn-${t}`);
         if (!btn) return;
         if (t === tab) {
-          btn.className = "flex-1 min-w-[120px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm";
+          btn.className = "w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm truncate";
         } else {
-          btn.className = "flex-1 min-w-[120px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center";
+          btn.className = "w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center truncate";
         }
       });
       lucide.createIcons();
@@ -1437,6 +1455,7 @@
 
     // Sub-Tabs: Expedition
     function switchExpSubTab(tab) {
+      if (navigator.vibrate) navigator.vibrate(6);
       document.querySelectorAll('.exp-subview').forEach(v => v.classList.add('hidden'));
       const target = document.getElementById(`expSubView-${tab}`);
       if (target) target.classList.remove('hidden');
@@ -1445,9 +1464,9 @@
         const btn = document.getElementById(`expSubBtn-${t}`);
         if (!btn) return;
         if (t === tab) {
-          btn.className = "flex-1 min-w-[120px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm";
+          btn.className = "w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm truncate";
         } else {
-          btn.className = "flex-1 min-w-[120px] py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center";
+          btn.className = "w-full py-2.5 px-1 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center truncate";
         }
       });
       lucide.createIcons();
@@ -1455,6 +1474,7 @@
 
     // Sub-Tabs: Finance
     function switchFinSubTab(tab) {
+      if (navigator.vibrate) navigator.vibrate(6);
       document.querySelectorAll('.fin-subview').forEach(v => v.classList.add('hidden'));
       const target = document.getElementById(`finSubView-${tab}`);
       if (target) target.classList.remove('hidden');
@@ -1463,9 +1483,9 @@
         const btn = document.getElementById(`finSubBtn-${t}`);
         if (!btn) return;
         if (t === tab) {
-          btn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm";
+          btn.className = "w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm";
         } else {
-          btn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center";
+          btn.className = "w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center";
         }
       });
       lucide.createIcons();
@@ -1473,6 +1493,7 @@
 
     // Sub-Tabs: Media
     function switchMediaSubTab(tab) {
+      if (navigator.vibrate) navigator.vibrate(6);
       document.querySelectorAll('.media-subview').forEach(v => v.classList.add('hidden'));
       const target = document.getElementById(`mediaSubView-${tab}`);
       if (target) target.classList.remove('hidden');
@@ -1481,9 +1502,9 @@
         const btn = document.getElementById(`mediaSubBtn-${t}`);
         if (!btn) return;
         if (t === tab) {
-          btn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm";
+          btn.className = "w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm";
         } else {
-          btn.className = "flex-1 py-2 px-3 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center";
+          btn.className = "w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center";
         }
       });
       lucide.createIcons();
@@ -1531,7 +1552,7 @@
       document.getElementById('setChecklistVisibility').value = d.checklistVisibility || 'VISIBLE';
       document.getElementById('setChecklistRevoke').value = d.checklistRevokeVisibility || 'VISIBLE';
 
-      // 10-Second Popup Settings
+      // Popup Settings
       if (d.popupConfig) {
         document.getElementById('setPopupStatus').value = d.popupConfig.status || 'DISABLED';
         document.getElementById('setPopupType').value = d.popupConfig.type || 'NOTIFICATION';
@@ -1566,7 +1587,7 @@
       updateBroadcastPreview();
     }
 
-    // Helper: Visually move switch thumb and toggle color
+    // Helper: Visually move switch thumb and toggle color (instant animation)
     function syncVisualSwitch(selectId, isActive, activeColor = 'emerald') {
       const btn = document.getElementById(`uiBtn-${selectId}`);
       if (!btn) return;
@@ -1582,35 +1603,92 @@
       const activeBg = colorMap[activeColor] || 'bg-indigo-600';
 
       if (isActive) {
-        btn.className = `switch-transition w-14 h-8 rounded-full ${activeBg} p-1 flex items-center shadow-inner shrink-0`;
-        if (thumb) thumb.style.transform = 'translateX(24px)';
+        btn.className = `switch-transition w-12 h-7 rounded-full ${activeBg} p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer`;
+        if (thumb) thumb.style.transform = 'translateX(20px)';
       } else {
-        btn.className = `switch-transition w-14 h-8 rounded-full bg-slate-800 p-1 flex items-center shadow-inner shrink-0`;
+        btn.className = `switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer`;
         if (thumb) thumb.style.transform = 'translateX(0px)';
       }
     }
 
-    // Toggle 2-state Switch with single tap
+    // Color definitions for instant optimistic toggling
+    const switchColorRules = {
+      setExpenseStatus: { activeVal: 'ALLOW Expense', color: 'emerald', label: 'Member expenses' },
+      setAppStatus: { activeVal: 'LOCKED', color: 'rose', label: 'Trip lock' },
+      setMaintenanceMode: { activeVal: 'ENABLED', color: 'amber', label: 'Maintenance mode' },
+      setAnnouncementMode: { activeVal: 'ENABLED', color: 'purple', label: 'Announcement mode' },
+      setSecurityStatus: { activeVal: 'vip', color: 'emerald', label: 'PIN login' },
+      setSignOffStatus: { activeVal: 'signing off', color: 'amber', label: 'Sign-off status' },
+      setContriStatus: { activeVal: 'ACTIVE', color: 'emerald', label: 'Contribution badges' },
+      setChecklistVisibility: { activeVal: 'VISIBLE', color: 'emerald', label: 'Checklist tab' },
+      setChecklistRevoke: { activeVal: 'VISIBLE', color: 'emerald', label: 'Revoke button' },
+      setPopupStatus: { activeVal: 'ENABLED', color: 'indigo', label: 'Broadcast alert' }
+    };
+
+    // Toggle 2-state Switch with INSTANT ACTION (0ms response) + background async save
     async function toggleSimpleSwitch(selectId, optionsArray, rowNumber, col, label) {
       const select = document.getElementById(selectId);
       if (!select) return;
+
+      // Haptic feedback
+      if (navigator.vibrate) navigator.vibrate(10);
 
       const currentVal = select.value;
       const nextVal = (currentVal === optionsArray[0]) ? optionsArray[1] : optionsArray[0];
       select.value = nextVal;
 
-      await saveSetting(rowNumber, col, nextVal, `${label} updated`);
+      // 1. INSTANT OPTIMISTIC UI FLIP
+      const rule = switchColorRules[selectId] || { activeVal: optionsArray[0], color: 'emerald' };
+      const isActive = (nextVal === rule.activeVal);
+      syncVisualSwitch(selectId, isActive, rule.color);
+
+      // Instant status badge update for broadcast
+      if (selectId === 'setPopupStatus') {
+        const popStatusLbl = document.getElementById('broadcastStatusLabel');
+        if (popStatusLbl) {
+          popStatusLbl.innerText = isActive ? 'ACTIVE' : 'OFF';
+          popStatusLbl.className = isActive ? 'text-xs font-bold text-indigo-400 uppercase' : 'text-xs font-bold text-slate-400 uppercase';
+        }
+      }
+
+      // 2. BACKGROUND ASYNC CALL
+      try {
+        const fresh = await adminApi('admin-update-setting', { rowNumber: rowNumber, col: col, value: nextVal });
+        globalData = fresh;
+        showAlert("Saved", `${label} updated`);
+      } catch (err) {
+        // 3. Rollback on failure
+        select.value = currentVal;
+        const wasActive = (currentVal === rule.activeVal);
+        syncVisualSwitch(selectId, wasActive, rule.color);
+        showAlert("Failed", err.message || "Failed to update switch", true);
+      }
     }
 
-    // VIP Meta Security Switch
+    // VIP Meta Security Switch with INSTANT ACTION
     async function toggleMetaSecuritySwitch() {
+      if (navigator.vibrate) navigator.vibrate(10);
       const select = document.getElementById('setSecurityStatus');
-      const nextVal = (select.value === 'vip') ? 'normal' : 'vip';
+      const currentVal = select.value;
+      const nextVal = (currentVal === 'vip') ? 'normal' : 'vip';
       select.value = nextVal;
-      await saveMetaSecurity(nextVal);
+
+      // Instant visual flip
+      syncVisualSwitch('setSecurityStatus', nextVal === 'vip', 'emerald');
+
+      try {
+        const fresh = await adminApi('admin-update-meta', { securityStatus: nextVal });
+        globalData = fresh;
+        showAlert("Security Mode", `PIN Login set to ${nextVal === 'vip' ? 'Enabled' : 'Disabled'}`);
+      } catch (err) {
+        // Rollback
+        select.value = currentVal;
+        syncVisualSwitch('setSecurityStatus', currentVal === 'vip', 'emerald');
+        showAlert("Failed", err.message, true);
+      }
     }
 
-    // Route 3-Way Segment Switch
+    // Route 3-Way Segment Switch with INSTANT ACTION
     function updateRouteSegmentUI(mode) {
       const badge = document.getElementById('routeBadgeText');
       ['ACTIVE', 'LOCKED', 'STEALTH'].forEach(m => {
@@ -1618,42 +1696,57 @@
         if (!btn) return;
         if (m === mode) {
           if (m === 'ACTIVE') {
-            btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-emerald-600 text-white shadow-md";
-            if (badge) { badge.innerText = "Active"; badge.className = "px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"; }
+            btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-emerald-600 text-white shadow-md cursor-pointer";
+            if (badge) { badge.innerText = "Active"; badge.className = "px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"; }
           } else if (m === 'LOCKED') {
-            btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-amber-600 text-white shadow-md";
-            if (badge) { badge.innerText = "Standby (Vault)"; badge.className = "px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30"; }
+            btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-amber-600 text-white shadow-md cursor-pointer";
+            if (badge) { badge.innerText = "Standby"; badge.className = "px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30"; }
           } else {
-            btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-rose-600 text-white shadow-md";
-            if (badge) { badge.innerText = "Hidden"; badge.className = "px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30"; }
+            btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-rose-600 text-white shadow-md cursor-pointer";
+            if (badge) { badge.innerText = "Hidden"; badge.className = "px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-rose-500/20 text-rose-400 border border-rose-500/30"; }
           }
         } else {
-          btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white";
+          btn.className = "py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white cursor-pointer";
         }
       });
     }
 
     async function setRouteSegmentMode(mode) {
+      if (navigator.vibrate) navigator.vibrate(10);
+      const oldMode = document.getElementById('setRouteStatus').value;
       document.getElementById('setRouteStatus').value = mode;
+
+      // Instant UI update
       updateRouteSegmentUI(mode);
-      await saveSetting(18, 'b', mode, `Route set to ${mode}`);
+
+      try {
+        const fresh = await adminApi('admin-update-setting', { rowNumber: 18, col: 'b', value: mode });
+        globalData = fresh;
+        showAlert("Route Mode", `Route set to ${mode}`);
+      } catch (err) {
+        document.getElementById('setRouteStatus').value = oldMode;
+        updateRouteSegmentUI(oldMode);
+        showAlert("Failed", err.message, true);
+      }
     }
 
     // ==========================================
     // BROADCAST ALERT ENGINE
     // ==========================================
     function selectBroadcastType(type, triggerSave = true) {
+      if (navigator.vibrate) navigator.vibrate(8);
       document.getElementById('setPopupType').value = type;
 
+      // Instant UI update
       ['NOTIFICATION', 'ANNOUNCEMENT', 'ALERT'].forEach(t => {
         const btn = document.getElementById(`bType-${t}`);
         if (!btn) return;
         if (t === type) {
-          if (t === 'NOTIFICATION') btn.className = "py-2.5 rounded-xl text-xs font-black uppercase bg-indigo-600 text-white transition text-center shadow-sm";
-          if (t === 'ANNOUNCEMENT') btn.className = "py-2.5 rounded-xl text-xs font-black uppercase bg-emerald-600 text-white transition text-center shadow-sm";
-          if (t === 'ALERT') btn.className = "py-2.5 rounded-xl text-xs font-black uppercase bg-rose-600 text-white transition text-center shadow-sm";
+          if (t === 'NOTIFICATION') btn.className = "py-2 rounded-xl text-xs font-black uppercase bg-indigo-600 text-white transition text-center shadow-sm";
+          if (t === 'ANNOUNCEMENT') btn.className = "py-2 rounded-xl text-xs font-black uppercase bg-emerald-600 text-white transition text-center shadow-sm";
+          if (t === 'ALERT') btn.className = "py-2 rounded-xl text-xs font-black uppercase bg-rose-600 text-white transition text-center shadow-sm";
         } else {
-          btn.className = "py-2.5 rounded-xl text-xs font-black uppercase bg-slate-950 border border-slate-800 text-slate-400 hover:text-white transition text-center";
+          btn.className = "py-2 rounded-xl text-xs font-black uppercase bg-slate-950 border border-slate-800 text-slate-400 hover:text-white transition text-center";
         }
       });
 
@@ -1679,18 +1772,18 @@
 
       if (type === 'ALERT') {
         badge.innerText = 'Alert';
-        badge.className = 'px-2.5 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-widest bg-rose-50 text-rose-600 border border-rose-100';
-        iconBox.className = 'w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto shadow-inner';
+        badge.className = 'px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-rose-50 text-rose-600 border border-rose-100';
+        iconBox.className = 'w-10 h-10 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center mx-auto shadow-inner';
         icon.setAttribute('data-lucide', 'alert-triangle');
       } else if (type === 'ANNOUNCEMENT') {
         badge.innerText = 'Announcement';
-        badge.className = 'px-2.5 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-100';
-        iconBox.className = 'w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto shadow-inner';
+        badge.className = 'px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-600 border border-emerald-100';
+        iconBox.className = 'w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto shadow-inner';
         icon.setAttribute('data-lucide', 'megaphone');
       } else {
         badge.innerText = 'Notification';
-        badge.className = 'px-2.5 py-0.5 rounded-full text-[8.5px] font-black uppercase tracking-widest bg-indigo-50 text-indigo-600 border border-indigo-100';
-        iconBox.className = 'w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mx-auto shadow-inner';
+        badge.className = 'px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-indigo-50 text-indigo-600 border border-indigo-100';
+        iconBox.className = 'w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mx-auto shadow-inner';
         icon.setAttribute('data-lucide', 'bell');
       }
       lucide.createIcons();
@@ -1725,7 +1818,7 @@
         showAlert("Push Failed", err.message, true);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Send Live to Squad`;
+        btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i> Push Live Alert to Squad`;
         lucide.createIcons();
       }
     }
@@ -1767,10 +1860,10 @@
       if (mode === 'UPCOMING') {
         btn.classList.remove('bg-slate-800');
         btn.classList.add('bg-indigo-600');
-        thumb.style.transform = 'translateX(28px)';
-        badge.innerText = 'Upcoming Showcase';
+        thumb.style.transform = 'translateX(20px)';
+        badge.innerText = 'Upcoming';
         badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30';
-        desc.innerText = 'Countdown timer & highlights mode is currently visible to members.';
+        desc.innerText = 'Members currently see the countdown showcase.';
       } else {
         btn.classList.remove('bg-indigo-600');
         btn.classList.add('bg-slate-800');
@@ -1782,12 +1875,23 @@
     }
 
     async function toggleTripModeSwitch() {
+      if (navigator.vibrate) navigator.vibrate(10);
       const cfg = (globalData && globalData.upcomingConfig) || {};
       const current = (cfg.tripMode || globalData?.tripMode || 'LIVE').toUpperCase();
       const nextMode = (current === 'UPCOMING') ? 'LIVE' : 'UPCOMING';
 
+      // Instant UI update
       syncTripModeSwitchUI(nextMode);
-      await saveSetting(32, 'b', nextMode, `App mode changed to ${nextMode}`);
+
+      try {
+        const fresh = await adminApi('admin-update-setting', { rowNumber: 32, col: 'b', value: nextMode });
+        globalData = fresh;
+        if (globalData.upcomingConfig) globalData.upcomingConfig.tripMode = nextMode;
+        showAlert("App Mode", `Experience mode set to ${nextMode}`);
+      } catch (err) {
+        syncTripModeSwitchUI(current);
+        showAlert("Failed", err.message, true);
+      }
     }
 
     function updateCarouselPreview(text) {
@@ -1804,17 +1908,17 @@
 
       if (urls.length === 0) {
         previewBox.innerHTML = `
-          <div class="col-span-full py-6 text-center text-slate-500 text-xs italic">
-            No image links entered yet. Paste URLs above to view preview.
+          <div class="col-span-full py-4 text-center text-slate-500 text-xs italic">
+            No image links entered yet. Paste URLs above.
           </div>`;
         return;
       }
 
       previewBox.innerHTML = urls.map((u, i) => `
-        <div class="relative group aspect-video bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+        <div class="relative group aspect-video bg-slate-950 rounded-lg overflow-hidden border border-slate-800">
           <img src="${u}" alt="Photo #${i+1}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.classList.add('border-rose-500/50'); this.src='https://placehold.co/400x225/0f172a/94a3b8?text=Broken+Image';">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-2 flex flex-col justify-between">
-            <span class="text-[9px] font-black text-white bg-slate-900/80 px-1.5 py-0.5 rounded self-start border border-white/10">#${i+1}</span>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-1.5 flex flex-col justify-between">
+            <span class="text-[9px] font-black text-white bg-slate-900/80 px-1 py-0.5 rounded self-start border border-white/10">#${i+1}</span>
             <a href="${u}" target="_blank" class="text-[8px] text-indigo-300 truncate underline">${u}</a>
           </div>
         </div>
@@ -1871,21 +1975,21 @@
       };
 
       const renderItem = (item) => `
-        <div class="bg-slate-950 border border-slate-800/80 p-3.5 rounded-2xl flex items-center justify-between gap-2.5">
+        <div class="bg-slate-950/80 border border-slate-800/80 p-3 rounded-xl flex items-center justify-between gap-2.5">
           <div class="min-w-0 flex-1">
             <p class="text-xs font-bold text-white leading-snug">${item.title}</p>
-            <p class="text-[10px] font-semibold ${item.isDone ? 'text-indigo-400' : 'text-slate-500'} mt-0.5">
+            <p class="text-[10px] font-semibold ${item.isDone ? 'text-indigo-400' : 'text-slate-500'} mt-0.5 truncate">
               ${item.isDone ? `Claimed by: ${getMemberPost(item.claimedBy)}` : 'Unclaimed'}
             </p>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
-            <button onclick='editChecklistItem(${JSON.stringify(item)})' class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-xl transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-            <button onclick="deleteChecklistItem(${item.id})" class="p-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick='editChecklistItem(${JSON.stringify(item)})' class="p-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick="deleteChecklistItem(${item.id})" class="p-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
           </div>
         </div>`;
 
-      impCont.innerHTML = importantItems.length ? importantItems.map(renderItem).join('') : '<p class="text-xs text-slate-500 italic py-2">No important tasks added yet</p>';
-      optCont.innerHTML = optionalItems.length ? optionalItems.map(renderItem).join('') : '<p class="text-xs text-slate-500 italic py-2">No optional tasks added yet</p>';
+      impCont.innerHTML = importantItems.length ? importantItems.map(renderItem).join('') : '<p class="text-xs text-slate-500 italic py-1">No important tasks added yet</p>';
+      optCont.innerHTML = optionalItems.length ? optionalItems.map(renderItem).join('') : '<p class="text-xs text-slate-500 italic py-1">No optional tasks added yet</p>';
       lucide.createIcons();
     }
 
@@ -1946,21 +2050,21 @@
     function renderMembers(mems) {
       const grid = document.getElementById('membersAdminGrid');
       grid.innerHTML = mems.map(m => `
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-3xl flex items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition">
-          <div class="flex items-center gap-3 min-w-0">
-            <img src="${m.img || 'https://blogger.googleusercontent.com/img/a/AVvXsEjMM5kJ6bdUIS9uMB7njQxBtn9O0VoPAp1RCvLFAkheTxSubxscFUStS1wV00BdrUR0AClFHOZlsJdCqCnQOau0MO8RuKobfzKAy1ixV7fo-6yqab8Ztd0t0A_V0XS4SqDsZMKnewl0GwdomQcXUve58wGv_2W1z6zhm4MKYCApsPoBtY-arhMfKVsJ1gPQ'}" class="w-12 h-12 rounded-2xl object-cover border border-slate-700 bg-slate-950 shrink-0">
-            <div class="min-w-0">
+        <div class="bg-slate-900/90 border border-slate-800/80 p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition min-w-0">
+          <div class="flex items-center gap-2.5 min-w-0 flex-1">
+            <img src="${m.img || 'https://blogger.googleusercontent.com/img/a/AVvXsEjMM5kJ6bdUIS9uMB7njQxBtn9O0VoPAp1RCvLFAkheTxSubxscFUStS1wV00BdrUR0AClFHOZlsJdCqCnQOau0MO8RuKobfzKAy1ixV7fo-6yqab8Ztd0t0A_V0XS4SqDsZMKnewl0GwdomQcXUve58wGv_2W1z6zhm4MKYCApsPoBtY-arhMfKVsJ1gPQ'}" class="w-11 h-11 rounded-xl object-cover border border-slate-700 bg-slate-950 shrink-0">
+            <div class="min-w-0 flex-1">
               <p class="text-xs font-black text-white truncate">${m.designation || m.role || m.rawName || m.name}</p>
-              <div class="flex items-center gap-1.5 mt-0.5">
+              <div class="flex items-center gap-1.5 mt-0.5 flex-wrap">
                 <span class="text-[10px] font-bold text-indigo-400 truncate">${m.rawName || m.name}</span>
-                <span class="text-[8.5px] font-black px-1.5 py-0.2 rounded uppercase ${m.verification === 'Verified' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${m.verification || 'Verified'}</span>
+                <span class="text-[8px] font-black px-1.5 py-0.2 rounded uppercase ${m.verification === 'Verified' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">${m.verification || 'Verified'}</span>
               </div>
               <p class="text-[10px] font-mono text-slate-500 mt-0.5">PIN: ${m.pin}</p>
             </div>
           </div>
           <div class="flex items-center gap-1 shrink-0">
-            <button onclick='editMember(${JSON.stringify(m)})' class="p-2 bg-slate-950 hover:bg-slate-800 text-slate-300 rounded-xl transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-            <button onclick="deleteMember(${m.id})" class="p-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick='editMember(${JSON.stringify(m)})' class="p-2 bg-slate-950 hover:bg-slate-800 text-slate-300 rounded-lg transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick="deleteMember(${m.id})" class="p-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
           </div>
         </div>
       `).join('');
@@ -1974,7 +2078,7 @@
       document.getElementById('memImgUrl').value = '';
       document.getElementById('memVerification').value = 'Verified';
       document.getElementById('memAttendance').value = 'Attendance Confirmed';
-      document.getElementById('uploadPreview').innerHTML = '<i data-lucide="user" class="w-6 h-6 text-slate-500 mb-0.5"></i><span class="text-[8px] font-bold text-slate-400 text-center">Photo</span>';
+      document.getElementById('uploadPreview').innerHTML = '<i data-lucide="user" class="w-5 h-5 text-slate-500 mb-0.5"></i><span class="text-[8px] font-bold text-slate-400 text-center">Photo</span>';
       document.getElementById('memberModal').classList.remove('hidden');
       lucide.createIcons();
     }
@@ -1992,7 +2096,7 @@
       document.getElementById('memRoleDetail').value = m.assignedRoleDetail || '';
       document.getElementById('memImgUrl').value = m.rawImg || m.img || '';
       if (m.img) {
-        document.getElementById('uploadPreview').innerHTML = `<img src="${m.img}" class="w-full h-full rounded-2xl object-cover">`;
+        document.getElementById('uploadPreview').innerHTML = `<img src="${m.img}" class="w-full h-full rounded-xl object-cover">`;
       }
       document.getElementById('memberModal').classList.remove('hidden');
     }
@@ -2064,7 +2168,7 @@
         try {
           const res = await adminApi('admin-upload', { fileName: file.name, base64Data: reader.result });
           document.getElementById('memImgUrl').value = res.publicUrl;
-          preview.innerHTML = `<img src="${res.publicUrl}" class="w-full h-full rounded-2xl object-cover">`;
+          preview.innerHTML = `<img src="${res.publicUrl}" class="w-full h-full rounded-xl object-cover">`;
           showAlert("Photo Ready", "Profile image attached");
         } catch (err) {
           preview.innerHTML = `<p class="text-[9px] text-rose-400 font-bold">Failed</p>`;
@@ -2080,26 +2184,26 @@
     function renderPlaces(places) {
       const container = document.getElementById('placesAdminCards');
       container.innerHTML = places.map((p, idx) => `
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition">
-          <div class="flex items-start gap-3">
-            <div class="flex flex-col gap-1 pt-0.5">
+        <div class="bg-slate-900/90 border border-slate-800/80 p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition min-w-0">
+          <div class="flex items-center gap-2.5 min-w-0 flex-1">
+            <div class="flex flex-col gap-0.5 shrink-0">
               <button onclick="movePlace(${idx}, -1)" ${idx === 0 ? 'disabled class="opacity-20 cursor-not-allowed"' : 'class="p-1 hover:text-indigo-400 transition"'}><i data-lucide="chevron-up" class="w-4 h-4"></i></button>
               <button onclick="movePlace(${idx}, 1)" ${idx === places.length - 1 ? 'disabled class="opacity-20 cursor-not-allowed"' : 'class="p-1 hover:text-indigo-400 transition"'}><i data-lucide="chevron-down" class="w-4 h-4"></i></button>
             </div>
 
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 bg-indigo-600/20 text-indigo-400 text-[10px] font-black rounded-lg">${p.tripDay || 'Day 1'}</span>
-                <span class="text-xs font-black text-white">${p.location || p.name || 'Location'}</span>
-                ${p.cancelStatus ? '<span class="text-[9px] font-bold text-rose-500 uppercase bg-rose-500/10 px-1.5 py-0.2 rounded">Cancelled</span>' : ''}
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-2 py-0.5 bg-indigo-600/20 text-indigo-400 text-[10px] font-black rounded-md">${p.tripDay || 'Day 1'}</span>
+                <span class="text-xs font-black text-white truncate">${p.location || p.name || 'Location'}</span>
+                ${p.cancelStatus ? '<span class="text-[8px] font-bold text-rose-500 uppercase bg-rose-500/10 px-1.5 py-0.2 rounded">Cancelled</span>' : ''}
               </div>
-              <p class="text-[11px] text-slate-400 font-semibold mt-1">ETA: ${p.eta || '-'} | ATA: ${p.ata || '-'} ${p.details ? '• ' + p.details : ''}</p>
+              <p class="text-[11px] text-slate-400 font-medium mt-0.5 truncate">ETA: ${p.eta || '-'} | ATA: ${p.ata || '-'} ${p.details ? '• ' + p.details : ''}</p>
             </div>
           </div>
 
-          <div class="flex items-center justify-end gap-1.5 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
-            <button onclick='editPlace(${JSON.stringify(p)})' class="p-2 bg-slate-950 text-slate-300 rounded-xl hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-            <button onclick="deletePlace(${p.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-xl hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick='editPlace(${JSON.stringify(p)})' class="p-2 bg-slate-950 text-slate-300 rounded-lg hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick="deletePlace(${p.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
           </div>
         </div>
       `).join('');
@@ -2215,7 +2319,7 @@
 
       if (!txs || txs.length === 0) {
         container.innerHTML = `
-          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center text-slate-500">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-slate-500">
             <p class="text-xs font-bold uppercase tracking-wider">No matching expenses found</p>
           </div>`;
         return;
@@ -2227,28 +2331,28 @@
         if (t.date) {
           try {
             const d = new Date(t.date);
-            dateFormatted = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            dateFormatted = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
             timeFormatted = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
           } catch(e){}
         }
 
         return `
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition">
-          <div class="min-w-0">
+        <div class="bg-slate-900/90 border border-slate-800/80 p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition min-w-0">
+          <div class="min-w-0 flex-1">
             <div class="flex items-center gap-2 flex-wrap">
               <span class="font-mono text-indigo-400 text-xs font-bold">${t.utr}</span>
               <span class="text-xs font-black text-emerald-400">₹${t.amount}</span>
               <span class="text-[10px] font-bold text-slate-400">[${t.category}]</span>
               <span class="text-[10px] font-bold text-indigo-300">(${t.paidVia || 'UPI'})</span>
             </div>
-            <p class="text-xs text-white font-bold mt-1">${t.notes || 'Expense'}</p>
-            <p class="text-[10px] text-slate-400 mt-0.5">By: <span class="text-slate-300 font-bold">${getClaimantPost(t.claimant)}</span> • ${dateFormatted} ${timeFormatted ? 'at ' + timeFormatted : ''}</p>
+            <p class="text-xs text-white font-bold mt-1 truncate">${t.notes || 'Expense'}</p>
+            <p class="text-[10px] text-slate-400 mt-0.5 truncate">By: <span class="text-slate-300 font-bold">${getClaimantPost(t.claimant)}</span> • ${dateFormatted} ${timeFormatted ? 'at ' + timeFormatted : ''}</p>
           </div>
 
-          <div class="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800 shrink-0">
-            <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase ${t.isVerified ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'}">${t.isVerified ? 'Verified' : 'Unverified'}</span>
-            <button onclick='openEditTxModal(${JSON.stringify(t)})' class="p-2 bg-slate-950 text-slate-300 rounded-xl hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-            <button onclick="deleteTx(${t.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-xl hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <span class="px-2 py-0.5 rounded-md text-[8.5px] font-black uppercase ${t.isVerified ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'}">${t.isVerified ? 'Verified' : 'Unverified'}</span>
+            <button onclick='openEditTxModal(${JSON.stringify(t)})' class="p-2 bg-slate-950 text-slate-300 rounded-lg hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick="deleteTx(${t.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
           </div>
         </div>`;
       }).join('');
@@ -2310,14 +2414,14 @@
       document.getElementById('budgetOverviewText').innerText = `Total Budget: ₹${stats.budget.toLocaleString('en-IN')}`;
       const container = document.getElementById('budgetAdminCards');
       container.innerHTML = (budgetList || []).map(b => `
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-3xl flex items-center justify-between shadow-sm hover:border-slate-700 transition">
+        <div class="bg-slate-900/90 border border-slate-800/80 p-3.5 rounded-2xl flex items-center justify-between shadow-sm hover:border-slate-700 transition">
           <div>
             <p class="text-xs font-black uppercase tracking-wider text-white">${b.category}</p>
             <p class="text-sm font-black text-emerald-400 mt-0.5">₹${b.amount.toLocaleString('en-IN')}</p>
           </div>
           <div class="flex gap-1.5">
-            <button onclick='editBudget(${JSON.stringify(b)})' class="p-2 bg-slate-950 text-slate-300 rounded-xl hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-            <button onclick="deleteBudget(${b.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-xl hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick='editBudget(${JSON.stringify(b)})' class="p-2 bg-slate-950 text-slate-300 rounded-lg hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+            <button onclick="deleteBudget(${b.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
           </div>
         </div>
       `).join('');
@@ -2453,29 +2557,27 @@
       if (!container) return;
 
       if (!trips || trips.length === 0) {
-        container.innerHTML = `<div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 text-center text-slate-500"><p class="text-xs font-bold uppercase tracking-wider">No past trips recorded</p></div>`;
+        container.innerHTML = `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-slate-500"><p class="text-xs font-bold uppercase tracking-wider">No past trips recorded</p></div>`;
         return;
       }
 
       container.innerHTML = (trips || []).map((t, idx) => `
-        <div class="bg-slate-900 border border-slate-800 p-4 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition">
+        <div class="bg-slate-900/90 border border-slate-800/80 p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition min-w-0">
           <div class="min-w-0 flex-1">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="px-2 py-0.5 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[9px] font-black uppercase tracking-wider">${t.tripCode || 'NO CODE'}</span>
-              <span class="text-xs font-black text-white break-words">${t.name}</span>
+              <span class="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[9px] font-black uppercase tracking-wider">${t.tripCode || 'NO CODE'}</span>
+              <span class="text-xs font-black text-white truncate">${t.name}</span>
               ${t.totalSpent ? `<span class="text-xs font-bold text-emerald-400">₹${t.totalSpent.toLocaleString('en-IN')}</span>` : ''}
             </div>
-            <p class="text-xs text-slate-400 mt-1">${t.dates || '-'}</p>
+            <p class="text-xs text-slate-400 mt-1 truncate">${t.dates || '-'}</p>
+            <div class="flex gap-2.5 mt-1">
+              ${t.reportUrl ? `<a href="${t.reportUrl}" target="_blank" class="text-[11px] text-indigo-400 font-bold underline">Report Doc</a>` : ''}
+              ${t.galleryUrl ? `<a href="${t.galleryUrl}" target="_blank" class="text-[11px] text-indigo-400 font-bold underline">Photo Vault</a>` : ''}
+            </div>
           </div>
-          <div class="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800 shrink-0">
-            <div class="flex gap-2.5">
-              ${t.reportUrl ? `<a href="${t.reportUrl}" target="_blank" class="text-xs text-indigo-400 font-bold underline">Report Doc</a>` : ''}
-              ${t.galleryUrl ? `<a href="${t.galleryUrl}" target="_blank" class="text-xs text-indigo-400 font-bold underline">Photo Vault</a>` : ''}
-            </div>
-            <div class="flex gap-1.5">
-              <button type="button" onclick="editArchiveByIndex(${idx})" class="p-2 bg-slate-950 text-slate-300 rounded-xl hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
-              <button type="button" onclick="deleteArchive(${t.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-xl hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
-            </div>
+          <div class="flex gap-1.5 shrink-0">
+            <button type="button" onclick="editArchiveByIndex(${idx})" class="p-2 bg-slate-950 text-slate-300 rounded-lg hover:bg-slate-800 transition"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+            <button type="button" onclick="deleteArchive(${t.id})" class="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 transition"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
           </div>
         </div>
       `).join('');
@@ -2561,7 +2663,7 @@
 
       if (!messages || messages.length === 0) {
         container.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-slate-500 py-12">
+          <div class="h-full flex flex-col items-center justify-center text-slate-500 py-10">
             <i data-lucide="message-square-off" class="w-8 h-8 mb-2 opacity-50"></i>
             <p class="text-xs font-bold uppercase tracking-wider">No messages in chat</p>
           </div>`;
@@ -2582,9 +2684,9 @@
         const safeText = (m.text || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
         return `
-          <div class="bg-slate-900 border ${isAdmin ? 'border-indigo-500/40 bg-indigo-950/20' : 'border-slate-800'} p-3.5 rounded-2xl flex items-start justify-between gap-3 hover:border-slate-700 transition">
+          <div class="bg-slate-900 border ${isAdmin ? 'border-indigo-500/40 bg-indigo-950/20' : 'border-slate-800'} p-3 rounded-xl flex items-start justify-between gap-2.5 hover:border-slate-700 transition">
             <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 mb-1">
+              <div class="flex items-center gap-1.5 mb-1 flex-wrap">
                 <span class="text-xs font-black uppercase tracking-wider ${isAdmin ? 'text-indigo-400' : 'text-slate-300'}">${m.sender}</span>
                 ${isAdmin ? '<span class="px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 text-[8px] font-black uppercase">Admin</span>' : ''}
                 <span class="text-[10px] text-slate-500 font-semibold">${timeStr}</span>
@@ -2592,7 +2694,7 @@
               <p class="text-xs font-medium text-slate-200 break-words leading-relaxed whitespace-pre-wrap">${m.text}</p>
             </div>
 
-            <div class="flex items-center gap-1.5 shrink-0 pt-0.5">
+            <div class="flex items-center gap-1 shrink-0 pt-0.5">
               <button type="button" title="Reply" onclick="setAdminReply('${m.sender}', '${safeText}')" class="p-1.5 bg-slate-950 hover:bg-indigo-600/30 text-slate-400 hover:text-indigo-300 rounded-lg transition">
                 <i data-lucide="reply" class="w-3.5 h-3.5"></i>
               </button>
