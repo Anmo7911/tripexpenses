@@ -2804,122 +2804,7 @@
 
     </div>
 
-<!-- =========================================
-         UPCOMING SHOWCASE MODE VIEW
-         ========================================= -->
-    <div id="ui-upcoming-showcase" class="hidden w-full space-y-6 transition-all duration-700 ease-out overflow-hidden">
-      
-      <!-- 1. Hero Countdown & Destination Card -->
-      <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 rounded-[32px] p-6 lg:p-8 border border-indigo-500/30 shadow-xl text-white relative overflow-hidden text-center">
-        <div class="absolute -right-10 -top-10 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative z-10 flex flex-col items-center justify-center text-center space-y-4">
-          <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">
-            Next Expedition
-          </span>
-
-          <div class="text-center w-full">
-            <h2 id="showcase-trip-name" class="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-white leading-tight text-center">
-              Kedarkantha Winter Expedition
-            </h2>
-            <p id="showcase-trip-sub" class="text-xs sm:text-sm font-bold text-indigo-200/80 uppercase tracking-widest mt-1 text-center">
-              Sankri Basecamp • Uttarakhand
-            </p>
-          </div>
-
-          <!-- Ticking Countdown Timer Grid -->
-          <div class="grid grid-cols-4 gap-2.5 sm:gap-4 max-w-xs sm:max-w-sm w-full pt-2 mx-auto">
-            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center flex flex-col items-center justify-center">
-              <span id="cd-days" class="block text-xl sm:text-2xl font-black text-white leading-none text-center">00</span>
-              <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block text-center">Days</span>
-            </div>
-            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center flex flex-col items-center justify-center">
-              <span id="cd-hours" class="block text-xl sm:text-2xl font-black text-white leading-none text-center">00</span>
-              <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block text-center">Hours</span>
-            </div>
-            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center flex flex-col items-center justify-center">
-              <span id="cd-mins" class="block text-xl sm:text-2xl font-black text-white leading-none text-center">00</span>
-              <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block text-center">Mins</span>
-            </div>
-            <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center flex flex-col items-center justify-center">
-              <span id="cd-secs" class="block text-xl sm:text-2xl font-black text-emerald-400 leading-none text-center">00</span>
-              <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block text-center">Secs</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. Track Record Bento Stats (Center Aligned) -->
-      <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        <!-- Stat 1: Trips Completed -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center">
-          <span class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-2.5">
-            <i data-lucide="compass" class="w-4 h-4"></i>
-          </span>
-          <p id="showcase-stat-trips-val" class="text-xl font-black text-slate-800 leading-none text-center">14</p>
-          <p id="showcase-stat-trips-lbl" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Trips Completed</p>
-        </div>
-
-        <!-- Stat 2: Total Managed -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center">
-          <span class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2.5">
-            <i data-lucide="wallet" class="w-4 h-4"></i>
-          </span>
-          <p id="showcase-stat-spent-val" class="text-xl font-black text-emerald-600 leading-none text-center">₹4.8L</p>
-          <p id="showcase-stat-spent-lbl" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Total Managed</p>
-        </div>
-
-        <!-- Stat 3: Waypoints Reached -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center">
-          <span class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2.5">
-            <i data-lucide="map-pin" class="w-4 h-4"></i>
-          </span>
-          <p id="showcase-stat-locations-val" class="text-xl font-black text-slate-800 leading-none text-center">85</p>
-          <p id="showcase-stat-locations-lbl" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Waypoints Reached</p>
-        </div>
-
-        <!-- Stat 4: States Traversed -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center">
-          <span class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto mb-2.5">
-            <i data-lucide="map" class="w-4 h-4"></i>
-          </span>
-          <p id="showcase-stat-states-val" class="text-xl font-black text-slate-800 leading-none text-center">7</p>
-          <p id="showcase-stat-states-lbl" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">States Traversed</p>
-        </div>
-
-        <!-- Stat 5: Kilometers Covered -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1">
-          <span class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-2.5">
-            <i data-lucide="navigation" class="w-4 h-4"></i>
-          </span>
-          <p id="showcase-stat-km-val" class="text-xl font-black text-slate-800 leading-none text-center">12,500</p>
-          <p id="showcase-stat-km-lbl" class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Kilometers Covered</p>
-        </div>
-      </div>
-
-      <!-- 3. Frameless 3D Coverflow Media Carousel (No Outer Card) -->
-      <div class="w-full relative py-2">
-        <!-- 3D Perspective Stage -->
-        <div class="relative w-full h-[220px] sm:h-[300px] overflow-hidden" style="perspective: 1100px;">
-          <!-- 3D Track -->
-          <div id="showcaseCarouselTrack" class="relative w-full h-full flex items-center justify-center"></div>
-
-          <!-- Left / Right Navigation Controls -->
-          <button type="button" onclick="prevShowcaseSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 z-40 w-9 h-9 rounded-full bg-slate-950/60 hover:bg-slate-950/80 text-white backdrop-blur-md flex items-center justify-center transition active:scale-90 border border-white/20 shadow-lg" title="Previous Image">
-            <i data-lucide="chevron-left" class="w-5 h-5"></i>
-          </button>
-          <button type="button" onclick="nextShowcaseSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 z-40 w-9 h-9 rounded-full bg-slate-950/60 hover:bg-slate-950/80 text-white backdrop-blur-md flex items-center justify-center transition active:scale-90 border border-white/20 shadow-lg" title="Next Image">
-            <i data-lucide="chevron-right" class="w-5 h-5"></i>
-          </button>
-
-          <!-- Frameless Slide Indicator Dots -->
-          <div id="carouselDotsContainer" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 pointer-events-auto bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"></div>
-        </div>
-      </div>
-
-    </div>
-
-    
 
     <!-- SPEND TREND GRAPH CARD -->
 <div id="ui-spend-chart-wrapper" class="hidden lg:block w-full mt-6 transition-all duration-500 overflow-hidden opacity-100">
@@ -4677,279 +4562,27 @@ if (urlParams.get('preview') === 'admin') {
 
 
     // ==========================================
-    // UPCOMING SHOWCASE 3D CAROUSEL & COUNTDOWN ENGINE
+    // DUAL MODE TOGGLE: LIVE VS UPCOMING SHOWCASE
     // ==========================================
-    let showcaseImagesList = [];
-    let currentShowcaseSlideIndex = 0;
-    let showcaseSlideAutoTimer = null;
-    let showcaseCountdownTimer = null;
-    let isTransitioningToLive = false;
+    const isUpcomingMode = (data.tripMode === 'UPCOMING');
+    const topCardsWrap = document.getElementById('ui-top-cards-wrapper');
+    const formWrap = document.getElementById('ui-form-wrapper');
+    const chartWrap = document.getElementById('ui-spend-chart-wrapper');
+    const upcomingShowcase = document.getElementById('ui-upcoming-showcase');
 
-    function renderUpcomingShowcaseUI(data) {
-      const cfg = data.upcomingConfig || {};
-      const stats = cfg.stats || {};
-
-      // 1. Populate Destination
-      const nameEl = document.getElementById('showcase-trip-name');
-      const subEl = document.getElementById('showcase-trip-sub');
-      if (nameEl) nameEl.innerText = cfg.nextTripName || 'Kedarkantha Winter Expedition';
-      if (subEl) subEl.innerText = cfg.nextTripSub || 'Sankri Basecamp • Uttarakhand';
-
-      // 2. Start Live Ticking Countdown with Auto-Transition
-      startShowcaseCountdown(cfg.nextTripDate, data);
-
-      // 3. Populate Centered Bento Stats (Supports both flat & nested keys)
-      if (document.getElementById('showcase-stat-trips-val')) {
-        document.getElementById('showcase-stat-trips-val').innerText = cfg.statTripsVal || stats.trips?.value || '14';
-        document.getElementById('showcase-stat-trips-lbl').innerText = cfg.statTripsLabel || stats.trips?.label || 'Trips Completed';
+    if (isUpcomingMode) {
+      if (topCardsWrap) topCardsWrap.classList.add('hidden');
+      if (formWrap) formWrap.classList.add('hidden');
+      if (chartWrap) chartWrap.classList.add('hidden');
+      if (upcomingShowcase) {
+        upcomingShowcase.classList.remove('hidden');
+        renderUpcomingShowcaseUI(data);
       }
-      if (document.getElementById('showcase-stat-spent-val')) {
-        document.getElementById('showcase-stat-spent-val').innerText = cfg.statSpentVal || stats.spent?.value || '₹4.8L';
-        document.getElementById('showcase-stat-spent-lbl').innerText = cfg.statSpentLabel || stats.spent?.label || 'Total Managed';
-      }
-      if (document.getElementById('showcase-stat-locations-val')) {
-        document.getElementById('showcase-stat-locations-val').innerText = cfg.statLocationsVal || stats.locations?.value || '85';
-        document.getElementById('showcase-stat-locations-lbl').innerText = cfg.statLocationsLabel || stats.locations?.label || 'Waypoints Reached';
-      }
-      if (document.getElementById('showcase-stat-states-val')) {
-        document.getElementById('showcase-stat-states-val').innerText = cfg.statStatesVal || stats.states?.value || '7';
-        document.getElementById('showcase-stat-states-lbl').innerText = cfg.statStatesLabel || stats.states?.label || 'States Traversed';
-      }
-      if (document.getElementById('showcase-stat-km-val')) {
-        document.getElementById('showcase-stat-km-val').innerText = cfg.statKmVal || stats.km?.value || '12,500';
-        document.getElementById('showcase-stat-km-lbl').innerText = cfg.statKmLabel || stats.km?.label || 'Kilometers Covered';
-      }
-
-      // 4. Safely Parse Carousel Images
-      const defaultImages = [
-        'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'
-      ];
-
-      const rawImages = cfg.carouselImages;
-      let parsedImages = [];
-      if (Array.isArray(rawImages)) {
-        parsedImages = rawImages.filter(u => typeof u === 'string' && u.trim().startsWith('http'));
-      } else if (typeof rawImages === 'string') {
-        parsedImages = rawImages
-          .split(/[\n,]+/)
-          .map(u => u.trim())
-          .filter(u => /^https?:\/\//i.test(u));
-      }
-
-      showcaseImagesList = parsedImages.length > 0 ? parsedImages : defaultImages;
-      currentShowcaseSlideIndex = 0;
-      build3DShowcaseCarousel();
-      lucide.createIcons();
-    }
-
-    // Live Countdown Timer with Smooth Auto-Switch on Expiration
-    function startShowcaseCountdown(targetDateStr, fullData) {
-      if (showcaseCountdownTimer) clearInterval(showcaseCountdownTimer);
-      isTransitioningToLive = false;
-
-      const daysEl = document.getElementById('cd-days');
-      const hoursEl = document.getElementById('cd-hours');
-      const minsEl = document.getElementById('cd-mins');
-      const secsEl = document.getElementById('cd-secs');
-
-      if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
-
-      const targetTime = targetDateStr ? new Date(targetDateStr).getTime() : NaN;
-
-      const updateTimer = () => {
-        if (isNaN(targetTime)) {
-          daysEl.innerText = '00';
-          hoursEl.innerText = '00';
-          minsEl.innerText = '00';
-          secsEl.innerText = '00';
-          return;
-        }
-
-        const now = Date.now();
-        const diff = targetTime - now;
-
-        if (diff <= 0) {
-          daysEl.innerText = '00';
-          hoursEl.innerText = '00';
-          minsEl.innerText = '00';
-          secsEl.innerText = '00';
-          clearInterval(showcaseCountdownTimer);
-
-          // Smoothly animate switch from Upcoming mode to Live Mode
-          if (!isTransitioningToLive) {
-            isTransitioningToLive = true;
-            transitionShowcaseToLiveMode(fullData);
-          }
-          return;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const mins = Math.floor((diff / (1000 * 60)) % 60);
-        const secs = Math.floor((diff / 1000) % 60);
-
-        daysEl.innerText = String(days).padStart(2, '0');
-        hoursEl.innerText = String(hours).padStart(2, '0');
-        minsEl.innerText = String(mins).padStart(2, '0');
-        secsEl.innerText = String(secs).padStart(2, '0');
-      };
-
-      updateTimer();
-      showcaseCountdownTimer = setInterval(updateTimer, 1000);
-    }
-
-    // Smooth animation switching from Upcoming showcase to the Live active screen
-    function transitionShowcaseToLiveMode(fullData) {
-      const showcaseWrap = document.getElementById('ui-upcoming-showcase');
-      const topCardsWrap = document.getElementById('ui-top-cards-wrapper');
-      const formWrap = document.getElementById('ui-form-wrapper');
-      const chartWrap = document.getElementById('ui-spend-chart-wrapper');
-
-      if (showcaseWrap) {
-        showcaseWrap.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-        showcaseWrap.style.opacity = '0';
-        showcaseWrap.style.transform = 'scale(0.96)';
-      }
-
-      setTimeout(() => {
-        if (showcaseWrap) {
-          showcaseWrap.classList.add('hidden');
-          showcaseWrap.style.opacity = '';
-          showcaseWrap.style.transform = '';
-        }
-
-        // Reveal standard Live Bento cards, Form, and Chart
-        [topCardsWrap, formWrap, chartWrap].forEach(el => {
-          if (!el) return;
-          el.classList.remove('hidden');
-          el.style.opacity = '0';
-          el.style.transform = 'translateY(12px)';
-          el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-          requestAnimationFrame(() => {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-          });
-        });
-
-        // Update local trip mode flag
-        if (fullData) {
-          fullData.tripMode = 'LIVE';
-          if (fullData.upcomingConfig) fullData.upcomingConfig.tripMode = 'LIVE';
-        }
-        showToast("Expedition Started! Live Ledger Active");
-        lucide.createIcons();
-      }, 600);
-    }
-
-    // Frameless 3D Coverflow Carousel Builder
-    function build3DShowcaseCarousel() {
-      const track = document.getElementById('showcaseCarouselTrack');
-      const dotsCont = document.getElementById('carouselDotsContainer');
-      if (!track || !showcaseImagesList.length) return;
-
-      track.innerHTML = showcaseImagesList.map((url, i) => `
-        <div id="showcase-slide-${i}" onclick="selectShowcaseSlide(${i})" class="absolute w-[72%] sm:w-[62%] h-[92%] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" style="transform-style: preserve-3d; will-change: transform, opacity;">
-          <img src="${url}" alt="Highlight ${i+1}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
-        </div>
-      `).join('');
-
-      if (dotsCont) {
-        dotsCont.innerHTML = showcaseImagesList.map((_, i) => `
-          <button type="button" onclick="selectShowcaseSlide(${i})" id="showcase-dot-${i}" class="w-2 h-2 rounded-full transition-all duration-300 ${i === 0 ? 'bg-white w-5' : 'bg-white/40 hover:bg-white/70'}" title="Slide ${i+1}"></button>
-        `).join('');
-      }
-
-      apply3DSlideTransforms();
-
-      // Auto-slide every 4 seconds
-      if (showcaseSlideAutoTimer) clearInterval(showcaseSlideAutoTimer);
-      showcaseSlideAutoTimer = setInterval(() => {
-        nextShowcaseSlide();
-      }, 4000);
-    }
-
-    // Apply Coverflow 3D positions (Center + Left Neighbor + Right Neighbor)
-    function apply3DSlideTransforms() {
-      const total = showcaseImagesList.length;
-      if (!total) return;
-
-      for (let i = 0; i < total; i++) {
-        const slide = document.getElementById(`showcase-slide-${i}`);
-        const dot = document.getElementById(`showcase-dot-${i}`);
-        if (!slide) continue;
-
-        // Calculate cyclic offset from the active slide: -1, 0, 1, etc.
-        let offset = (i - currentShowcaseSlideIndex) % total;
-        if (offset < -Math.floor(total / 2)) offset += total;
-        if (offset > Math.floor(total / 2)) offset -= total;
-
-        if (offset === 0) {
-          // Main Center Slide (100% size, full brightness, highest z-index)
-          slide.style.transform = 'translateX(0%) translateZ(60px) rotateY(0deg) scale(1)';
-          slide.style.opacity = '1';
-          slide.style.zIndex = '30';
-          slide.style.filter = 'brightness(1)';
-          slide.style.pointerEvents = 'auto';
-        } else if (offset === -1 || (offset < 0 && Math.abs(offset) === 1)) {
-          // Left Background Slide (Tilted, scaled down, darker)
-          slide.style.transform = 'translateX(-48%) translateZ(-80px) rotateY(25deg) scale(0.85)';
-          slide.style.opacity = '0.7';
-          slide.style.zIndex = '20';
-          slide.style.filter = 'brightness(0.65)';
-          slide.style.pointerEvents = 'auto';
-        } else if (offset === 1 || (offset > 0 && Math.abs(offset) === 1)) {
-          // Right Background Slide (Tilted, scaled down, darker)
-          slide.style.transform = 'translateX(48%) translateZ(-80px) rotateY(-25deg) scale(0.85)';
-          slide.style.opacity = '0.7';
-          slide.style.zIndex = '20';
-          slide.style.filter = 'brightness(0.65)';
-          slide.style.pointerEvents = 'auto';
-        } else {
-          // Hidden overflow slides pushed far back
-          const sign = offset > 0 ? 1 : -1;
-          slide.style.transform = `translateX(${sign * 80}%) translateZ(-200px) scale(0.65)`;
-          slide.style.opacity = '0';
-          slide.style.zIndex = '10';
-          slide.style.pointerEvents = 'none';
-        }
-
-        // Indicator Dots Sync
-        if (dot) {
-          if (offset === 0) {
-            dot.className = 'w-5 h-2 rounded-full bg-white transition-all duration-300';
-          } else {
-            dot.className = 'w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300';
-          }
-        }
-      }
-    }
-
-    function selectShowcaseSlide(idx) {
-      currentShowcaseSlideIndex = idx;
-      apply3DSlideTransforms();
-      resetShowcaseAutoSlideTimer();
-    }
-
-    function nextShowcaseSlide() {
-      if (!showcaseImagesList.length) return;
-      currentShowcaseSlideIndex = (currentShowcaseSlideIndex + 1) % showcaseImagesList.length;
-      apply3DSlideTransforms();
-      resetShowcaseAutoSlideTimer();
-    }
-
-    function prevShowcaseSlide() {
-      if (!showcaseImagesList.length) return;
-      currentShowcaseSlideIndex = (currentShowcaseSlideIndex - 1 + showcaseImagesList.length) % showcaseImagesList.length;
-      apply3DSlideTransforms();
-      resetShowcaseAutoSlideTimer();
-    }
-
-    function resetShowcaseAutoSlideTimer() {
-      if (showcaseSlideAutoTimer) clearInterval(showcaseSlideAutoTimer);
-      showcaseSlideAutoTimer = setInterval(nextShowcaseSlide, 4500);
+    } else {
+      if (topCardsWrap) topCardsWrap.classList.remove('hidden');
+      if (formWrap) formWrap.classList.remove('hidden');
+      if (chartWrap) chartWrap.classList.remove('hidden');
+      if (upcomingShowcase) upcomingShowcase.classList.add('hidden');
     }
 
     
@@ -9599,48 +9232,35 @@ window.addEventListener('resize', autoScaleNoticeA4);
       // 2. Start Live Ticking Countdown
       startShowcaseCountdown(cfg.nextTripDate);
 
-      // 3. Populate Bento Stats (Supporting both flat API keys and nested objects)
+      // 3. Populate Bento Stats (No hardcoded '+')
       if (document.getElementById('showcase-stat-trips-val')) {
-        document.getElementById('showcase-stat-trips-val').innerText = cfg.statTripsVal || stats.trips?.value || '14';
-        document.getElementById('showcase-stat-trips-lbl').innerText = cfg.statTripsLabel || stats.trips?.label || 'Trips Completed';
+        document.getElementById('showcase-stat-trips-val').innerText = stats.trips?.value || '5';
+        document.getElementById('showcase-stat-trips-lbl').innerText = stats.trips?.label || 'Trips';
       }
       if (document.getElementById('showcase-stat-spent-val')) {
-        document.getElementById('showcase-stat-spent-val').innerText = cfg.statSpentVal || stats.spent?.value || '₹4.8L';
-        document.getElementById('showcase-stat-spent-lbl').innerText = cfg.statSpentLabel || stats.spent?.label || 'Total Managed';
+        document.getElementById('showcase-stat-spent-val').innerText = stats.spent?.value || '5000 Rs';
+        document.getElementById('showcase-stat-spent-lbl').innerText = stats.spent?.label || 'Expedition Spent';
       }
       if (document.getElementById('showcase-stat-locations-val')) {
-        document.getElementById('showcase-stat-locations-val').innerText = cfg.statLocationsVal || stats.locations?.value || '85';
-        document.getElementById('showcase-stat-locations-lbl').innerText = cfg.statLocationsLabel || stats.locations?.label || 'Waypoints Reached';
+        document.getElementById('showcase-stat-locations-val').innerText = stats.locations?.value || '50';
+        document.getElementById('showcase-stat-locations-lbl').innerText = stats.locations?.label || 'Locations';
       }
       if (document.getElementById('showcase-stat-states-val')) {
-        document.getElementById('showcase-stat-states-val').innerText = cfg.statStatesVal || stats.states?.value || '7';
-        document.getElementById('showcase-stat-states-lbl').innerText = cfg.statStatesLabel || stats.states?.label || 'States Traversed';
+        document.getElementById('showcase-stat-states-val').innerText = stats.states?.value || '8';
+        document.getElementById('showcase-stat-states-lbl').innerText = stats.states?.label || 'States';
       }
       if (document.getElementById('showcase-stat-km-val')) {
-        document.getElementById('showcase-stat-km-val').innerText = cfg.statKmVal || stats.km?.value || '12,500';
-        document.getElementById('showcase-stat-km-lbl').innerText = cfg.statKmLabel || stats.km?.label || 'Kilometers Covered';
+        document.getElementById('showcase-stat-km-val').innerText = stats.km?.value || '4200 km';
+        document.getElementById('showcase-stat-km-lbl').innerText = stats.km?.label || 'Kilometers Covered';
       }
 
-      // 4. Safely Parse Carousel Images (Strings or Arrays)
+      // 4. Initialize Image Carousel
       const defaultImages = [
         'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
         'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
         'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'
       ];
-
-      const rawImages = cfg.carouselImages;
-      let parsedImages = [];
-
-      if (Array.isArray(rawImages)) {
-        parsedImages = rawImages.filter(u => typeof u === 'string' && u.trim().startsWith('http'));
-      } else if (typeof rawImages === 'string') {
-        parsedImages = rawImages
-          .split(/[\n,]+/)
-          .map(u => u.trim())
-          .filter(u => /^https?:\/\//i.test(u));
-      }
-
-      showcaseImagesList = parsedImages.length > 0 ? parsedImages : defaultImages;
+      showcaseImagesList = (cfg.carouselImages && cfg.carouselImages.length > 0) ? cfg.carouselImages : defaultImages;
       buildShowcaseCarousel(showcaseImagesList);
       lucide.createIcons();
     }
