@@ -168,6 +168,25 @@ async function dashboard() {
   const termsUrl = await resolveAsset(setting(31, 'b'));
   const rawTerms = setting(31, 'b') || '';
 
+  const tripMode = text(setting(32, 'b')).toUpperCase() || 'LIVE';
+  const upcomingConfig = {
+    tripMode,
+    nextTripName: text(setting(32, 'c')) || 'Kedarkantha Winter Expedition',
+    nextTripDate: text(setting(32, 'd')) || '2026-12-25T06:00',
+    nextTripSub: text(setting(32, 'e')) || 'Sankri Basecamp • Uttarakhand',
+    statTripsVal: text(setting(33, 'b')) || '14',
+    statTripsLabel: text(setting(33, 'c')) || 'Trips Completed',
+    statSpentVal: text(setting(33, 'd')) || '₹4.8L',
+    statSpentLabel: text(setting(33, 'e')) || 'Total Managed',
+    statLocationsVal: text(setting(34, 'b')) || '85',
+    statLocationsLabel: text(setting(34, 'c')) || 'Waypoints Reached',
+    statStatesVal: text(setting(34, 'd')) || '7',
+    statStatesLabel: text(setting(34, 'e')) || 'States Traversed',
+    statKmVal: text(setting(34, 'f')) || '12,500',
+    statKmLabel: text(setting(34, 'g')) || 'Kilometers Covered',
+    carouselImages: setting(35, 'b') || ''
+  };
+
   const popupType = text(setting(28, 'b')).toUpperCase() || 'NOTIFICATION';
   const popupTitle = text(setting(28, 'c'));
   const popupMessage = text(setting(28, 'd'));
@@ -311,6 +330,7 @@ async function dashboard() {
 
   const totalExpenses = Object.values(categorySpent).reduce((a, b) => a + b, 0);
   return {
+    tripMode, upcomingConfig,
     appStatus, routeStatus, expenseStatus, contributionToggle, signOffStatus, checklistVisibility, checklistRevokeVisibility, announcementMode, maintenanceMode,
     termsUrl, rawTerms,
     liveTripCode,
