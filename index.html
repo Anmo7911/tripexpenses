@@ -51,61 +51,6 @@
 
   <style>
 
-    /* =========================================
-   TOP-TO-DOWN SLING COUNTDOWN ENGINE
-   ========================================= */
-.cd-sling-slot {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.25rem;
-  width: 100%;
-}
-
-.cd-sling-digit {
-  display: inline-block;
-  will-change: transform, opacity;
-  line-height: 1;
-}
-
-/* Old number pulls down and exits bottom */
-.sling-exit-down {
-  animation: slingExit 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* New incoming number slings in from the top with spring tension */
-.sling-enter-down {
-  animation: slingEnter 0.55s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
-}
-
-@keyframes slingExit {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(115%) scale(0.85);
-    opacity: 0;
-  }
-}
-
-@keyframes slingEnter {
-  0% {
-    transform: translateY(-120%) scale(1.15);
-    opacity: 0;
-  }
-  65% {
-    transform: translateY(12%) scale(0.96);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-
 
     /* =========================================
    AUTHENTIC A4 NOTICE ENGINE
@@ -4731,27 +4676,282 @@ if (urlParams.get('preview') === 'admin') {
 
 
 
-   // Check Trip Mode: Live vs Upcoming Showcase
-     const isUpcomingMode = (data.tripMode || data.upcomingConfig?.tripMode) === 'UPCOMING';
-     const showcaseWrap = document.getElementById('ui-upcoming-showcase');
-     const topCardsWrap = document.getElementById('ui-top-cards-wrapper');
-     const formWrap = document.getElementById('ui-form-wrapper');
-     const chartWrap = document.getElementById('ui-spend-chart-wrapper');
+    // ==========================================
+    // UPCOMING SHOWCASE 3D CAROUSEL & COUNTDOWN ENGINE
+    // ==========================================
+    let showcaseImagesList = [];
+    let currentShowcaseSlideIndex = 0;
+    let showcaseSlideAutoTimer = null;
+    let showcaseCountdownTimer = null;
+    let isTransitioningToLive = false;
 
-     if (isUpcomingMode) {
-       if (topCardsWrap) topCardsWrap.classList.add('hidden');
-       if (formWrap) formWrap.classList.add('hidden');
-       if (chartWrap) chartWrap.classList.add('hidden');
-       if (showcaseWrap) {
-         showcaseWrap.classList.remove('hidden');
-         renderUpcomingShowcaseUI(data);
-       }
-     } else {
-       if (showcaseWrap) showcaseWrap.classList.add('hidden');
-       if (topCardsWrap) topCardsWrap.classList.remove('hidden');
-       if (formWrap) formWrap.classList.remove('hidden');
-       if (chartWrap) chartWrap.classList.remove('hidden');
-     }
+    function renderUpcomingShowcaseUI(data) {
+      const cfg = data.upcomingConfig || {};
+      const stats = cfg.stats || {};
+
+      // 1. Populate Destination
+      const nameEl = document.getElementById('showcase-trip-name');
+      const subEl = document.getElementById('showcase-trip-sub');
+      if (nameEl) nameEl.innerText = cfg.nextTripName || 'Kedarkantha Winter Expedition';
+      if (subEl) subEl.innerText = cfg.nextTripSub || 'Sankri Basecamp • Uttarakhand';
+
+      // 2. Start Live Ticking Countdown with Auto-Transition
+      startShowcaseCountdown(cfg.nextTripDate, data);
+
+      // 3. Populate Centered Bento Stats (Supports both flat & nested keys)
+      if (document.getElementById('showcase-stat-trips-val')) {
+        document.getElementById('showcase-stat-trips-val').innerText = cfg.statTripsVal || stats.trips?.value || '14';
+        document.getElementById('showcase-stat-trips-lbl').innerText = cfg.statTripsLabel || stats.trips?.label || 'Trips Completed';
+      }
+      if (document.getElementById('showcase-stat-spent-val')) {
+        document.getElementById('showcase-stat-spent-val').innerText = cfg.statSpentVal || stats.spent?.value || '₹4.8L';
+        document.getElementById('showcase-stat-spent-lbl').innerText = cfg.statSpentLabel || stats.spent?.label || 'Total Managed';
+      }
+      if (document.getElementById('showcase-stat-locations-val')) {
+        document.getElementById('showcase-stat-locations-val').innerText = cfg.statLocationsVal || stats.locations?.value || '85';
+        document.getElementById('showcase-stat-locations-lbl').innerText = cfg.statLocationsLabel || stats.locations?.label || 'Waypoints Reached';
+      }
+      if (document.getElementById('showcase-stat-states-val')) {
+        document.getElementById('showcase-stat-states-val').innerText = cfg.statStatesVal || stats.states?.value || '7';
+        document.getElementById('showcase-stat-states-lbl').innerText = cfg.statStatesLabel || stats.states?.label || 'States Traversed';
+      }
+      if (document.getElementById('showcase-stat-km-val')) {
+        document.getElementById('showcase-stat-km-val').innerText = cfg.statKmVal || stats.km?.value || '12,500';
+        document.getElementById('showcase-stat-km-lbl').innerText = cfg.statKmLabel || stats.km?.label || 'Kilometers Covered';
+      }
+
+      // 4. Safely Parse Carousel Images
+      const defaultImages = [
+        'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'
+      ];
+
+      const rawImages = cfg.carouselImages;
+      let parsedImages = [];
+      if (Array.isArray(rawImages)) {
+        parsedImages = rawImages.filter(u => typeof u === 'string' && u.trim().startsWith('http'));
+      } else if (typeof rawImages === 'string') {
+        parsedImages = rawImages
+          .split(/[\n,]+/)
+          .map(u => u.trim())
+          .filter(u => /^https?:\/\//i.test(u));
+      }
+
+      showcaseImagesList = parsedImages.length > 0 ? parsedImages : defaultImages;
+      currentShowcaseSlideIndex = 0;
+      build3DShowcaseCarousel();
+      lucide.createIcons();
+    }
+
+    // Live Countdown Timer with Smooth Auto-Switch on Expiration
+    function startShowcaseCountdown(targetDateStr, fullData) {
+      if (showcaseCountdownTimer) clearInterval(showcaseCountdownTimer);
+      isTransitioningToLive = false;
+
+      const daysEl = document.getElementById('cd-days');
+      const hoursEl = document.getElementById('cd-hours');
+      const minsEl = document.getElementById('cd-mins');
+      const secsEl = document.getElementById('cd-secs');
+
+      if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
+
+      const targetTime = targetDateStr ? new Date(targetDateStr).getTime() : NaN;
+
+      const updateTimer = () => {
+        if (isNaN(targetTime)) {
+          daysEl.innerText = '00';
+          hoursEl.innerText = '00';
+          minsEl.innerText = '00';
+          secsEl.innerText = '00';
+          return;
+        }
+
+        const now = Date.now();
+        const diff = targetTime - now;
+
+        if (diff <= 0) {
+          daysEl.innerText = '00';
+          hoursEl.innerText = '00';
+          minsEl.innerText = '00';
+          secsEl.innerText = '00';
+          clearInterval(showcaseCountdownTimer);
+
+          // Smoothly animate switch from Upcoming mode to Live Mode
+          if (!isTransitioningToLive) {
+            isTransitioningToLive = true;
+            transitionShowcaseToLiveMode(fullData);
+          }
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+
+        daysEl.innerText = String(days).padStart(2, '0');
+        hoursEl.innerText = String(hours).padStart(2, '0');
+        minsEl.innerText = String(mins).padStart(2, '0');
+        secsEl.innerText = String(secs).padStart(2, '0');
+      };
+
+      updateTimer();
+      showcaseCountdownTimer = setInterval(updateTimer, 1000);
+    }
+
+    // Smooth animation switching from Upcoming showcase to the Live active screen
+    function transitionShowcaseToLiveMode(fullData) {
+      const showcaseWrap = document.getElementById('ui-upcoming-showcase');
+      const topCardsWrap = document.getElementById('ui-top-cards-wrapper');
+      const formWrap = document.getElementById('ui-form-wrapper');
+      const chartWrap = document.getElementById('ui-spend-chart-wrapper');
+
+      if (showcaseWrap) {
+        showcaseWrap.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        showcaseWrap.style.opacity = '0';
+        showcaseWrap.style.transform = 'scale(0.96)';
+      }
+
+      setTimeout(() => {
+        if (showcaseWrap) {
+          showcaseWrap.classList.add('hidden');
+          showcaseWrap.style.opacity = '';
+          showcaseWrap.style.transform = '';
+        }
+
+        // Reveal standard Live Bento cards, Form, and Chart
+        [topCardsWrap, formWrap, chartWrap].forEach(el => {
+          if (!el) return;
+          el.classList.remove('hidden');
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(12px)';
+          el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+          requestAnimationFrame(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          });
+        });
+
+        // Update local trip mode flag
+        if (fullData) {
+          fullData.tripMode = 'LIVE';
+          if (fullData.upcomingConfig) fullData.upcomingConfig.tripMode = 'LIVE';
+        }
+        showToast("Expedition Started! Live Ledger Active");
+        lucide.createIcons();
+      }, 600);
+    }
+
+    // Frameless 3D Coverflow Carousel Builder
+    function build3DShowcaseCarousel() {
+      const track = document.getElementById('showcaseCarouselTrack');
+      const dotsCont = document.getElementById('carouselDotsContainer');
+      if (!track || !showcaseImagesList.length) return;
+
+      track.innerHTML = showcaseImagesList.map((url, i) => `
+        <div id="showcase-slide-${i}" onclick="selectShowcaseSlide(${i})" class="absolute w-[72%] sm:w-[62%] h-[92%] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" style="transform-style: preserve-3d; will-change: transform, opacity;">
+          <img src="${url}" alt="Highlight ${i+1}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.src='https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+        </div>
+      `).join('');
+
+      if (dotsCont) {
+        dotsCont.innerHTML = showcaseImagesList.map((_, i) => `
+          <button type="button" onclick="selectShowcaseSlide(${i})" id="showcase-dot-${i}" class="w-2 h-2 rounded-full transition-all duration-300 ${i === 0 ? 'bg-white w-5' : 'bg-white/40 hover:bg-white/70'}" title="Slide ${i+1}"></button>
+        `).join('');
+      }
+
+      apply3DSlideTransforms();
+
+      // Auto-slide every 4 seconds
+      if (showcaseSlideAutoTimer) clearInterval(showcaseSlideAutoTimer);
+      showcaseSlideAutoTimer = setInterval(() => {
+        nextShowcaseSlide();
+      }, 4000);
+    }
+
+    // Apply Coverflow 3D positions (Center + Left Neighbor + Right Neighbor)
+    function apply3DSlideTransforms() {
+      const total = showcaseImagesList.length;
+      if (!total) return;
+
+      for (let i = 0; i < total; i++) {
+        const slide = document.getElementById(`showcase-slide-${i}`);
+        const dot = document.getElementById(`showcase-dot-${i}`);
+        if (!slide) continue;
+
+        // Calculate cyclic offset from the active slide: -1, 0, 1, etc.
+        let offset = (i - currentShowcaseSlideIndex) % total;
+        if (offset < -Math.floor(total / 2)) offset += total;
+        if (offset > Math.floor(total / 2)) offset -= total;
+
+        if (offset === 0) {
+          // Main Center Slide (100% size, full brightness, highest z-index)
+          slide.style.transform = 'translateX(0%) translateZ(60px) rotateY(0deg) scale(1)';
+          slide.style.opacity = '1';
+          slide.style.zIndex = '30';
+          slide.style.filter = 'brightness(1)';
+          slide.style.pointerEvents = 'auto';
+        } else if (offset === -1 || (offset < 0 && Math.abs(offset) === 1)) {
+          // Left Background Slide (Tilted, scaled down, darker)
+          slide.style.transform = 'translateX(-48%) translateZ(-80px) rotateY(25deg) scale(0.85)';
+          slide.style.opacity = '0.7';
+          slide.style.zIndex = '20';
+          slide.style.filter = 'brightness(0.65)';
+          slide.style.pointerEvents = 'auto';
+        } else if (offset === 1 || (offset > 0 && Math.abs(offset) === 1)) {
+          // Right Background Slide (Tilted, scaled down, darker)
+          slide.style.transform = 'translateX(48%) translateZ(-80px) rotateY(-25deg) scale(0.85)';
+          slide.style.opacity = '0.7';
+          slide.style.zIndex = '20';
+          slide.style.filter = 'brightness(0.65)';
+          slide.style.pointerEvents = 'auto';
+        } else {
+          // Hidden overflow slides pushed far back
+          const sign = offset > 0 ? 1 : -1;
+          slide.style.transform = `translateX(${sign * 80}%) translateZ(-200px) scale(0.65)`;
+          slide.style.opacity = '0';
+          slide.style.zIndex = '10';
+          slide.style.pointerEvents = 'none';
+        }
+
+        // Indicator Dots Sync
+        if (dot) {
+          if (offset === 0) {
+            dot.className = 'w-5 h-2 rounded-full bg-white transition-all duration-300';
+          } else {
+            dot.className = 'w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300';
+          }
+        }
+      }
+    }
+
+    function selectShowcaseSlide(idx) {
+      currentShowcaseSlideIndex = idx;
+      apply3DSlideTransforms();
+      resetShowcaseAutoSlideTimer();
+    }
+
+    function nextShowcaseSlide() {
+      if (!showcaseImagesList.length) return;
+      currentShowcaseSlideIndex = (currentShowcaseSlideIndex + 1) % showcaseImagesList.length;
+      apply3DSlideTransforms();
+      resetShowcaseAutoSlideTimer();
+    }
+
+    function prevShowcaseSlide() {
+      if (!showcaseImagesList.length) return;
+      currentShowcaseSlideIndex = (currentShowcaseSlideIndex - 1 + showcaseImagesList.length) % showcaseImagesList.length;
+      apply3DSlideTransforms();
+      resetShowcaseAutoSlideTimer();
+    }
+
+    function resetShowcaseAutoSlideTimer() {
+      if (showcaseSlideAutoTimer) clearInterval(showcaseSlideAutoTimer);
+      showcaseSlideAutoTimer = setInterval(nextShowcaseSlide, 4500);
+    }
+
     
      // =============================================================
      // DYNAMIC GRAPHICS ENGINE & DESIGN CONTROLLER INJECTION
@@ -9379,28 +9579,27 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
 
   // ==========================================
-    // UPCOMING SHOWCASE 3D CAROUSEL & COUNTDOWN ENGINE
+    // UPCOMING SHOWCASE RENDER ENGINE & TIMERS
     // ==========================================
-    let showcaseImagesList = [];
-    let currentShowcaseSlideIndex = 0;
-    let showcaseSlideAutoTimer = null;
     let showcaseCountdownTimer = null;
-    let isTransitioningToLive = false;
+    let showcaseCarouselTimer = null;
+    let showcaseCurrentSlide = 0;
+    let showcaseImagesList = [];
 
     function renderUpcomingShowcaseUI(data) {
       const cfg = data.upcomingConfig || {};
       const stats = cfg.stats || {};
 
-      // 1. Destination titles
+      // 1. Populate Destination Titles
       const nameEl = document.getElementById('showcase-trip-name');
       const subEl = document.getElementById('showcase-trip-sub');
       if (nameEl) nameEl.innerText = cfg.nextTripName || 'Next Expedition';
-      if (subEl) subEl.innerText = cfg.nextTripSub || 'Basecamp';
+      if (subEl) subEl.innerText = cfg.nextTripSub || 'Departing Soon';
 
-      // 2. Start live ticking countdown with auto-transition
-      startShowcaseCountdown(cfg.nextTripDate, data);
+      // 2. Start Live Ticking Countdown
+      startShowcaseCountdown(cfg.nextTripDate);
 
-      // 3. Centered bento stats
+      // 3. Populate Bento Stats (Supporting both flat API keys and nested objects)
       if (document.getElementById('showcase-stat-trips-val')) {
         document.getElementById('showcase-stat-trips-val').innerText = cfg.statTripsVal || stats.trips?.value || '14';
         document.getElementById('showcase-stat-trips-lbl').innerText = cfg.statTripsLabel || stats.trips?.label || 'Trips Completed';
@@ -9422,7 +9621,7 @@ window.addEventListener('resize', autoScaleNoticeA4);
         document.getElementById('showcase-stat-km-lbl').innerText = cfg.statKmLabel || stats.km?.label || 'Kilometers Covered';
       }
 
-      // 4. Parse carousel images
+      // 4. Safely Parse Carousel Images (Strings or Arrays)
       const defaultImages = [
         'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
         'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
@@ -9431,6 +9630,7 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
       const rawImages = cfg.carouselImages;
       let parsedImages = [];
+
       if (Array.isArray(rawImages)) {
         parsedImages = rawImages.filter(u => typeof u === 'string' && u.trim().startsWith('http'));
       } else if (typeof rawImages === 'string') {
@@ -9441,118 +9641,119 @@ window.addEventListener('resize', autoScaleNoticeA4);
       }
 
       showcaseImagesList = parsedImages.length > 0 ? parsedImages : defaultImages;
-      currentShowcaseSlideIndex = 0;
-      build3DShowcaseCarousel();
+      buildShowcaseCarousel(showcaseImagesList);
       lucide.createIcons();
     }
 
-    // Ticking countdown timer that auto-switches when reaching 00:00:00:00
-    // Universal element resolver that matches your IDs
-function findCountdownEl(type) {
-  return document.getElementById(`showcase-cd-${type}`) ||
-         document.getElementById(`cd-${type}`) ||
-         document.getElementById(`upcoming-cd-${type}`) ||
-         document.getElementById(`stat-cd-${type}`);
-}
+    function startShowcaseCountdown(targetDateStr) {
+      if (showcaseCountdownTimer) clearInterval(showcaseCountdownTimer);
+      if (!targetDateStr) return;
 
-// Automatically wraps the number container at runtime if not wrapped
-function getOrCreateSlingSlot(el) {
-  let slot = el.parentElement;
-  if (!slot || !slot.classList.contains('cd-sling-slot')) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'cd-sling-slot';
-    const computedH = el.offsetHeight > 0 ? el.offsetHeight + 'px' : '2.5rem';
-    wrapper.style.height = computedH;
-    el.parentNode.insertBefore(wrapper, el);
-    wrapper.appendChild(el);
-    slot = wrapper;
-  }
-  return slot;
-}
+      const targetTime = new Date(targetDateStr).getTime();
 
-// Slings digit from top to down whenever the value changes
-function updateSlingDigit(el, nextVal) {
-  if (!el) return;
-  const currentVal = el.getAttribute('data-val') || el.innerText.trim();
-  const formattedVal = String(nextVal).padStart(2, '0');
+      const updateTicker = () => {
+        const now = Date.now();
+        const diff = targetTime - now;
 
-  // Skip animation if unchanged
-  if (currentVal === formattedVal) return;
+        const dEl = document.getElementById('cd-days');
+        const hEl = document.getElementById('cd-hours');
+        const mEl = document.getElementById('cd-mins');
+        const sEl = document.getElementById('cd-secs');
 
-  const slot = getOrCreateSlingSlot(el);
+        if (diff <= 0) {
+          if (dEl) dEl.innerText = "00";
+          if (hEl) hEl.innerText = "00";
+          if (mEl) mEl.innerText = "00";
+          if (sEl) sEl.innerText = "00";
+          return;
+        }
 
-  // If first render, set instantly without animation
-  if (!currentVal || currentVal === '--' || currentVal === '') {
-    el.innerText = formattedVal;
-    el.setAttribute('data-val', formattedVal);
-    el.classList.add('cd-sling-digit');
-    return;
-  }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-  // Clone current element to slingshot it downwards
-  const exiting = el.cloneNode(true);
-  exiting.className = (el.className || '') + ' cd-sling-digit sling-exit-down absolute inset-0 flex items-center justify-center pointer-events-none';
-  exiting.innerText = currentVal;
-  slot.appendChild(exiting);
+        if (dEl) dEl.innerText = String(days).padStart(2, '0');
+        if (hEl) hEl.innerText = String(hours).padStart(2, '0');
+        if (mEl) mEl.innerText = String(mins).padStart(2, '0');
+        if (sEl) sEl.innerText = String(secs).padStart(2, '0');
+      };
 
-  // Prep the incoming number from above
-  el.innerText = formattedVal;
-  el.setAttribute('data-val', formattedVal);
-  el.classList.remove('sling-enter-down');
-  void el.offsetWidth; // Force layout reflow
-  el.classList.add('cd-sling-digit', 'sling-enter-down');
-
-  // Clean up exited element after animation
-  setTimeout(() => {
-    if (exiting.parentNode) exiting.parentNode.removeChild(exiting);
-  }, 600);
-}
-
-// Main countdown loop
-function startShowcaseCountdown(targetDateStr) {
-  if (window.showcaseCountdownTimer) {
-    clearInterval(window.showcaseCountdownTimer);
-    window.showcaseCountdownTimer = null;
-  }
-
-  if (!targetDateStr) return;
-
-  // Safari-safe date normalization
-  let target = new Date(targetDateStr.replace(/-/g, '/').replace('T', ' ')).getTime();
-  if (isNaN(target)) target = new Date(targetDateStr).getTime();
-  if (isNaN(target)) return;
-
-  function tick() {
-    const now = Date.now();
-    const diff = target - now;
-
-    const daysEl = findCountdownEl('days');
-    const hoursEl = findCountdownEl('hours');
-    const minsEl = findCountdownEl('mins');
-    const secsEl = findCountdownEl('secs');
-
-    if (diff <= 0) {
-      updateSlingDigit(daysEl, 0);
-      updateSlingDigit(hoursEl, 0);
-      updateSlingDigit(minsEl, 0);
-      updateSlingDigit(secsEl, 0);
-      return;
+      updateTicker();
+      showcaseCountdownTimer = setInterval(updateTicker, 1000);
     }
 
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    const s = Math.floor((diff / 1000) % 60);
+    function buildShowcaseCarousel(images) {
+      const track = document.getElementById('showcaseCarouselTrack');
+      const dotsContainer = document.getElementById('carouselDotsContainer');
+      if (!track || !images || images.length === 0) return;
 
-    updateSlingDigit(daysEl, d);
-    updateSlingDigit(hoursEl, h);
-    updateSlingDigit(minsEl, m);
-    updateSlingDigit(secsEl, s);
-  }
+      showcaseCurrentSlide = 0;
+      track.innerHTML = images.map((url, i) => `
+        <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}" data-slide="${i}">
+          <img src="${url}" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+        </div>
+      `).join('');
 
-  tick();
-  window.showcaseCountdownTimer = setInterval(tick, 1000);
-}
+      if (dotsContainer) {
+        dotsContainer.innerHTML = images.map((_, i) => `
+          <button type="button" onclick="goToShowcaseSlide(${i})" class="w-1.5 h-1.5 rounded-full transition-all ${i === 0 ? 'bg-white w-4' : 'bg-white/40'}"></button>
+        `).join('');
+      }
+
+      updateCarouselCounter(0, images.length);
+
+      if (showcaseCarouselTimer) clearInterval(showcaseCarouselTimer);
+      if (images.length > 1) {
+        showcaseCarouselTimer = setInterval(() => {
+          nextShowcaseSlide();
+        }, 4000);
+      }
+    }
+
+    function goToShowcaseSlide(index) {
+      const slides = document.querySelectorAll('#showcaseCarouselTrack > div');
+      const dots = document.querySelectorAll('#carouselDotsContainer > button');
+      if (!slides.length) return;
+
+      showcaseCurrentSlide = (index + slides.length) % slides.length;
+
+      slides.forEach((s, idx) => {
+        if (idx === showcaseCurrentSlide) {
+          s.classList.replace('opacity-0', 'opacity-100');
+          s.classList.replace('z-0', 'z-10');
+        } else {
+          s.classList.replace('opacity-100', 'opacity-0');
+          s.classList.replace('z-10', 'z-0');
+        }
+      });
+
+      dots.forEach((d, idx) => {
+        if (idx === showcaseCurrentSlide) {
+          d.className = "w-4 h-1.5 rounded-full transition-all bg-white";
+        } else {
+          d.className = "w-1.5 h-1.5 rounded-full transition-all bg-white/40";
+        }
+      });
+
+      updateCarouselCounter(showcaseCurrentSlide, slides.length);
+    }
+
+    function nextShowcaseSlide() {
+      goToShowcaseSlide(showcaseCurrentSlide + 1);
+    }
+
+    function prevShowcaseSlide() {
+      goToShowcaseSlide(showcaseCurrentSlide - 1);
+    }
+
+    function updateCarouselCounter(current, total) {
+      const counterEl = document.getElementById('carousel-counter-badge');
+      if (counterEl) {
+        counterEl.innerText = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      }
+    }  
     
 </script>
 
