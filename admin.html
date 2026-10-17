@@ -118,15 +118,15 @@
   <!-- =========================================
        TOP GLOBAL HEADER
        ========================================= -->
-  <header class="admin-header-safe bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 px-4 pb-3 sticky top-0 z-40 flex items-center justify-between w-full">
-    <div class="flex items-center gap-3 min-w-0">
+  <header class="admin-header-safe bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 px-4 pb-3 sticky top-0 z-40 flex items-center justify-between w-full gap-2">
+    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
       <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-600/30 shrink-0">
         <i data-lucide="shield" class="w-4 h-4 stroke-[2.5]"></i>
       </div>
-      <div class="min-w-0">
-        <div class="flex items-center gap-2">
-          <h1 id="headerTripName" class="text-sm font-black uppercase tracking-wide text-white truncate max-w-[140px] sm:max-w-xs">Admin Control</h1>
-          <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
+      <div class="min-w-0 flex-1">
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap sm:flex-nowrap">
+          <h1 id="headerTripName" class="text-xs sm:text-sm font-black uppercase tracking-wide text-white whitespace-nowrap overflow-visible">Admin Control</h1>
+          <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-live"></span> Live
           </span>
         </div>
@@ -135,14 +135,14 @@
     </div>
 
     <!-- Header Actions -->
-    <div class="flex items-center gap-2 shrink-0">
+    <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
       <a href="/" target="_blank"
-        class="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700/60 shadow-sm active:scale-95">
+        class="px-2.5 py-1.5 sm:px-3 bg-slate-800/80 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-slate-700/60 shadow-sm active:scale-95">
         <i data-lucide="external-link" class="w-3.5 h-3.5 text-indigo-400"></i>
-        <span>Member App</span>
+        <span><span class="hidden sm:inline">Member </span>App</span>
       </a>
       <button onclick="adminLogout()"
-        class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+        class="px-2.5 py-1.5 sm:px-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
         <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
         <span class="hidden sm:inline">Logout</span>
       </button>
@@ -194,69 +194,8 @@
       <!-- OP SUB-VIEW 1: MASTER SWITCHES & BASIC INFO -->
       <div id="opSubView-switches" class="op-subview space-y-4">
 
-        <!-- App Experience Mode Switch (Promoted to Top of Main Switches) -->
-        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-3 shadow-sm">
-          <div class="min-w-0 flex-1 pr-1">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-black uppercase tracking-wider text-white">App Experience Mode</span>
-              <span id="tripModeBadge" class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                Live Operations
-              </span>
-            </div>
-            <p id="tripModeDesc" class="text-xs text-slate-400 mt-0.5 line-clamp-1">
-              Members currently see the live expense tracker & route dashboard.
-            </p>
-          </div>
-
-          <button type="button" id="btnTripModeSwitch" onclick="toggleTripModeSwitch()"
-            class="switch-transition relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full bg-slate-800 p-0.5 items-center">
-            <span id="tripModeToggleThumb"
-              class="switch-thumb-transition pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md translate-x-0"></span>
-          </button>
-        </div>
-
-
-        <!-- Trip Details Card -->
-        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
-          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
-            <div class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
-              <i data-lucide="tag" class="w-4 h-4"></i>
-            </div>
-            <div class="min-w-0">
-              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Trip Titles & Notification Banners</h2>
-              <p class="text-xs text-slate-400 truncate">Controls headings and warning tickers shown to all members</p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Main Trip Title</label>
-              <textarea id="setTripName" rows="2" placeholder="e.g. Valley of Flowers" onchange="saveSetting(2, 'b', this.value, 'Trip name saved')"
-                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white font-bold outline-none transition"></textarea>
-            </div>
-
-            <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Destination Subtitle</label>
-              <input type="text" id="setTripSub" placeholder="e.g. Uttarakhand Expedition" onchange="saveSetting(2, 'c', this.value, 'Subtitle saved')"
-                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold outline-none transition">
-            </div>
-
-            <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Blue Notice Banner</label>
-              <input type="text" id="setNotice" placeholder="Important announcement or gathering point" onchange="saveSetting(7, 'b', this.value, 'Notice banner updated')"
-                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium outline-none transition">
-            </div>
-
-            <div>
-              <label class="text-xs font-bold text-rose-400 uppercase tracking-wide block mb-1">Red Emergency Alert Banner</label>
-              <input type="text" id="setWarning" placeholder="Immediate weather or safety warning" onchange="saveSetting(8, 'b', this.value, 'Alert banner updated')"
-                class="w-full bg-slate-950/80 border border-rose-500/40 focus:border-rose-500 rounded-xl px-3.5 py-2.5 text-sm text-rose-200 font-medium outline-none transition">
-            </div>
-          </div>
-        </div>
-
         <!-- Master Toggles Grid (Clean, instant-action list rows) -->
-        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3 shadow-sm">
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
           <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
             <div class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
               <i data-lucide="sliders" class="w-4 h-4"></i>
@@ -265,6 +204,27 @@
               <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Master Feature Switches</h2>
               <p class="text-xs text-slate-400 truncate">Tap any switch for instant action (auto-saved)</p>
             </div>
+          </div>
+
+          <!-- App Experience Mode Switch (At the Top of Master Switches) -->
+          <div class="bg-slate-950/80 border border-indigo-500/30 rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-inner">
+            <div class="min-w-0 flex-1 pr-1">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black uppercase tracking-wider text-white">App Experience Mode</span>
+                <span id="tripModeBadge" class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  Live Operations
+                </span>
+              </div>
+              <p id="tripModeDesc" class="text-xs text-slate-400 mt-0.5 line-clamp-1">
+                Members currently see the live expense tracker & route dashboard.
+              </p>
+            </div>
+
+            <button type="button" id="btnTripModeSwitch" onclick="toggleTripModeSwitch()"
+              class="switch-transition relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full bg-slate-800 p-0.5 items-center">
+              <span id="tripModeToggleThumb"
+                class="switch-thumb-transition pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md translate-x-0"></span>
+            </button>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -393,6 +353,45 @@
                 class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white cursor-pointer">
                 Hidden
               </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trip Details Card -->
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
+          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
+            <div class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <i data-lucide="tag" class="w-4 h-4"></i>
+            </div>
+            <div class="min-w-0">
+              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Trip Titles & Notification Banners</h2>
+              <p class="text-xs text-slate-400 truncate">Controls headings and warning tickers shown to all members</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Main Trip Title</label>
+              <textarea id="setTripName" rows="2" placeholder="e.g. Valley of Flowers" onchange="saveSetting(2, 'b', this.value, 'Trip name saved')"
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white font-bold outline-none transition"></textarea>
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Destination Subtitle</label>
+              <input type="text" id="setTripSub" placeholder="e.g. Uttarakhand Expedition" onchange="saveSetting(2, 'c', this.value, 'Subtitle saved')"
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold outline-none transition">
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Blue Notice Banner</label>
+              <input type="text" id="setNotice" placeholder="Important announcement or gathering point" onchange="saveSetting(7, 'b', this.value, 'Notice banner updated')"
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium outline-none transition">
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-rose-400 uppercase tracking-wide block mb-1">Red Emergency Alert Banner</label>
+              <input type="text" id="setWarning" placeholder="Immediate weather or safety warning" onchange="saveSetting(8, 'b', this.value, 'Alert banner updated')"
+                class="w-full bg-slate-950/80 border border-rose-500/40 focus:border-rose-500 rounded-xl px-3.5 py-2.5 text-sm text-rose-200 font-medium outline-none transition">
             </div>
           </div>
         </div>
@@ -1238,7 +1237,7 @@
        POPUP ALERT TOAST NOTIFICATION (Clear of header & notch, Green when done, Red on error)
        ========================================= -->
   <div id="adminAlertToast"
-    style="top: max(calc(env(safe-area-inset-top, 0px) + 76px), 80px);"
+    style="top: max(calc(env(safe-area-inset-top, 0px) + 58px), 62px);"
     class="fixed left-4 right-4 sm:left-auto sm:right-6 z-50 sm:max-w-sm w-auto bg-slate-900/95 backdrop-blur-md border-2 border-emerald-500 shadow-2xl shadow-emerald-950/60 rounded-2xl p-3.5 transition-all duration-300 transform translate-y-[-220%] opacity-0 pointer-events-none flex items-start gap-3">
     <div id="toastIconBox" class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
       <i data-lucide="check-circle-2" class="w-5 h-5 stroke-[2.5]"></i>
