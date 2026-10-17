@@ -194,6 +194,45 @@
       <!-- OP SUB-VIEW 1: MASTER SWITCHES & BASIC INFO -->
       <div id="opSubView-switches" class="op-subview space-y-4">
 
+        <!-- Trip Details Card -->
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
+          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
+            <div class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
+              <i data-lucide="tag" class="w-4 h-4"></i>
+            </div>
+            <div class="min-w-0">
+              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Trip Titles & Notification Banners</h2>
+              <p class="text-xs text-slate-400 truncate">Controls headings and warning tickers shown to all members</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Main Trip Title</label>
+              <textarea id="setTripName" rows="2" placeholder="e.g. Valley of Flowers" onchange="saveSetting(2, 'b', this.value, 'Trip name saved')"
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white font-bold outline-none transition"></textarea>
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Destination Subtitle</label>
+              <input type="text" id="setTripSub" placeholder="e.g. Uttarakhand Expedition" onchange="saveSetting(2, 'c', this.value, 'Subtitle saved')"
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold outline-none transition">
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Blue Notice Banner</label>
+              <input type="text" id="setNotice" placeholder="Important announcement or gathering point" onchange="saveSetting(7, 'b', this.value, 'Notice banner updated')"
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium outline-none transition">
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-rose-400 uppercase tracking-wide block mb-1">Red Emergency Alert Banner</label>
+              <input type="text" id="setWarning" placeholder="Immediate weather or safety warning" onchange="saveSetting(8, 'b', this.value, 'Alert banner updated')"
+                class="w-full bg-slate-950/80 border border-rose-500/40 focus:border-rose-500 rounded-xl px-3.5 py-2.5 text-sm text-rose-200 font-medium outline-none transition">
+            </div>
+          </div>
+        </div>
+
         <!-- Master Toggles Grid (Clean, instant-action list rows) -->
         <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
           <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
@@ -353,45 +392,6 @@
                 class="py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider transition text-center bg-slate-900 border border-slate-800 text-slate-400 hover:text-white cursor-pointer">
                 Hidden
               </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Trip Details Card -->
-        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
-          <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
-            <div class="w-8 h-8 rounded-xl bg-indigo-500/15 text-indigo-400 flex items-center justify-center shrink-0">
-              <i data-lucide="tag" class="w-4 h-4"></i>
-            </div>
-            <div class="min-w-0">
-              <h2 class="text-sm font-black uppercase tracking-wider text-white truncate">Trip Titles & Notification Banners</h2>
-              <p class="text-xs text-slate-400 truncate">Controls headings and warning tickers shown to all members</p>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Main Trip Title</label>
-              <textarea id="setTripName" rows="2" placeholder="e.g. Valley of Flowers" onchange="saveSetting(2, 'b', this.value, 'Trip name saved')"
-                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl p-3 text-sm text-white font-bold outline-none transition"></textarea>
-            </div>
-
-            <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Destination Subtitle</label>
-              <input type="text" id="setTripSub" placeholder="e.g. Uttarakhand Expedition" onchange="saveSetting(2, 'c', this.value, 'Subtitle saved')"
-                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold outline-none transition">
-            </div>
-
-            <div>
-              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Blue Notice Banner</label>
-              <input type="text" id="setNotice" placeholder="Important announcement or gathering point" onchange="saveSetting(7, 'b', this.value, 'Notice banner updated')"
-                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium outline-none transition">
-            </div>
-
-            <div>
-              <label class="text-xs font-bold text-rose-400 uppercase tracking-wide block mb-1">Red Emergency Alert Banner</label>
-              <input type="text" id="setWarning" placeholder="Immediate weather or safety warning" onchange="saveSetting(8, 'b', this.value, 'Alert banner updated')"
-                class="w-full bg-slate-950/80 border border-rose-500/40 focus:border-rose-500 rounded-xl px-3.5 py-2.5 text-sm text-rose-200 font-medium outline-none transition">
             </div>
           </div>
         </div>
