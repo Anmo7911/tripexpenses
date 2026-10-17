@@ -2874,11 +2874,11 @@
     </div>
   </div>
 
-  <!-- 2. Track Record Bento Stats (5 Boxes: Centered Text + Background Watermark Icons) -->
+  <!-- 2. Track Record Bento Stats (5 Boxes: Centered Text + Left Watermark Icons) -->
   <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
     <!-- Stat 1: Trips -->
     <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center group">
-      <div class="absolute -right-2 -bottom-2 text-indigo-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
+      <div class="absolute -left-2 top-1/2 -translate-y-1/2 text-indigo-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
         <i data-lucide="compass" class="w-16 h-16 sm:w-20 sm:h-20 stroke-[1.5]"></i>
       </div>
       <div class="relative z-10 flex flex-col items-center justify-center">
@@ -2889,7 +2889,7 @@
 
     <!-- Stat 2: Spent/Managed -->
     <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center group">
-      <div class="absolute -right-2 -bottom-2 text-emerald-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
+      <div class="absolute -left-2 top-1/2 -translate-y-1/2 text-emerald-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
         <i data-lucide="wallet" class="w-16 h-16 sm:w-20 sm:h-20 stroke-[1.5]"></i>
       </div>
       <div class="relative z-10 flex flex-col items-center justify-center">
@@ -2900,7 +2900,7 @@
 
     <!-- Stat 3: Waypoints -->
     <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center group">
-      <div class="absolute -right-2 -bottom-2 text-blue-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
+      <div class="absolute -left-2 top-1/2 -translate-y-1/2 text-blue-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
         <i data-lucide="map-pin" class="w-16 h-16 sm:w-20 sm:h-20 stroke-[1.5]"></i>
       </div>
       <div class="relative z-10 flex flex-col items-center justify-center">
@@ -2911,7 +2911,7 @@
 
     <!-- Stat 4: States -->
     <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center group">
-      <div class="absolute -right-2 -bottom-2 text-purple-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
+      <div class="absolute -left-2 top-1/2 -translate-y-1/2 text-purple-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
         <i data-lucide="map" class="w-16 h-16 sm:w-20 sm:h-20 stroke-[1.5]"></i>
       </div>
       <div class="relative z-10 flex flex-col items-center justify-center">
@@ -2922,7 +2922,7 @@
 
     <!-- Stat 5: Kilometers -->
     <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 group">
-      <div class="absolute -right-2 -bottom-2 text-amber-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
+      <div class="absolute -left-2 top-1/2 -translate-y-1/2 text-amber-600/10 pointer-events-none transition-transform duration-300 group-hover:scale-110">
         <i data-lucide="navigation" class="w-16 h-16 sm:w-20 sm:h-20 stroke-[1.5]"></i>
       </div>
       <div class="relative z-10 flex flex-col items-center justify-center">
@@ -9581,8 +9581,12 @@ function goToShowcaseSlide(index) {
     }
   });
 
-  updateCarouselCounter(showcaseCurrentSlide, slides.length);
-}
+  function updateCarouselCounter(current, total) {
+      const counterEl = document.getElementById('carousel-counter-badge');
+      if (counterEl) {
+        counterEl.innerText = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      }
+    }
 
 function nextShowcaseSlide() {
   goToShowcaseSlide(showcaseCurrentSlide + 1);
