@@ -54,9 +54,13 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Safe bottom space for fixed mobile nav */
+    /* Safe bottom space for fixed mobile nav ensuring content sits cleanly above */
     .mobile-safe-bottom {
-      padding-bottom: calc(84px + env(safe-area-inset-bottom, 16px));
+      padding-bottom: calc(112px + env(safe-area-inset-bottom, 24px)) !important;
+    }
+    .admin-header-safe {
+      padding-top: max(calc(env(safe-area-inset-top, 0px) + 12px), 16px) !important;
+      min-height: calc(env(safe-area-inset-top, 0px) + 56px) !important;
     }
 
     /* Modal bottom-sheet styling on mobile */
@@ -91,7 +95,7 @@
       <form onsubmit="handleAdminLogin(event)" class="space-y-4">
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1.5">Username</label>
-          <input type="text" id="adminUser" required placeholder="admin" autocomplete="username"
+          <input type="text" id="adminUser" required value="admin" placeholder="admin" autocomplete="username"
             class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-4 py-3 text-sm text-white font-medium outline-none transition">
         </div>
 
@@ -114,7 +118,7 @@
   <!-- =========================================
        TOP GLOBAL HEADER
        ========================================= -->
-  <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 sticky top-0 z-40 flex items-center justify-between w-full">
+  <header class="admin-header-safe bg-slate-900/95 backdrop-blur-md border-b border-slate-800/80 px-4 pb-3 sticky top-0 z-40 flex items-center justify-between w-full">
     <div class="flex items-center gap-3 min-w-0">
       <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-600/30 shrink-0">
         <i data-lucide="shield" class="w-4 h-4 stroke-[2.5]"></i>
@@ -161,9 +165,7 @@
     <button onclick="switchCategory('media')" id="deskBtn-media" class="desk-cat-btn px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition bg-slate-800/80 hover:bg-slate-800 text-slate-300">
       <i data-lucide="folder" class="w-4 h-4"></i> Media & Archives
     </button>
-    <button onclick="switchCategory('chat')" id="deskBtn-chat" class="desk-cat-btn px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition bg-slate-800/80 hover:bg-slate-800 text-slate-300">
-      <i data-lucide="message-square" class="w-4 h-4"></i> Team Chat
-    </button>
+
   </nav>
 
   <!-- =========================================
@@ -293,15 +295,18 @@
               </button>
             </div>
 
-            <!-- Switch 5: Security Pass (PIN Login) -->
+            <!-- Switch 5: Squad Member Identity Encryption -->
             <div class="bg-slate-950/70 border border-slate-800/80 p-3.5 rounded-xl flex items-center justify-between gap-3 min-w-0">
               <div class="min-w-0 flex-1 pr-1">
-                <p class="text-xs font-black uppercase tracking-wider text-white truncate">Member PIN Login</p>
-                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Require 4-digit PIN authentication</p>
+                <div class="flex items-center gap-1.5">
+                  <p class="text-xs font-black uppercase tracking-wider text-white truncate">Member Encryption</p>
+                  <span id="encStatusBadge" class="text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 uppercase">OFF</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">Hide member names & avatars on main app</p>
               </div>
               <button type="button" onclick="toggleMetaSecuritySwitch()" id="uiBtn-setSecurityStatus"
-                class="switch-transition w-12 h-7 rounded-full bg-emerald-600 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
-                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-5"></span>
+                class="switch-transition w-12 h-7 rounded-full bg-slate-800 p-0.5 flex items-center shadow-inner shrink-0 cursor-pointer">
+                <span class="switch-thumb-transition w-6 h-6 rounded-full bg-white shadow-md transform translate-x-0"></span>
               </button>
             </div>
 
@@ -769,7 +774,7 @@
               <a id="previewGuideline" href="#" target="_blank" class="text-xs font-bold text-indigo-400 underline hidden">View Live</a>
             </div>
             <p class="text-xs text-slate-400">Rules and instructions shown to squad members</p>
-            <input type="file" id="guidelineFileInput" accept="image/*,application/pdf" class="hidden" onchange="uploadDirectAsset(this, 'setting', 9, 'b', 'previewGuideline', 'Guidelines document updated')">
+            <input type="file" id="guidelineFileInput" accept="image/*,application/pdf" class="hidden" onchange="uploadDirectAsset(this, 'setting', 11, 'b', 'previewGuideline', 'Guidelines document updated')">
             <button type="button" onclick="document.getElementById('guidelineFileInput').click()" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
               <i data-lucide="upload" class="w-3.5 h-3.5 text-indigo-400"></i> Choose File & Upload
             </button>
@@ -801,7 +806,7 @@
               <a id="previewStamp" href="#" target="_blank" class="text-xs font-bold text-rose-400 underline hidden">View Live</a>
             </div>
             <p class="text-xs text-slate-400">Transparent PNG stamped over digital member passes</p>
-            <input type="file" id="stampFileInput" accept="image/png,image/webp,image/jpeg" class="hidden" onchange="uploadDirectAsset(this, 'setting', 14, 'b', 'previewStamp', 'Digital stamp PNG updated')">
+            <input type="file" id="stampFileInput" accept="image/png,image/webp,image/jpeg" class="hidden" onchange="uploadDirectAsset(this, 'setting', 12, 'b', 'previewStamp', 'Digital stamp PNG updated')">
             <button type="button" onclick="document.getElementById('stampFileInput').click()" class="w-full py-2.5 bg-slate-950 hover:bg-slate-800 active:scale-98 text-slate-200 border border-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
               <i data-lucide="upload" class="w-3.5 h-3.5 text-rose-400"></i> Choose Stamp PNG & Upload
             </button>
@@ -847,74 +852,29 @@
 
     </section>
 
-    <!-- ====================================================
-         SECTION 5: TEAM CHAT MANAGER
-         ==================================================== -->
-    <section id="section-chat" class="category-section hidden space-y-3.5">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-sm font-black uppercase tracking-wider text-white">Trip Chat Moderation</h2>
-          <p class="text-xs text-slate-400">Broadcast updates, reply, edit, or delete messages</p>
-        </div>
-        <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
-          Live
-        </span>
-      </div>
-
-      <!-- Responsive Chat Console Box -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col h-[65vh] sm:h-[520px] shadow-xl">
-        <!-- Messages Area -->
-        <div id="adminChatMessages" class="flex-1 p-3.5 overflow-y-auto space-y-2.5 bg-slate-950/70"></div>
-
-        <!-- Replying Context Banner -->
-        <div id="adminReplyBanner" class="hidden px-3.5 py-2 bg-slate-800/90 border-t border-slate-700/80 flex items-center justify-between text-xs">
-          <div class="flex items-center gap-2 truncate min-w-0">
-            <i data-lucide="reply" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
-            <span class="font-bold text-slate-400 shrink-0">Replying to <b id="adminReplySender" class="text-indigo-400"></b>:</span>
-            <span id="adminReplyText" class="text-slate-300 truncate italic"></span>
-          </div>
-          <button type="button" onclick="cancelAdminReply()" class="text-slate-400 hover:text-white transition p-1">
-            <i data-lucide="x" class="w-4 h-4"></i>
-          </button>
-        </div>
-
-        <!-- Chat Input Form -->
-        <form id="adminChatForm" onsubmit="sendAdminMessage(event)" class="p-2.5 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
-          <input type="text" id="adminChatInput" placeholder="Type a message or announcement as Admin..."
-            class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-indigo-500 transition">
-          <button type="submit" id="adminSendBtn"
-            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-black rounded-xl text-xs uppercase tracking-wider flex items-center gap-1.5 transition shadow-md shadow-indigo-600/30 shrink-0">
-            <i data-lucide="send" class="w-3.5 h-3.5"></i> <span class="hidden sm:inline">Send</span>
-          </button>
-        </form>
-      </div>
-    </section>
+    
 
   </main>
 
   <!-- =========================================
        MOBILE BOTTOM NAVIGATION BAR (Sticky Thumb Bar)
        ========================================= -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/90 px-1 py-1.5 flex items-center justify-around z-40 shadow-2xl">
-    <button onclick="switchCategory('operations')" id="mobBtn-operations" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-indigo-400 transition cursor-pointer min-w-[56px]">
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800/90 px-3 pt-1.5 flex items-center justify-around z-40 shadow-2xl" style="padding-bottom: max(env(safe-area-inset-bottom, 0px), 10px);">
+    <button onclick="switchCategory('operations')" id="mobBtn-operations" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-indigo-400 transition cursor-pointer">
       <i data-lucide="zap" class="w-5 h-5"></i>
-      <span class="text-[9px] font-black uppercase tracking-wider">Controls</span>
+      <span class="text-[9.5px] font-black uppercase tracking-wider">Controls</span>
     </button>
-    <button onclick="switchCategory('expedition')" id="mobBtn-expedition" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
+    <button onclick="switchCategory('expedition')" id="mobBtn-expedition" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 transition cursor-pointer">
       <i data-lucide="map-pin" class="w-5 h-5"></i>
-      <span class="text-[9px] font-bold uppercase tracking-wider">Route</span>
+      <span class="text-[9.5px] font-bold uppercase tracking-wider">Route</span>
     </button>
-    <button onclick="switchCategory('finance')" id="mobBtn-finance" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
+    <button onclick="switchCategory('finance')" id="mobBtn-finance" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 transition cursor-pointer">
       <i data-lucide="wallet" class="w-5 h-5"></i>
-      <span class="text-[9px] font-bold uppercase tracking-wider">Ledger</span>
+      <span class="text-[9.5px] font-bold uppercase tracking-wider">Ledger</span>
     </button>
-    <button onclick="switchCategory('media')" id="mobBtn-media" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
+    <button onclick="switchCategory('media')" id="mobBtn-media" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 transition cursor-pointer">
       <i data-lucide="folder" class="w-5 h-5"></i>
-      <span class="text-[9px] font-bold uppercase tracking-wider">Vault</span>
-    </button>
-    <button onclick="switchCategory('chat')" id="mobBtn-chat" class="mob-cat-btn flex flex-col items-center gap-1 py-1 px-2 rounded-xl text-slate-400 transition cursor-pointer min-w-[56px]">
-      <i data-lucide="message-square" class="w-5 h-5"></i>
-      <span class="text-[9px] font-bold uppercase tracking-wider">Chat</span>
+      <span class="text-[9.5px] font-bold uppercase tracking-wider">Vault</span>
     </button>
   </nav>
 
@@ -927,7 +887,7 @@
     <select id="setChecklistVisibility"><option value="VISIBLE">VISIBLE</option><option value="HIDDEN">HIDDEN</option></select>
     <select id="setTitleVisibility"><option value="VISIBLE">VISIBLE</option><option value="HIDDEN">HIDDEN</option></select>
     <select id="setContriStatus"><option value="ACTIVE">ACTIVE</option><option value="PAUSED">PAUSED</option></select>
-    <select id="setSecurityStatus"><option value="normal">normal</option><option value="vip">vip</option></select>
+    <select id="setSecurityStatus"><option value="normal">normal</option><option value="encrypted">encrypted</option></select>
     <select id="setSignOffStatus"><option value="closed">closed</option><option value="signing off">signing off</option></select>
     <select id="setAppStatus"><option value="OPEN">OPEN</option><option value="LOCKED">LOCKED</option></select>
     <select id="setExpenseStatus"><option value="ALLOW Expense">ALLOW Expense</option><option value="STOP Expense">STOP Expense</option></select>
@@ -957,7 +917,7 @@
         </div>
         <div>
           <label class="text-xs font-bold text-slate-300 uppercase block mb-1">Section Priority</label>
-          <select id="chkSection" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-indigo-500 font-bold">
+          <select id="chkSection" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white outline-none focus:border-indigo-500 font-bold">
             <option value="Important">Important Tasks (Star Marked)</option>
             <option value="Optional">Optional Tasks</option>
           </select>
@@ -1269,28 +1229,7 @@
     </div>
   </div>
 
-  <!-- 7. EDIT CHAT MESSAGE MODAL -->
-  <div id="editMessageModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl mobile-sheet">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-        <h3 class="text-sm font-black uppercase tracking-wider text-white">Edit Chat Message</h3>
-        <button onclick="closeEditMessageModal()" class="text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
-      </div>
-
-      <form onsubmit="saveEditMessage(event)" class="space-y-3.5 pt-3.5">
-        <input type="hidden" id="editMsgId">
-        <div>
-          <label class="text-xs font-bold text-slate-300 uppercase block mb-1">Message Text</label>
-          <textarea id="editMsgText" rows="4" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white outline-none focus:border-indigo-500 font-medium"></textarea>
-        </div>
-
-        <div class="flex gap-2 pt-2">
-          <button type="button" onclick="closeEditMessageModal()" class="flex-1 py-3 bg-slate-800 text-slate-300 font-bold rounded-xl text-xs uppercase">Cancel</button>
-          <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-black rounded-xl text-xs uppercase shadow-md">Update Message</button>
-        </div>
-      </form>
-    </div>
-  </div>
+  
 
   <!-- =========================================
        POPUP ALERT TOAST NOTIFICATION
@@ -1311,7 +1250,6 @@
   <script>
     let globalData = null;
     let autoLogoutTimer = null;
-    let adminReplyContext = null;
 
     // Toast Alert Helper
     function showAlert(title, message, isError = false) {
@@ -1526,7 +1464,6 @@
         if (d.budgetRawList && d.stats) renderBudget(d.budgetRawList, d.stats);
         renderMedia(d);
         if (d.pastTrips) renderArchives(d.pastTrips);
-        if (d.messages) renderAdminChat(d.messages);
       } catch (err) {
         showAlert("Sync Error", err.message, true);
       }
@@ -1546,7 +1483,8 @@
       document.getElementById('setRouteStatus').value = d.routeStatus || 'ACTIVE';
       document.getElementById('setContriStatus').value = d.contributionToggle || 'ACTIVE';
       document.getElementById('setSignOffStatus').value = d.signOffStatus || 'closed';
-      document.getElementById('setSecurityStatus').value = d.securityStatus || 'normal';
+      const isEncrypted = (d.securityStatus || 'normal').toLowerCase() === 'encrypted';
+      document.getElementById('setSecurityStatus').value = isEncrypted ? 'encrypted' : 'normal';
       document.getElementById('setMaintenanceMode').value = d.maintenanceMode || 'DISABLED';
       document.getElementById('setAnnouncementMode').value = d.announcementMode || 'DISABLED';
       document.getElementById('setChecklistVisibility').value = d.checklistVisibility || 'VISIBLE';
@@ -1566,7 +1504,15 @@
       syncVisualSwitch('setAppStatus', (d.appStatus || 'OPEN') === 'LOCKED', 'rose');
       syncVisualSwitch('setMaintenanceMode', (d.maintenanceMode || 'DISABLED') === 'ENABLED', 'amber');
       syncVisualSwitch('setAnnouncementMode', (d.announcementMode || 'DISABLED') === 'ENABLED', 'purple');
-      syncVisualSwitch('setSecurityStatus', (d.securityStatus || 'normal') === 'vip', 'emerald');
+      syncVisualSwitch('setSecurityStatus', isEncrypted, 'emerald');
+
+      const encBadge = document.getElementById('encStatusBadge');
+      if (encBadge) {
+        encBadge.innerText = isEncrypted ? 'ENCRYPTED' : 'OFF';
+        encBadge.className = isEncrypted
+          ? 'text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase'
+          : 'text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 uppercase';
+      }
       syncVisualSwitch('setSignOffStatus', (d.signOffStatus || 'closed') === 'signing off', 'amber');
       syncVisualSwitch('setContriStatus', (d.contributionToggle || 'ACTIVE') === 'ACTIVE', 'emerald');
       syncVisualSwitch('setChecklistVisibility', (d.checklistVisibility || 'VISIBLE') === 'VISIBLE', 'emerald');
@@ -1617,7 +1563,7 @@
       setAppStatus: { activeVal: 'LOCKED', color: 'rose', label: 'Trip lock' },
       setMaintenanceMode: { activeVal: 'ENABLED', color: 'amber', label: 'Maintenance mode' },
       setAnnouncementMode: { activeVal: 'ENABLED', color: 'purple', label: 'Announcement mode' },
-      setSecurityStatus: { activeVal: 'vip', color: 'emerald', label: 'PIN login' },
+      setSecurityStatus: { activeVal: 'encrypted', color: 'emerald', label: 'Member encryption' },
       setSignOffStatus: { activeVal: 'signing off', color: 'amber', label: 'Sign-off status' },
       setContriStatus: { activeVal: 'ACTIVE', color: 'emerald', label: 'Contribution badges' },
       setChecklistVisibility: { activeVal: 'VISIBLE', color: 'emerald', label: 'Checklist tab' },
@@ -1653,37 +1599,71 @@
 
       // 2. BACKGROUND ASYNC CALL
       try {
-        const fresh = await adminApi('admin-update-setting', { rowNumber: rowNumber, col: col, value: nextVal });
+        let fresh;
+        if (selectId === 'setPopupStatus') {
+          // If enabling broadcast alert, simultaneously renew pushedAt timestamp so all client devices trigger live alert
+          if (nextVal === 'ENABLED') {
+            await adminApi('admin-update-setting', { rowNumber: 28, col: 'e', value: 'ENABLED' });
+            fresh = await adminApi('admin-update-setting', { rowNumber: 28, col: 'f', value: String(Date.now()) });
+          } else {
+            fresh = await adminApi('admin-update-setting', { rowNumber: 28, col: 'e', value: 'DISABLED' });
+          }
+        } else {
+          fresh = await adminApi('admin-update-setting', { rowNumber: rowNumber, col: col, value: nextVal });
+        }
         globalData = fresh;
+        renderSettings(fresh);
         showAlert("Saved", `${label} updated`);
       } catch (err) {
         // 3. Rollback on failure
         select.value = currentVal;
         const wasActive = (currentVal === rule.activeVal);
         syncVisualSwitch(selectId, wasActive, rule.color);
+        if (selectId === 'setPopupStatus') {
+          const popStatusLbl = document.getElementById('broadcastStatusLabel');
+          if (popStatusLbl) {
+            popStatusLbl.innerText = wasActive ? 'ACTIVE' : 'OFF';
+            popStatusLbl.className = wasActive ? 'text-xs font-bold text-indigo-400 uppercase' : 'text-xs font-bold text-slate-400 uppercase';
+          }
+        }
         showAlert("Failed", err.message || "Failed to update switch", true);
       }
     }
 
-    // VIP Meta Security Switch with INSTANT ACTION
+    // Member Identity Encryption Switch with INSTANT ACTION
     async function toggleMetaSecuritySwitch() {
       if (navigator.vibrate) navigator.vibrate(10);
       const select = document.getElementById('setSecurityStatus');
-      const currentVal = select.value;
-      const nextVal = (currentVal === 'vip') ? 'normal' : 'vip';
+      const currentVal = (select.value || 'normal').toLowerCase();
+      const nextVal = (currentVal === 'encrypted') ? 'normal' : 'encrypted';
       select.value = nextVal;
 
       // Instant visual flip
-      syncVisualSwitch('setSecurityStatus', nextVal === 'vip', 'emerald');
+      syncVisualSwitch('setSecurityStatus', nextVal === 'encrypted', 'emerald');
+      const encBadge = document.getElementById('encStatusBadge');
+      if (encBadge) {
+        encBadge.innerText = (nextVal === 'encrypted') ? 'ENCRYPTED' : 'OFF';
+        encBadge.className = (nextVal === 'encrypted')
+          ? 'text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase'
+          : 'text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 uppercase';
+      }
 
       try {
         const fresh = await adminApi('admin-update-meta', { securityStatus: nextVal });
         globalData = fresh;
-        showAlert("Security Mode", `PIN Login set to ${nextVal === 'vip' ? 'Enabled' : 'Disabled'}`);
+        renderSettings(fresh);
+        if (fresh.members) renderMembers(fresh.members);
+        showAlert("Member Encryption", `Identity Encryption ${nextVal === 'encrypted' ? 'Enabled (Squad names & photos masked)' : 'Disabled (Original identity restored)'}`);
       } catch (err) {
         // Rollback
         select.value = currentVal;
-        syncVisualSwitch('setSecurityStatus', currentVal === 'vip', 'emerald');
+        syncVisualSwitch('setSecurityStatus', currentVal === 'encrypted', 'emerald');
+        if (encBadge) {
+          encBadge.innerText = (currentVal === 'encrypted') ? 'ENCRYPTED' : 'OFF';
+          encBadge.className = (currentVal === 'encrypted')
+            ? 'text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase'
+            : 'text-[9px] font-bold px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 uppercase';
+        }
         showAlert("Failed", err.message, true);
       }
     }
@@ -1722,6 +1702,7 @@
       try {
         const fresh = await adminApi('admin-update-setting', { rowNumber: 18, col: 'b', value: mode });
         globalData = fresh;
+        renderSettings(fresh);
         showAlert("Route Mode", `Route set to ${mode}`);
       } catch (err) {
         document.getElementById('setRouteStatus').value = oldMode;
@@ -1812,7 +1793,6 @@
 
         globalData = fresh;
         renderSettings(fresh);
-        if (fresh.messages) renderAdminChat(fresh.messages);
         showAlert("Broadcast Sent", "Popup alert pushed to all member phones");
       } catch (err) {
         showAlert("Push Failed", err.message, true);
@@ -1842,7 +1822,8 @@
         const fresh = await adminApi('admin-update-meta', { securityStatus: val });
         globalData = fresh;
         renderSettings(fresh);
-        showAlert("Security Mode", `PIN Login set to ${val === 'vip' ? 'Enabled' : 'Disabled'}`);
+        if (fresh.members) renderMembers(fresh.members);
+        showAlert("Member Encryption", `Identity Encryption set to ${val === 'encrypted' ? 'Enabled' : 'Disabled'}`);
       } catch (err) {
         showAlert("Failed", err.message, true);
       }
@@ -1887,6 +1868,8 @@
         const fresh = await adminApi('admin-update-setting', { rowNumber: 32, col: 'b', value: nextMode });
         globalData = fresh;
         if (globalData.upcomingConfig) globalData.upcomingConfig.tripMode = nextMode;
+        renderUpcomingAdminSettings(fresh);
+        renderSettings(fresh);
         showAlert("App Mode", `Experience mode set to ${nextMode}`);
       } catch (err) {
         syncTripModeSwitchUI(current);
@@ -2654,147 +2637,13 @@
       }
     }
 
-    // ==========================================
-    // CHAT ENGINE
-    // ==========================================
-    function renderAdminChat(messages) {
-      const container = document.getElementById('adminChatMessages');
-      if (!container) return;
-
-      if (!messages || messages.length === 0) {
-        container.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center text-slate-500 py-10">
-            <i data-lucide="message-square-off" class="w-8 h-8 mb-2 opacity-50"></i>
-            <p class="text-xs font-bold uppercase tracking-wider">No messages in chat</p>
-          </div>`;
-        lucide.createIcons();
-        return;
-      }
-
-      container.innerHTML = messages.map(m => {
-        const isAdmin = m.sender === 'Admin' || m.sender.toLowerCase().includes('coordinator');
-        let timeStr = '-';
-        if (m.timestamp) {
-          try {
-            const d = new Date(m.timestamp);
-            timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
-          } catch(e){}
-        }
-
-        const safeText = (m.text || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-
-        return `
-          <div class="bg-slate-900 border ${isAdmin ? 'border-indigo-500/40 bg-indigo-950/20' : 'border-slate-800'} p-3 rounded-xl flex items-start justify-between gap-2.5 hover:border-slate-700 transition">
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-1.5 mb-1 flex-wrap">
-                <span class="text-xs font-black uppercase tracking-wider ${isAdmin ? 'text-indigo-400' : 'text-slate-300'}">${m.sender}</span>
-                ${isAdmin ? '<span class="px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 text-[8px] font-black uppercase">Admin</span>' : ''}
-                <span class="text-[10px] text-slate-500 font-semibold">${timeStr}</span>
-              </div>
-              <p class="text-xs font-medium text-slate-200 break-words leading-relaxed whitespace-pre-wrap">${m.text}</p>
-            </div>
-
-            <div class="flex items-center gap-1 shrink-0 pt-0.5">
-              <button type="button" title="Reply" onclick="setAdminReply('${m.sender}', '${safeText}')" class="p-1.5 bg-slate-950 hover:bg-indigo-600/30 text-slate-400 hover:text-indigo-300 rounded-lg transition">
-                <i data-lucide="reply" class="w-3.5 h-3.5"></i>
-              </button>
-              <button type="button" title="Edit" onclick="openEditMessageModal(${m.id}, '${safeText}')" class="p-1.5 bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg transition">
-                <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
-              </button>
-              <button type="button" title="Delete" onclick="deleteAdminMessage(${m.id})" class="p-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition">
-                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
-          </div>`;
-      }).join('');
-
-      container.scrollTop = container.scrollHeight;
-      lucide.createIcons();
-    }
-
-    function setAdminReply(sender, text) {
-      adminReplyContext = { sender, text };
-      document.getElementById('adminReplySender').innerText = sender;
-      document.getElementById('adminReplyText').innerText = text;
-      document.getElementById('adminReplyBanner').classList.remove('hidden');
-      document.getElementById('adminChatInput').focus();
-      lucide.createIcons();
-    }
-
-    function cancelAdminReply() {
-      adminReplyContext = null;
-      document.getElementById('adminReplyBanner').classList.add('hidden');
-    }
-
-    async function sendAdminMessage(e) {
-      e.preventDefault();
-      const input = document.getElementById('adminChatInput');
-      let text = input.value.trim();
-      if (!text) return;
-
-      if (adminReplyContext) {
-        text = `Replying to @${adminReplyContext.sender}: "${adminReplyContext.text.slice(0, 40)}..."\n${text}`;
-      }
-
-      const btn = document.getElementById('adminSendBtn');
-      btn.disabled = true;
-
-      try {
-        const fresh = await adminApi('admin-send-message', { sender: 'Admin', text });
-        globalData = fresh;
-        renderAdminChat(fresh.messages);
-        input.value = '';
-        cancelAdminReply();
-        showAlert("Sent", "Admin message broadcasted");
-      } catch(err) {
-        showAlert("Failed", err.message, true);
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    function openEditMessageModal(id, text) {
-      document.getElementById('editMsgId').value = id;
-      document.getElementById('editMsgText').value = text;
-      document.getElementById('editMessageModal').classList.remove('hidden');
-    }
-
-    function closeEditMessageModal() {
-      document.getElementById('editMessageModal').classList.add('hidden');
-    }
-
-    async function saveEditMessage(e) {
-      e.preventDefault();
-      const id = document.getElementById('editMsgId').value;
-      const text = document.getElementById('editMsgText').value.trim();
-      if (!text) return;
-
-      try {
-        const fresh = await adminApi('admin-edit-message', { id, text });
-        globalData = fresh;
-        renderAdminChat(fresh.messages);
-        closeEditMessageModal();
-        showAlert("Message Updated", "Chat message modified");
-      } catch(err) {
-        showAlert("Failed", err.message, true);
-      }
-    }
-
-    async function deleteAdminMessage(id) {
-      if (!confirm('Delete this message from chat?')) return;
-      try {
-        const fresh = await adminApi('admin-delete-message', { id });
-        globalData = fresh;
-        renderAdminChat(fresh.messages);
-        showAlert("Deleted", "Message removed from chat");
-      } catch(err) {
-        showAlert("Failed", err.message, true);
-      }
-    }
-
     // Initialize Page
     window.onload = () => {
       lucide.createIcons();
+      const adminUserInput = document.getElementById('adminUser');
+      if (adminUserInput && !adminUserInput.value) {
+        adminUserInput.value = 'admin';
+      }
       if (sessionStorage.getItem('adminToken')) {
         document.getElementById('admin-login-modal').classList.add('hidden');
         resetAutoLogout();
