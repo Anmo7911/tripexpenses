@@ -194,6 +194,28 @@
       <!-- OP SUB-VIEW 1: MASTER SWITCHES & BASIC INFO -->
       <div id="opSubView-switches" class="op-subview space-y-4">
 
+        <!-- App Experience Mode Switch (Promoted to Top of Main Switches) -->
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-3 shadow-sm">
+          <div class="min-w-0 flex-1 pr-1">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black uppercase tracking-wider text-white">App Experience Mode</span>
+              <span id="tripModeBadge" class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                Live Operations
+              </span>
+            </div>
+            <p id="tripModeDesc" class="text-xs text-slate-400 mt-0.5 line-clamp-1">
+              Members currently see the live expense tracker & route dashboard.
+            </p>
+          </div>
+
+          <button type="button" id="btnTripModeSwitch" onclick="toggleTripModeSwitch()"
+            class="switch-transition relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full bg-slate-800 p-0.5 items-center">
+            <span id="tripModeToggleThumb"
+              class="switch-thumb-transition pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md translate-x-0"></span>
+          </button>
+        </div>
+
+
         <!-- Trip Details Card -->
         <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-sm">
           <div class="flex items-center gap-2.5 pb-2.5 border-b border-slate-800">
@@ -467,26 +489,7 @@
 
       <!-- OP SUB-VIEW 3: UPCOMING SHOWCASE & BENTO STATS -->
       <div id="opSubView-upcoming" class="op-subview hidden space-y-4">
-        <!-- Trip Experience Mode Switch -->
-        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-3">
-          <div class="min-w-0 flex-1 pr-1">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-black uppercase tracking-wider text-white">App Experience Mode</span>
-              <span id="tripModeBadge" class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                Live Operations
-              </span>
-            </div>
-            <p id="tripModeDesc" class="text-xs text-slate-400 mt-0.5 line-clamp-1">
-              Members currently see the live expense tracker & route dashboard.
-            </p>
-          </div>
 
-          <button type="button" id="btnTripModeSwitch" onclick="toggleTripModeSwitch()"
-            class="switch-transition relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full bg-slate-800 p-0.5 items-center">
-            <span id="tripModeToggleThumb"
-              class="switch-thumb-transition pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md translate-x-0"></span>
-          </button>
-        </div>
 
         <!-- Next Expedition Information -->
         <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3">
@@ -1232,15 +1235,17 @@
   
 
   <!-- =========================================
-       POPUP ALERT TOAST NOTIFICATION
+       POPUP ALERT TOAST NOTIFICATION (Clear of header & notch, Green when done, Red on error)
        ========================================= -->
-  <div id="adminAlertToast" class="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 sm:max-w-sm w-auto bg-slate-900 border border-indigo-500/40 rounded-2xl p-3.5 shadow-2xl transition-all duration-300 transform translate-y-[-140%] opacity-0 pointer-events-none flex items-start gap-3">
-    <div id="toastIconBox" class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
-      <i data-lucide="check" class="w-4 h-4"></i>
+  <div id="adminAlertToast"
+    style="top: max(calc(env(safe-area-inset-top, 0px) + 76px), 80px);"
+    class="fixed left-4 right-4 sm:left-auto sm:right-6 z-50 sm:max-w-sm w-auto bg-slate-900/95 backdrop-blur-md border-2 border-emerald-500 shadow-2xl shadow-emerald-950/60 rounded-2xl p-3.5 transition-all duration-300 transform translate-y-[-220%] opacity-0 pointer-events-none flex items-start gap-3">
+    <div id="toastIconBox" class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0">
+      <i data-lucide="check-circle-2" class="w-5 h-5 stroke-[2.5]"></i>
     </div>
     <div class="min-w-0 flex-1">
-      <h4 id="toastTitle" class="text-xs font-black uppercase tracking-wider text-white truncate">Success</h4>
-      <p id="toastMessage" class="text-xs text-slate-300 mt-0.5 leading-snug"></p>
+      <h4 id="toastTitle" class="text-xs font-black uppercase tracking-wider text-emerald-400 truncate">Success</h4>
+      <p id="toastMessage" class="text-xs text-slate-200 mt-0.5 leading-snug font-medium"></p>
     </div>
   </div>
 
@@ -1251,7 +1256,7 @@
     let globalData = null;
     let autoLogoutTimer = null;
 
-    // Toast Alert Helper
+    // Toast Alert Helper (Green when done/success, Red otherwise; positioned clearly below top bar)
     function showAlert(title, message, isError = false) {
       const toast = document.getElementById('adminAlertToast');
       const iconBox = document.getElementById('toastIconBox');
@@ -1262,20 +1267,25 @@
       toastMsg.innerText = message;
 
       if (isError) {
-        toast.className = "fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 sm:max-w-sm w-auto bg-slate-900 border border-rose-500/50 rounded-2xl p-3.5 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-start gap-3";
-        iconBox.className = "w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0";
-        iconBox.innerHTML = '<i data-lucide="alert-triangle" class="w-4 h-4"></i>';
+        // Red alert styling for errors, failures, and warnings
+        toast.className = "fixed left-4 right-4 sm:left-auto sm:right-6 z-50 sm:max-w-sm w-auto bg-slate-900/95 backdrop-blur-md border-2 border-rose-500 shadow-2xl shadow-rose-950/60 rounded-2xl p-3.5 transition-all duration-300 transform translate-y-0 opacity-100 pointer-events-auto flex items-start gap-3";
+        iconBox.className = "w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center shrink-0";
+        iconBox.innerHTML = '<i data-lucide="alert-triangle" class="w-5 h-5 stroke-[2.5]"></i>';
+        toastTitle.className = "text-xs font-black uppercase tracking-wider text-rose-400 truncate";
       } else {
-        toast.className = "fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 sm:max-w-sm w-auto bg-slate-900 border border-indigo-500/40 rounded-2xl p-3.5 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-start gap-3";
-        iconBox.className = "w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0";
-        iconBox.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+        // Green confirmation styling when action is done / successful
+        toast.className = "fixed left-4 right-4 sm:left-auto sm:right-6 z-50 sm:max-w-sm w-auto bg-slate-900/95 backdrop-blur-md border-2 border-emerald-500 shadow-2xl shadow-emerald-950/60 rounded-2xl p-3.5 transition-all duration-300 transform translate-y-0 opacity-100 pointer-events-auto flex items-start gap-3";
+        iconBox.className = "w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0";
+        iconBox.innerHTML = '<i data-lucide="check-circle-2" class="w-5 h-5 stroke-[2.5]"></i>';
+        toastTitle.className = "text-xs font-black uppercase tracking-wider text-emerald-400 truncate";
       }
       lucide.createIcons();
 
       if (window.toastTimer) clearTimeout(window.toastTimer);
       window.toastTimer = setTimeout(() => {
-        toast.classList.replace('translate-y-0', 'translate-y-[-140%]');
+        toast.classList.replace('translate-y-0', 'translate-y-[-220%]');
         toast.classList.replace('opacity-100', 'opacity-0');
+        toast.classList.replace('pointer-events-auto', 'pointer-events-none');
       }, 3000);
     }
 
@@ -1283,7 +1293,7 @@
     function resetAutoLogout() {
       if (autoLogoutTimer) clearTimeout(autoLogoutTimer);
       autoLogoutTimer = setTimeout(() => {
-        showAlert("Session Expired", "You have been logged out due to inactivity.");
+        showAlert("Session Expired", "You have been logged out due to inactivity.", true);
         adminLogout();
       }, 15 * 60 * 1000);
     }
