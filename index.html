@@ -4559,6 +4559,33 @@ if (urlParams.get('preview') === 'admin') {
        evaluateBroadcastPopup(data.popupConfig);
      }
 
+
+
+    // ==========================================
+    // DUAL MODE TOGGLE: LIVE VS UPCOMING SHOWCASE
+    // ==========================================
+    const isUpcomingMode = (data.tripMode === 'UPCOMING');
+    const topCardsWrap = document.getElementById('ui-top-cards-wrapper');
+    const formWrap = document.getElementById('ui-form-wrapper');
+    const chartWrap = document.getElementById('ui-spend-chart-wrapper');
+    const upcomingShowcase = document.getElementById('ui-upcoming-showcase');
+
+    if (isUpcomingMode) {
+      if (topCardsWrap) topCardsWrap.classList.add('hidden');
+      if (formWrap) formWrap.classList.add('hidden');
+      if (chartWrap) chartWrap.classList.add('hidden');
+      if (upcomingShowcase) {
+        upcomingShowcase.classList.remove('hidden');
+        renderUpcomingShowcaseUI(data);
+      }
+    } else {
+      if (topCardsWrap) topCardsWrap.classList.remove('hidden');
+      if (formWrap) formWrap.classList.remove('hidden');
+      if (chartWrap) chartWrap.classList.remove('hidden');
+      if (upcomingShowcase) upcomingShowcase.classList.add('hidden');
+    }
+
+    
      // =============================================================
      // DYNAMIC GRAPHICS ENGINE & DESIGN CONTROLLER INJECTION
      // =============================================================
@@ -9182,7 +9209,171 @@ window.addEventListener('resize', autoScaleNoticeA4);
     showToast("Download failed. Try again.");
   }
 }
-    
+
+
+  // ==========================================
+    // UPCOMING SHOWCASE RENDER ENGINE & TIMERS
+    // ==========================================
+    let showcaseCountdownTimer = null;
+    let showcaseCarouselTimer = null;
+    let showcaseCurrentSlide = 0;
+    let showcaseImagesList = [];
+
+    function renderUpcomingShowcaseUI(data) {
+      const cfg = data.upcomingConfig || {};
+      const stats = cfg.stats || {};
+
+      // 1. Populate Destination Titles
+      const nameEl = document.getElementById('showcase-trip-name');
+      const subEl = document.getElementById('showcase-trip-sub');
+      if (nameEl) nameEl.innerText = cfg.nextTripName || 'Next Expedition';
+      if (subEl) subEl.innerText = cfg.nextTripSub || 'Departing Soon';
+
+      // 2. Start Live Ticking Countdown
+      startShowcaseCountdown(cfg.nextTripDate);
+
+      // 3. Populate Bento Stats (No hardcoded '+')
+      if (document.getElementById('showcase-stat-trips-val')) {
+        document.getElementById('showcase-stat-trips-val').innerText = stats.trips?.value || '5';
+        document.getElementById('showcase-stat-trips-lbl').innerText = stats.trips?.label || 'Trips';
+      }
+      if (document.getElementById('showcase-stat-spent-val')) {
+        document.getElementById('showcase-stat-spent-val').innerText = stats.spent?.value || '5000 Rs';
+        document.getElementById('showcase-stat-spent-lbl').innerText = stats.spent?.label || 'Expedition Spent';
+      }
+      if (document.getElementById('showcase-stat-locations-val')) {
+        document.getElementById('showcase-stat-locations-val').innerText = stats.locations?.value || '50';
+        document.getElementById('showcase-stat-locations-lbl').innerText = stats.locations?.label || 'Locations';
+      }
+      if (document.getElementById('showcase-stat-states-val')) {
+        document.getElementById('showcase-stat-states-val').innerText = stats.states?.value || '8';
+        document.getElementById('showcase-stat-states-lbl').innerText = stats.states?.label || 'States';
+      }
+      if (document.getElementById('showcase-stat-km-val')) {
+        document.getElementById('showcase-stat-km-val').innerText = stats.km?.value || '4200 km';
+        document.getElementById('showcase-stat-km-lbl').innerText = stats.km?.label || 'Kilometers Covered';
+      }
+
+      // 4. Initialize Image Carousel
+      const defaultImages = [
+        'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'
+      ];
+      showcaseImagesList = (cfg.carouselImages && cfg.carouselImages.length > 0) ? cfg.carouselImages : defaultImages;
+      buildShowcaseCarousel(showcaseImagesList);
+      lucide.createIcons();
+    }
+
+    function startShowcaseCountdown(targetDateStr) {
+      if (showcaseCountdownTimer) clearInterval(showcaseCountdownTimer);
+      if (!targetDateStr) return;
+
+      const targetTime = new Date(targetDateStr).getTime();
+
+      const updateTicker = () => {
+        const now = Date.now();
+        const diff = targetTime - now;
+
+        const dEl = document.getElementById('cd-days');
+        const hEl = document.getElementById('cd-hours');
+        const mEl = document.getElementById('cd-mins');
+        const sEl = document.getElementById('cd-secs');
+
+        if (diff <= 0) {
+          if (dEl) dEl.innerText = "00";
+          if (hEl) hEl.innerText = "00";
+          if (mEl) mEl.innerText = "00";
+          if (sEl) sEl.innerText = "00";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        if (dEl) dEl.innerText = String(days).padStart(2, '0');
+        if (hEl) hEl.innerText = String(hours).padStart(2, '0');
+        if (mEl) mEl.innerText = String(mins).padStart(2, '0');
+        if (sEl) sEl.innerText = String(secs).padStart(2, '0');
+      };
+
+      updateTicker();
+      showcaseCountdownTimer = setInterval(updateTicker, 1000);
+    }
+
+    function buildShowcaseCarousel(images) {
+      const track = document.getElementById('showcaseCarouselTrack');
+      const dotsContainer = document.getElementById('carouselDotsContainer');
+      if (!track || !images || images.length === 0) return;
+
+      showcaseCurrentSlide = 0;
+      track.innerHTML = images.map((url, i) => `
+        <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out ${i === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}" data-slide="${i}">
+          <img src="${url}" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
+        </div>
+      `).join('');
+
+      if (dotsContainer) {
+        dotsContainer.innerHTML = images.map((_, i) => `
+          <button type="button" onclick="goToShowcaseSlide(${i})" class="w-1.5 h-1.5 rounded-full transition-all ${i === 0 ? 'bg-white w-4' : 'bg-white/40'}"></button>
+        `).join('');
+      }
+
+      updateCarouselCounter(0, images.length);
+
+      if (showcaseCarouselTimer) clearInterval(showcaseCarouselTimer);
+      if (images.length > 1) {
+        showcaseCarouselTimer = setInterval(() => {
+          nextShowcaseSlide();
+        }, 4000);
+      }
+    }
+
+    function goToShowcaseSlide(index) {
+      const slides = document.querySelectorAll('#showcaseCarouselTrack > div');
+      const dots = document.querySelectorAll('#carouselDotsContainer > button');
+      if (!slides.length) return;
+
+      showcaseCurrentSlide = (index + slides.length) % slides.length;
+
+      slides.forEach((s, idx) => {
+        if (idx === showcaseCurrentSlide) {
+          s.classList.replace('opacity-0', 'opacity-100');
+          s.classList.replace('z-0', 'z-10');
+        } else {
+          s.classList.replace('opacity-100', 'opacity-0');
+          s.classList.replace('z-10', 'z-0');
+        }
+      });
+
+      dots.forEach((d, idx) => {
+        if (idx === showcaseCurrentSlide) {
+          d.className = "w-4 h-1.5 rounded-full transition-all bg-white";
+        } else {
+          d.className = "w-1.5 h-1.5 rounded-full transition-all bg-white/40";
+        }
+      });
+
+      updateCarouselCounter(showcaseCurrentSlide, slides.length);
+    }
+
+    function nextShowcaseSlide() {
+      goToShowcaseSlide(showcaseCurrentSlide + 1);
+    }
+
+    function prevShowcaseSlide() {
+      goToShowcaseSlide(showcaseCurrentSlide - 1);
+    }
+
+    function updateCarouselCounter(current, total) {
+      const counterEl = document.getElementById('carousel-counter-badge');
+      if (counterEl) {
+        counterEl.innerText = `${String(current + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      }
+    }  
     
 </script>
 
