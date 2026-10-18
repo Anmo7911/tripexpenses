@@ -16,7 +16,7 @@
   <link rel="apple-touch-icon" href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEimofIigNth4k5BreAJAnyG4bsP0EWZytIYDGiFMLea8zwHDYwC5otlcejP1ewp3Hwfc2J0nYCZzCueuJI7k3VPm8r-_Ryhz2GuegoB-sMgQGM24tGRq6ZSz-AZwi5WvZFWL9E3-v4D3FUBHZj6x42fN8kfRo1hGKLiwCy5gQi5K9PVNVBDWIzSTYLbV7e0/s666/jjjjjjjjjjjjj.png">
 
   <!-- Mobile Responsive Viewport Setup (Fixes Mobile Scaling) -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
   <!-- iOS specific meta tags to enable full-screen standalone mode -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -44,12 +44,14 @@
   <link rel="manifest"
     href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Bharat%20Way%22%2C%22short_name%22%3A%22Bharat%20Way%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%234f46e5%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fblogger.googleusercontent.com%2Fimg%2Fb%2FR29vZ2xl%2FAVvXsEiGHp7RSIwlvRAyQhCAZEg7NgMyK8DyzUyfbgd1I6Jn50K5ervtpkkzrUclO9pzMW5uE_nuR31zQnh3_baZVUK9k66bTnIDd792yTSMD-vcYMIe49rWshii3AYoKfEt1o_FYRSTLt-ChjRNjKknHOlgX7v2XdBaR78UEppEOVnfLP9CuPK8l1jCte7bwSG-%2Fs1254%2FIMG_6004.PNG%22%2C%22sizes%22%3A%221254x1254%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
 
-  <!-- iOS specific meta tags to enable full-screen standalone mode -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#4f46e5">
+
 
   <style>
+    /* iOS notch and status-bar safe padding for curved header */
+    #app-header {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
 
     /* Countdown Timer Top-to-Down Slide Animation */
 @keyframes timerSlideDown {
@@ -2600,7 +2602,7 @@
   <!-- =========================================
        APP HEADER CONTAINER (Theme Color with Rounded Bottom)
        ========================================= -->
-  <header id="app-header" class="relative lg:sticky top-0 z-30 w-full overflow-hidden select-none bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-800 text-white rounded-b-[28px] sm:rounded-b-[36px] lg:rounded-b-[40px] shadow-lg shadow-indigo-950/15" style="border-bottom-left-radius: 2.25rem; border-bottom-right-radius: 2.25rem;">
+  <header id="app-header" class="relative lg:sticky top-0 z-30 w-full overflow-hidden select-none bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-800 text-white rounded-b-[28px] sm:rounded-b-[36px] lg:rounded-b-[40px] shadow-lg shadow-indigo-950/15" style="border-bottom-left-radius: 2.25rem; border-bottom-right-radius: 2.25rem; padding-top: env(safe-area-inset-top, 0px);">
     
     <!-- Subtle Ambient Lighting and Depth -->
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/15 via-transparent to-black/15 pointer-events-none"></div>
@@ -2882,46 +2884,32 @@
 
 
 
-      <!-- Ticking Countdown Timer Grid with Top-to-Down Slide Effect -->
+      <!-- Ticking Countdown Timer Grid with Top-to-Down Slide Effect (Displays D A Y 1 on completion) -->
       <div id="showcase-countdown-timer" class="grid grid-cols-4 gap-2.5 sm:gap-4 max-w-xs sm:max-w-sm w-full pt-1">
         <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center">
           <div class="h-6 sm:h-8 flex items-center justify-center overflow-hidden">
             <span id="cd-days" class="inline-block text-xl sm:text-2xl font-black text-white leading-none">00</span>
           </div>
-          <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Days</span>
+          <span class="cd-label text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Days</span>
         </div>
         <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center">
           <div class="h-6 sm:h-8 flex items-center justify-center overflow-hidden">
             <span id="cd-hours" class="inline-block text-xl sm:text-2xl font-black text-white leading-none">00</span>
           </div>
-          <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Hours</span>
+          <span class="cd-label text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Hours</span>
         </div>
         <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center">
           <div class="h-6 sm:h-8 flex items-center justify-center overflow-hidden">
             <span id="cd-mins" class="inline-block text-xl sm:text-2xl font-black text-white leading-none">00</span>
           </div>
-          <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Mins</span>
+          <span class="cd-label text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Mins</span>
         </div>
         <div class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-2.5 sm:p-3 text-center">
           <div class="h-6 sm:h-8 flex items-center justify-center overflow-hidden">
             <span id="cd-secs" class="inline-block text-xl sm:text-2xl font-black text-emerald-400 leading-none">00</span>
           </div>
-          <span class="text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Secs</span>
+          <span class="cd-label text-[8px] sm:text-[9px] font-bold text-indigo-200 uppercase tracking-widest mt-1 block">Secs</span>
         </div>
-      </div>
-
-      <!-- Timer Done Replacement: 'You are ready to experience a way' with stunning glow effect -->
-      <div id="showcase-timer-complete" class="hidden ready-experience-container max-w-xs sm:max-w-sm w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-indigo-950/90 via-slate-900/90 to-emerald-950/90 border border-indigo-400/40 backdrop-blur-md transition-all duration-300 text-center flex flex-col items-center justify-center gap-1.5 shadow-2xl">
-        <div class="flex items-center gap-2">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-          </span>
-          <span class="text-[9px] font-black uppercase tracking-[0.22em] text-emerald-300">Expedition Unlocked</span>
-        </div>
-        <h3 class="ready-experience-effect text-sm sm:text-base font-black uppercase tracking-wider drop-shadow leading-snug">
-          You are ready to experience a way
-        </h3>
       </div>
     </div>
   </div>
@@ -9497,20 +9485,16 @@ window.addEventListener('resize', autoScaleNoticeA4);
     function startShowcaseCountdown(targetDateStr) {
   if (showcaseCountdownTimer) clearInterval(showcaseCountdownTimer);
   const timerGrid = document.getElementById('showcase-countdown-timer');
-  const completeBanner = document.getElementById('showcase-timer-complete');
 
-  if (!targetDateStr) {
-    if (timerGrid) timerGrid.classList.remove('hidden');
-    if (completeBanner) completeBanner.classList.add('hidden');
-    return;
-  }
-
-  const targetTime = new Date(targetDateStr).getTime();
+  const dEl = document.getElementById('cd-days');
+  const hEl = document.getElementById('cd-hours');
+  const mEl = document.getElementById('cd-mins');
+  const sEl = document.getElementById('cd-secs');
 
   // Helper: updates text and triggers top-to-down slide animation on change
   const updateBox = (el, val) => {
     if (!el) return;
-    const str = String(val).padStart(2, '0');
+    const str = typeof val === 'number' ? String(val).padStart(2, '0') : String(val);
     if (el.innerText !== str) {
       el.innerText = str;
       el.classList.remove('animate-timer-slide');
@@ -9519,26 +9503,39 @@ window.addEventListener('resize', autoScaleNoticeA4);
     }
   };
 
+  // Displays 'D A Y 1' across the four boxes on countdown completion
+  const showDayOne = () => {
+    if (timerGrid) timerGrid.classList.remove('hidden');
+    updateBox(dEl, 'D');
+    updateBox(hEl, 'A');
+    updateBox(mEl, 'Y');
+    updateBox(sEl, '1');
+    document.querySelectorAll('.cd-label').forEach(lbl => lbl.classList.add('hidden'));
+  };
+
+  if (!targetDateStr) {
+    if (timerGrid) timerGrid.classList.remove('hidden');
+    showDayOne();
+    return;
+  }
+
+  const targetTime = new Date(targetDateStr).getTime();
+  if (isNaN(targetTime)) {
+    if (timerGrid) timerGrid.classList.remove('hidden');
+    showDayOne();
+    return;
+  }
+
   const updateTicker = () => {
     const now = Date.now();
     const diff = targetTime - now;
 
-    const dEl = document.getElementById('cd-days');
-    const hEl = document.getElementById('cd-hours');
-    const mEl = document.getElementById('cd-mins');
-    const sEl = document.getElementById('cd-secs');
-
     if (diff <= 0) {
-      if (timerGrid) timerGrid.classList.add('hidden');
-      if (completeBanner) completeBanner.classList.remove('hidden');
-      updateBox(dEl, 0);
-      updateBox(hEl, 0);
-      updateBox(mEl, 0);
-      updateBox(sEl, 0);
+      showDayOne();
       return;
     } else {
       if (timerGrid) timerGrid.classList.remove('hidden');
-      if (completeBanner) completeBanner.classList.add('hidden');
+      document.querySelectorAll('.cd-label').forEach(lbl => lbl.classList.remove('hidden'));
     }
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
