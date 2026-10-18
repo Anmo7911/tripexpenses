@@ -1616,21 +1616,6 @@
       /* Stops pull-to-refresh globally */
     }
 
-    
-    /* Slide-Up Transition for Transaction Ledger Page */
-    #ui-ledger-page {
-      will-change: transform, opacity;
-      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-    }
-
-    /* Ensure home summary cards sit above the curved header */
-    #ui-top-cards-wrapper,
-    #balance-col,
-    #stats-col {
-      position: relative;
-      z-index: 40 !important;
-    }
-
     /* Simple spinning loader */
     .loader {
       border-top-color: #fff;
@@ -2679,12 +2664,12 @@
     <div class="flex flex-col lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start space-y-4 lg:space-y-0">
 
       <!-- LEFT COLUMN: SUMMARY BENTO CARDS (5 cols on Desktop) -->
-      <div id="ui-top-cards-wrapper" class="w-full lg:col-span-5 transition-all duration-500 overflow-hidden opacity-100 origin-top relative z-40">
+      <div id="ui-top-cards-wrapper" class="w-full lg:col-span-5 transition-all duration-500 overflow-hidden opacity-100 origin-top">
         
         <div class="flex flex-row lg:flex-col gap-1 lg:gap-4 h-[150px] lg:h-auto w-full relative">
 
           <!-- Flippable Balance Card (70% on Mobile, Full Width on Desktop) -->
-          <div id="balance-col" class="transition-all duration-[600ms] ease-[cubic-bezier(0.25,1,0.5,1)] h-full lg:h-[160px] relative z-40 w-[calc(70%-3px)] lg:w-full">
+          <div id="balance-col" class="transition-all duration-[600ms] ease-[cubic-bezier(0.25,1,0.5,1)] h-full lg:h-[160px] z-20 w-[calc(70%-3px)] lg:w-full">
             <div class="card-scene h-full w-full">
               <div id="card-flipper-engine" onclick="flipBalanceCard()" class="card-flipper cursor-pointer select-none">
 
@@ -2732,7 +2717,7 @@
           </div>
 
           <!-- Total Budget & Spent (30% on Mobile Stacked, Dual Columns on Desktop) -->
-          <div id="stats-col" class="transition-all duration-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col sm:flex-col lg:grid lg:grid-cols-2 justify-between h-full lg:h-auto w-[calc(30%-1px)] lg:w-full gap-1 lg:gap-3 relative z-40">
+          <div id="stats-col" class="transition-all duration-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col sm:flex-col lg:grid lg:grid-cols-2 justify-between h-full lg:h-auto w-[calc(30%-1px)] lg:w-full gap-1 lg:gap-3">
 
             <!-- Total Budget -->
             <div id="ui-budget-wrapper" class="w-full h-[calc(50%-2px)] lg:h-[76px] rounded-tr-[22px] rounded-tl-[4px] rounded-b-[4px] lg:rounded-[22px] overflow-hidden">
@@ -2763,7 +2748,7 @@
             </div>
 
             <!-- Spent Card -->
-            <div id="ui-spent-hero-card" onclick="openTransactionsPage()" class="w-full h-[calc(50%-2px)] lg:h-[76px] bg-slate-900/95 hover:bg-slate-900 backdrop-blur-md border border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-br-[22px] rounded-bl-[4px] rounded-t-[4px] lg:rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 active:scale-[0.98]">
+            <div id="ui-spent-hero-card" onclick="toggleLedger()" class="w-full h-[calc(50%-2px)] lg:h-[76px] bg-slate-900/95 hover:bg-slate-900 backdrop-blur-md border border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-br-[22px] rounded-bl-[4px] rounded-t-[4px] lg:rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 active:scale-[0.98]">
               <div class="flex flex-col justify-center items-center lg:items-start min-w-0">
                 <div class="flex items-center gap-1 mb-0.5">
                   <p id="ui-spent-label" class="text-[7.5px] sm:text-[8px] lg:text-[9px] font-black text-rose-400 uppercase tracking-wider">
@@ -2859,12 +2844,6 @@
               </div>
             </div>
           </form>
-        </div>
-
-        <!-- All Transactions Trigger Button -->
-        <div onclick="openTransactionsPage()" class="flex items-center justify-center gap-1.5 mt-3 py-2 cursor-pointer text-slate-400 hover:text-slate-600 transition-colors select-none group" title="Open Transactions">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 group-hover:text-slate-600">All Transactions</span>
-          <i data-lucide="chevron-down" class="w-4 h-4 stroke-[2.5] text-slate-400 group-hover:text-slate-600 group-hover:translate-y-0.5 transition-all"></i>
         </div>
       </div>
 
@@ -3049,79 +3028,47 @@
 
    
 
-  </main>
-
-  <!-- =========================================
-       TRANSACTION LEDGER PAGE (Slide-Up Full View)
-       ========================================= -->
-  <div id="ui-ledger-page"
-    class="fixed inset-0 lg:left-72 z-[160] bg-slate-100/98 backdrop-blur-xl flex flex-col justify-start transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] transform translate-y-full opacity-0 pointer-events-none overflow-hidden select-none">
-    
-    <div class="w-full h-full flex flex-col max-w-md lg:max-w-4xl mx-auto overflow-hidden">
-
-      <!-- Top Header Row inside the Transaction Page -->
-      <div class="px-4 lg:px-8 pt-4 pb-3 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs flex items-center justify-between z-10 shrink-0" style="padding-top: max(1rem, calc(env(safe-area-inset-top, 0px) + 0.75rem));">
-        
-        <!-- Left: Back / Cut Button and Title -->
-        <div class="flex items-center gap-2.5 min-w-0">
-          <button type="button" onclick="closeTransactionsPage()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center active:scale-90 transition-all border border-slate-200/80 shrink-0 cursor-pointer" title="Back to Home">
-            <i data-lucide="arrow-left" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
-          <div class="min-w-0">
-            <h3 class="text-xs sm:text-sm font-black text-slate-800 uppercase tracking-wide truncate">Transaction Ledger</h3>
-            <p class="text-[8.5px] sm:text-[9.5px] font-bold text-slate-400 uppercase tracking-wider truncate">All expense entries & settlement</p>
-          </div>
-        </div>
-
-        <!-- Right: Search, Filter, CSV, POS, Cut Buttons -->
-        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <!-- Search Button Toggle -->
-          <button type="button" onclick="toggleLedgerSearch()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200/80 transition-colors active:scale-90 outline-none" title="Search Transactions">
-            <i data-lucide="search" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
-          <!-- Filter Button Toggle -->
-          <button type="button" onclick="toggleLedgerFilter()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200/80 transition-colors active:scale-90 outline-none" title="Filter by Category">
-            <i data-lucide="filter" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
-          <!-- Download CSV -->
-          <button type="button" onclick="downloadLedgerCSV()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200/80 transition-colors active:scale-90 outline-none" title="Download CSV">
-            <i data-lucide="download" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
-          <!-- POS Terminal Trigger Button -->
-          <button type="button" onclick="closeTransactionsPage(); showTab('pos', null);" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200/80 transition-colors active:scale-90 outline-none" title="Print Bill POS">
-            <i data-lucide="printer" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
-          <!-- Cut / Close Button (X) -->
-          <button type="button" onclick="closeTransactionsPage()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-50 hover:text-rose-600 border border-slate-200/80 transition-colors active:scale-90 outline-none shrink-0" title="Close">
-            <i data-lucide="x" class="w-4 h-4 stroke-[2.5]"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Expandable Search Input -->
-      <div id="ledger-search-bar" class="hidden px-4 lg:px-8 pt-3 pb-1 bg-white border-b border-slate-200/60 shrink-0">
-        <div class="relative w-full">
-          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-          <input 
-            type="text" 
-            id="ledger-search-input" 
-            oninput="handleLedgerSearch(this.value)" 
-            placeholder="Search notes, category, UTR, or amount..." 
-            class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-2xl pl-10 pr-4 py-2 text-xs font-bold text-slate-700 outline-none transition-all placeholder-slate-400"
-          >
-        </div>
-      </div>
-
-      <!-- Expandable Filter Bar -->
-      <div id="ledger-filter-bar" class="hidden flex gap-2 overflow-x-auto px-4 lg:px-8 py-2.5 bg-white border-b border-slate-200/60 shrink-0 snap-x" style="scrollbar-width: none;"></div>
-
-      <!-- Scrollable List of Transactions -->
-      <div class="flex-1 overflow-y-auto px-4 lg:px-8 py-4 space-y-3" style="padding-bottom: max(6rem, calc(env(safe-area-inset-bottom, 0px) + 5rem));">
-        <div id="txList" class="grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
-      </div>
-
+   <!-- TRANSACTION LEDGER -->
+<div id="ui-ledger-container" class="hidden opacity-0 translate-y-10 transition-all duration-500 pt-20 sm:pt-24 lg:pt-28 pb-10">
+  <div class="flex items-center justify-between mb-3 px-2">
+    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Transaction Ledger</h3>
+    <div class="flex items-center gap-2">
+      <!-- Search Button Toggle -->
+      <button type="button" onclick="toggleLedgerSearch()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-colors active:scale-90 outline-none" title="Search Transactions">
+        <i data-lucide="search" class="w-4 h-4 stroke-[2.5]"></i>
+      </button>
+      <button type="button" onclick="toggleLedgerFilter()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-colors active:scale-90 outline-none" title="Filter by Category">
+        <i data-lucide="filter" class="w-4 h-4 stroke-[2.5]"></i>
+      </button>
+      <button type="button" onclick="downloadLedgerCSV()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-colors active:scale-90 outline-none" title="Download CSV">
+        <i data-lucide="download" class="w-4 h-4 stroke-[2.5]"></i>
+      </button>
+      <!-- POS Terminal Trigger Button -->
+<button type="button" onclick="showTab('pos', null)" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-indigo-50 hover:text-indigo-600 transition-colors active:scale-90 outline-none" title="Print Bill POS">
+  <i data-lucide="printer" class="w-4 h-4 stroke-[2.5]"></i>
+</button>
     </div>
   </div>
+
+  <!-- Expandable Search Input -->
+  <div id="ledger-search-bar" class="hidden mb-3 px-2">
+    <div class="relative w-full">
+      <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+      <input 
+        type="text" 
+        id="ledger-search-input" 
+        oninput="handleLedgerSearch(this.value)" 
+        placeholder="Search notes, category, UTR, or amount..." 
+        class="w-full bg-slate-50 border border-slate-200 focus:border-indigo-500 rounded-2xl pl-10 pr-4 py-2 text-xs font-bold text-slate-700 outline-none transition-all placeholder-slate-400"
+      >
+    </div>
+  </div>
+
+  <div id="ledger-filter-bar" class="hidden flex gap-2 overflow-x-auto pb-4 px-2 mb-2 snap-x" style="scrollbar-width: none;"></div>
+  <div id="txList" class="grid grid-cols-1 lg:grid-cols-2 gap-3"></div>
+</div>
+
+  </main>
 
  <!-- =========================================
        TAB 2: SQUAD VIEW
@@ -4031,9 +3978,6 @@ if (urlParams.get('preview') === 'admin') {
   if (tabId !== 'archives') {
     closeArchiveGalleryPage();
   }
-  if (tabId !== 'transactions') {
-    closeTransactionsPage();
-  }
   
   // Normalize target view: transactions uses the spend view DOM
   const targetViewId = (tabId === 'transactions') ? 'spend' : tabId;
@@ -4104,13 +4048,13 @@ if (urlParams.get('preview') === 'admin') {
       statsCol.style.opacity = '1';
       statsCol.style.transform = 'translateX(0px) scale(1)';
     }
-    closeTransactionsPage();
+    if (isLedgerActive) toggleLedger();
     currentLedgerFilter = "All";
     renderLedgerList();
   } else if (tabId === 'transactions') {
     const flipper = document.getElementById('card-flipper-engine');
     if (flipper) flipper.classList.remove('flipper-rotated');
-    openTransactionsPage();
+    if (!isLedgerActive) toggleLedger();
   } else if (tabId === 'places' && globalActiveDataPayloadBackup && globalActiveDataPayloadBackup.routeStatus === "LOCKED") {
     // If opening the route tab while locked, freeze scrolling and scroll to top
     document.body.classList.add('overflow-hidden', 'touch-none');
@@ -5591,103 +5535,80 @@ const places = payload.places.filter(p => p.tripDay || p.location);
 
     
     
-    function openTransactionsPage(btnEl) {
-      isLedgerActive = true;
-      renderLedgerList();
-
-      const ledgerPage = document.getElementById('ui-ledger-page');
-      if (ledgerPage) {
-        ledgerPage.classList.remove('hidden', 'pointer-events-none');
-        void ledgerPage.offsetHeight; // trigger reflow for smooth slide-up
-        ledgerPage.classList.remove('translate-y-full', 'opacity-0');
-        ledgerPage.classList.add('translate-y-0', 'opacity-100');
-      }
-
-      // Sync Desktop Sidebar active state
-      document.querySelectorAll('.desktop-nav-btn').forEach(b => {
-        b.classList.remove('text-white', 'bg-indigo-600', 'shadow-md', 'shadow-indigo-100');
-        b.classList.add('text-slate-500');
-      });
-      const deskTxBtn = document.querySelector('.desktop-nav-btn[data-tab="transactions"]');
-      if (deskTxBtn) {
-        deskTxBtn.classList.remove('text-slate-500');
-        deskTxBtn.classList.add('text-white', 'bg-indigo-600', 'shadow-md', 'shadow-indigo-100');
-      }
-
-      lucide.createIcons();
-    }
-
-    function closeTransactionsPage() {
-      isLedgerActive = false;
-
-      const ledgerPage = document.getElementById('ui-ledger-page');
-      if (ledgerPage) {
-        ledgerPage.classList.remove('translate-y-0', 'opacity-100');
-        ledgerPage.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
-        setTimeout(() => {
-          if (!isLedgerActive) {
-            ledgerPage.classList.add('hidden');
-          }
-        }, 450);
-      }
-
-      // Ensure home cards sit firmly in front of header curve with verified z-index & scroll
-      const mainView = document.getElementById('view-spend');
-      if (mainView) {
-        mainView.classList.remove('z-20');
-        mainView.classList.add('z-40');
-        mainView.style.zIndex = '40';
-      }
-
-      const header = document.getElementById('app-header');
-      if (header) {
-        header.classList.remove('sticky');
-        header.classList.add('relative');
-        header.style.zIndex = '30';
-      }
-
-      const topCards = document.getElementById('ui-top-cards-wrapper');
-      if (topCards) {
-        topCards.classList.remove('hidden');
-        topCards.style.opacity = '1';
-        topCards.style.zIndex = '40';
-      }
-
-      const formWrap = document.getElementById('ui-form-wrapper');
-      if (formWrap) {
-        formWrap.classList.remove('hidden');
-        formWrap.style.opacity = '1';
-      }
-
-      // Reset scroll position to top
-      window.scrollTo({ top: 0, behavior: 'instant' });
-
-      // Reset Desktop Sidebar active button to Home
-      document.querySelectorAll('.desktop-nav-btn').forEach(b => {
-        b.classList.remove('text-white', 'bg-indigo-600', 'shadow-md', 'shadow-indigo-100');
-        b.classList.add('text-slate-500');
-      });
-      const deskHomeBtn = document.querySelector('.desktop-nav-btn[data-tab="spend"]');
-      if (deskHomeBtn) {
-        deskHomeBtn.classList.remove('text-slate-500');
-        deskHomeBtn.classList.add('text-white', 'bg-indigo-600', 'shadow-md', 'shadow-indigo-100');
-      }
-
-      // Reset mobile bottom nav active button to Home
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-      const mobHomeBtn = document.querySelector('nav .nav-btn:first-child');
-      if (mobHomeBtn) mobHomeBtn.classList.add('nav-active');
-
-      lucide.createIcons();
-    }
-
     function toggleLedger() {
-      if (isLedgerActive) {
-        closeTransactionsPage();
-      } else {
-        openTransactionsPage();
-      }
+  isLedgerActive = !isLedgerActive;
+  
+  const mainView = document.getElementById('view-spend');
+  const topCards = document.getElementById('ui-top-cards-wrapper');
+  const formWrap = document.getElementById('ui-form-wrapper');
+  const ledgerBox = document.getElementById('ui-ledger-container');
+  const header = document.getElementById('app-header');
+  const chartWrap = document.getElementById('ui-spend-chart-wrapper'); // <-- Added
+
+  if (isLedgerActive) {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Expand the ledger
+    renderLedgerList();
+
+    // 1. Move the view behind the sticky header so ledger scrolls underneath
+    if (mainView) {
+      mainView.classList.remove('z-40');
+      mainView.classList.add('z-20');
     }
+
+    // 2. Make header sticky on mobile
+    if (header) {
+      header.classList.remove('relative');
+      header.classList.add('sticky');
+    }
+
+    // 3. Hide standard cards, form & chart
+    topCards.classList.add('hidden');
+    formWrap.classList.add('hidden');
+    if (chartWrap) {
+      chartWrap.classList.add('hidden');
+      chartWrap.classList.remove('lg:block');
+    }
+    
+    // 4. Show and animate ledger
+    ledgerBox.classList.remove('hidden');
+    setTimeout(() => {
+      ledgerBox.classList.remove('opacity-0', 'translate-y-10');
+    }, 50);
+
+  } else {
+    // 1. Restore container layer above header so cards sit in front
+    if (mainView) {
+      mainView.classList.remove('z-20');
+      mainView.classList.add('z-40');
+    }
+
+    // 2. Restore non-sticky header for standard Spend form on mobile
+    if (header) {
+      header.classList.remove('sticky');
+      header.classList.add('relative');
+    }
+
+    // 3. Hide ledger
+    ledgerBox.classList.add('opacity-0', 'translate-y-10');
+    setTimeout(() => { ledgerBox.classList.add('hidden'); }, 300);
+
+    // 4. Bring back standard Spend cards, form & chart
+    topCards.classList.remove('hidden');
+    formWrap.classList.remove('hidden');
+    if (chartWrap) {
+      chartWrap.classList.remove('hidden');
+      chartWrap.classList.add('lg:block');
+    }
+    
+    topCards.style.maxHeight = '';
+    topCards.style.opacity = '1';
+    formWrap.style.maxHeight = '';
+    formWrap.style.opacity = '1';
+  }
+  
+  lucide.createIcons();
+}
 
     // ==========================================
     // HTML5 CANVAS SIGNATURE CAPTURE ENGINE
@@ -7285,7 +7206,7 @@ async function executePendingChecklistAction() {
 
 
     function openTransactionsTab(btnEl) {
-  openTransactionsPage(btnEl);
+  showTab('transactions', btnEl);
 }
 
 
@@ -8584,14 +8505,6 @@ function togglePosPower() {
   lucide.createIcons();
 }
 
-
-    
-    // Close Transaction Page on Escape key press
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && typeof isLedgerActive !== 'undefined' && isLedgerActive) {
-        closeTransactionsPage();
-      }
-    });
 
     // Tactical POS Button Click / Keypad Tone
 function playPosClickSound() {
