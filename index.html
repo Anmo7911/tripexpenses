@@ -68,6 +68,13 @@
       padding-bottom: max(0.625rem, calc(env(safe-area-inset-bottom, 0px) + 0.35rem)) !important;
     }
 
+    /* Daily Spend Trend Graph - Strictly Hidden on Mobile */
+    @media (max-width: 1023px) {
+      #ui-spend-chart-wrapper {
+        display: none !important;
+      }
+    }
+
 
     /* Countdown Timer Top-to-Down Slide Animation */
 @keyframes timerSlideDown {
@@ -2692,7 +2699,11 @@
       <!-- LEFT COLUMN: SUMMARY BENTO CARDS (5 cols on Desktop) -->
       <div id="ui-top-cards-wrapper" class="w-full lg:col-span-5 transition-all duration-500 overflow-hidden opacity-100 origin-top">
         
-        <div class="flex flex-row lg:flex-col gap-2.5 lg:gap-4 h-[150px] lg:h-auto w-full relative">
+        <!-- Countdown-Style Background Card Container -->
+        <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 rounded-[32px] p-3 sm:p-3.5 lg:p-4 border border-indigo-500/30 shadow-xl relative overflow-hidden">
+          <div class="absolute -right-10 -top-10 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-row lg:flex-col gap-2.5 lg:gap-4 h-[150px] lg:h-auto w-full">
 
           <!-- Flippable Balance Card -->
           <div id="balance-col" class="transition-all duration-[600ms] ease-[cubic-bezier(0.25,1,0.5,1)] h-full lg:h-[160px] z-20 w-[calc(50%-5px)] lg:w-full">
@@ -2793,6 +2804,7 @@
 
           </div>
 
+        </div>
         </div>
       </div>
 
@@ -4791,7 +4803,10 @@ if (urlParams.get('preview') === 'admin') {
     if (isUpcomingMode) {
       if (topCardsWrap) topCardsWrap.classList.add('hidden');
       if (formWrap) formWrap.classList.add('hidden');
-      if (chartWrap) chartWrap.classList.add('hidden');
+      if (chartWrap) {
+        chartWrap.classList.add('hidden');
+        chartWrap.classList.remove('lg:block');
+      }
       if (upcomingShowcase) {
         upcomingShowcase.classList.remove('hidden');
         renderUpcomingShowcaseUI(data);
@@ -4799,7 +4814,10 @@ if (urlParams.get('preview') === 'admin') {
     } else {
       if (topCardsWrap) topCardsWrap.classList.remove('hidden');
       if (formWrap) formWrap.classList.remove('hidden');
-      if (chartWrap) chartWrap.classList.remove('hidden');
+      if (chartWrap) {
+        chartWrap.classList.remove('hidden');
+        chartWrap.classList.add('lg:block');
+      }
       if (upcomingShowcase) upcomingShowcase.classList.add('hidden');
     }
 
@@ -5599,7 +5617,10 @@ const places = payload.places.filter(p => p.tripDay || p.location);
     // 3. Hide standard cards, form & chart
     topCards.classList.add('hidden');
     formWrap.classList.add('hidden');
-    if (chartWrap) chartWrap.classList.add('hidden'); // <-- Added
+    if (chartWrap) {
+      chartWrap.classList.add('hidden');
+      chartWrap.classList.remove('lg:block');
+    }
     
     // 4. Show and animate ledger
     ledgerBox.classList.remove('hidden');
@@ -5627,11 +5648,14 @@ const places = payload.places.filter(p => p.tripDay || p.location);
     // 4. Bring back standard Spend cards, form & chart
     topCards.classList.remove('hidden');
     formWrap.classList.remove('hidden');
-    if (chartWrap) chartWrap.classList.remove('hidden'); // <-- Added
+    if (chartWrap) {
+      chartWrap.classList.remove('hidden');
+      chartWrap.classList.add('lg:block');
+    }
     
-    topCards.style.maxHeight = '300px';
+    topCards.style.maxHeight = '';
     topCards.style.opacity = '1';
-    formWrap.style.maxHeight = '500px';
+    formWrap.style.maxHeight = '';
     formWrap.style.opacity = '1';
   }
   
