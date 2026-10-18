@@ -47,9 +47,25 @@
 
 
   <style>
-    /* iOS notch and status-bar safe padding for curved header */
+    /* iOS notch and status-bar safe padding for curved header (Home & Countdown page) */
     #app-header {
       padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    /* Safe top padding for standalone views when header is hidden */
+    .view-safe-top {
+      padding-top: max(1rem, calc(env(safe-area-inset-top, 0px) + 1rem)) !important;
+    }
+
+    /* Safe top & bottom padding for mobile side drawer (menu page) */
+    #more-menu-sheet {
+      padding-top: max(1rem, calc(env(safe-area-inset-top, 0px) + 1rem)) !important;
+      padding-bottom: max(1rem, calc(env(safe-area-inset-bottom, 0px) + 1rem)) !important;
+    }
+
+    /* Safe bottom padding for fixed mobile nav bar */
+    nav.lg\:hidden.fixed.bottom-0 {
+      padding-bottom: max(0.625rem, calc(env(safe-area-inset-bottom, 0px) + 0.35rem)) !important;
     }
 
 
@@ -2914,60 +2930,60 @@
     </div>
   </div>
 
-  <!-- 2. Track Record Bento Stats (5 Boxes: Centered Icon Pill, Value & Label) -->
-  <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
+  <!-- 2. Track Record Bento Stats (5 Boxes: Compact Centered Icon Pill, Value & Label) -->
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-2.5">
     <!-- Stat 1: Trips -->
-    <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center text-center group">
-      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mx-auto mb-2.5 shadow-xs transition-transform duration-300 group-hover:scale-110">
-        <i data-lucide="compass" class="w-5 h-5 stroke-[2.2]"></i>
+    <div class="relative overflow-hidden bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex flex-col items-center justify-center text-center group">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="compass" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
-        <p id="showcase-stat-trips-val" class="text-xl sm:text-2xl font-black text-slate-800 leading-tight text-center">14</p>
-        <p id="showcase-stat-trips-lbl" class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Trips Completed</p>
+        <p id="showcase-stat-trips-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">14</p>
+        <p id="showcase-stat-trips-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 text-center">Trips Completed</p>
       </div>
     </div>
 
     <!-- Stat 2: Spent/Managed -->
-    <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center text-center group">
-      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-2.5 shadow-xs transition-transform duration-300 group-hover:scale-110">
-        <i data-lucide="wallet" class="w-5 h-5 stroke-[2.2]"></i>
+    <div class="relative overflow-hidden bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex flex-col items-center justify-center text-center group">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="wallet" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
-        <p id="showcase-stat-spent-val" class="text-xl sm:text-2xl font-black text-emerald-600 leading-tight text-center">₹4.8L</p>
-        <p id="showcase-stat-spent-lbl" class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Total Managed</p>
+        <p id="showcase-stat-spent-val" class="text-lg sm:text-xl font-black text-emerald-600 leading-tight text-center">₹4.8L</p>
+        <p id="showcase-stat-spent-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 text-center">Total Managed</p>
       </div>
     </div>
 
     <!-- Stat 3: Waypoints -->
-    <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center text-center group">
-      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mx-auto mb-2.5 shadow-xs transition-transform duration-300 group-hover:scale-110">
-        <i data-lucide="map-pin" class="w-5 h-5 stroke-[2.2]"></i>
+    <div class="relative overflow-hidden bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex flex-col items-center justify-center text-center group">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="map-pin" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
-        <p id="showcase-stat-locations-val" class="text-xl sm:text-2xl font-black text-slate-800 leading-tight text-center">85</p>
-        <p id="showcase-stat-locations-lbl" class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Waypoints Reached</p>
+        <p id="showcase-stat-locations-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">85</p>
+        <p id="showcase-stat-locations-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 text-center">Waypoints Reached</p>
       </div>
     </div>
 
     <!-- Stat 4: States -->
-    <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center text-center group">
-      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center mx-auto mb-2.5 shadow-xs transition-transform duration-300 group-hover:scale-110">
-        <i data-lucide="map" class="w-5 h-5 stroke-[2.2]"></i>
+    <div class="relative overflow-hidden bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex flex-col items-center justify-center text-center group">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="map" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
-        <p id="showcase-stat-states-val" class="text-xl sm:text-2xl font-black text-slate-800 leading-tight text-center">7</p>
-        <p id="showcase-stat-states-lbl" class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">States Traversed</p>
+        <p id="showcase-stat-states-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">7</p>
+        <p id="showcase-stat-states-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 text-center">States Traversed</p>
       </div>
     </div>
 
     <!-- Stat 5: Kilometers -->
-    <div class="relative overflow-hidden bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 group">
-      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mx-auto mb-2.5 shadow-xs transition-transform duration-300 group-hover:scale-110">
-        <i data-lucide="navigation" class="w-5 h-5 stroke-[2.2]"></i>
+    <div class="relative overflow-hidden bg-white rounded-xl sm:rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/80 shadow-xs hover:shadow-sm transition-all flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 group">
+      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="navigation" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
-        <p id="showcase-stat-km-val" class="text-xl sm:text-2xl font-black text-slate-800 leading-tight text-center">12,500</p>
-        <p id="showcase-stat-km-lbl" class="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1 text-center">Kilometers Covered</p>
+        <p id="showcase-stat-km-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">12,500</p>
+        <p id="showcase-stat-km-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 text-center">Kilometers Covered</p>
       </div>
     </div>
   </div>
@@ -3155,7 +3171,7 @@
     <!-- =========================================
      TAB: OFFICIAL NOTICES & CIRCULARS VIEW
      ========================================= -->
-<main id="view-notices" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto pt-4 px-4 lg:p-8 space-y-5 pb-24 relative z-20">
+<main id="view-notices" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto view-safe-top px-4 lg:p-8 space-y-5 pb-24 relative z-20">
 
   <!-- 1. NOTICES LIST VIEW -->
   <div id="notices-list-view" class="space-y-4">
@@ -3223,9 +3239,9 @@
   <!-- =========================================
      TAB: ITINERARY CHECKLIST VIEW
      ========================================= -->
-<main id="view-checklist" class="tab-content w-full max-w-md lg:max-w-3xl mx-auto -mt-12 sm:-mt-14 lg:-mt-16 pt-0 px-4 lg:px-8 space-y-4 pb-24 relative z-40">
+<main id="view-checklist" class="tab-content w-full max-w-md lg:max-w-3xl mx-auto view-safe-top px-4 lg:px-8 space-y-4 pb-24 relative z-40">
   
-  <div class="flex items-center justify-between px-1 mt-[50px]">
+  <div class="flex items-center justify-between px-1 pt-1">
     <div>
       <h2 class="text-base lg:text-lg font-black uppercase tracking-tight text-slate-900">Itinerary Checklist</h2>
       <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Claim tasks and track readiness</p>
@@ -3246,7 +3262,7 @@
     <!-- =========================================
        TAB 4: MORE / PROFILE VIEW (Desktop Dedicated View)
        ========================================= -->
-  <main id="view-more" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto p-4 lg:p-8 space-y-6">
+  <main id="view-more" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto view-safe-top p-4 lg:p-8 space-y-6">
     <div class="bg-white rounded-[32px] border border-slate-200/80 p-6 lg:p-10 shadow-sm space-y-6">
 
       <!-- Header: User Greeting & ID Button -->
@@ -3341,7 +3357,7 @@
  <!-- =========================================
        TAB 5: PAST TRIPS ARCHIVE FULL VIEW
        ========================================= -->
-  <main id="view-archives" class="tab-content w-full max-w-md lg:max-w-5xl mx-auto pt-4 px-4 lg:p-8 space-y-6">
+  <main id="view-archives" class="tab-content w-full max-w-md lg:max-w-5xl mx-auto view-safe-top px-4 lg:p-8 space-y-6">
 
    <!-- 1. ARCHIVES LIST VIEW -->
     <div id="archives-list-view" class="space-y-4">
@@ -3445,7 +3461,7 @@
     <!-- =========================================
      TAB: POS THERMAL RECEIPT PRINT VIEW
      ========================================= -->
-<main id="view-pos" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto pt-4 px-4 lg:p-8 space-y-6 pb-24 relative z-20">
+<main id="view-pos" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto view-safe-top px-4 lg:p-8 space-y-6 pb-24 relative z-20">
 
   <!-- Top Navigation Header -->
   <div class="flex items-center justify-between px-1">
@@ -3544,7 +3560,7 @@
     <!-- =========================================
      TAB 7: TRIP GALLERY (Full Desktop View)
      ========================================= -->
-<main id="view-gallery" class="tab-content w-full max-w-5xl mx-auto pt-4 px-4 lg:p-8 space-y-6 pb-12">
+<main id="view-gallery" class="tab-content w-full max-w-5xl mx-auto view-safe-top px-4 lg:p-8 space-y-6 pb-12">
   <div class="bg-white rounded-[28px] lg:rounded-[32px] p-6 lg:p-8 border border-slate-200/80 shadow-sm space-y-5 relative flex flex-col">
     
     <!-- Top Header -->
@@ -3583,7 +3599,7 @@
 <!-- =========================================
      TAB 6: ABOUT US / TERMS & CONDITIONS PAGE
      ========================================= -->
-<main id="view-about" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto pt-4 px-4 lg:p-8 space-y-6 pb-20">
+<main id="view-about" class="tab-content w-full max-w-md lg:max-w-4xl mx-auto view-safe-top px-4 lg:p-8 space-y-6 pb-20">
   <div class="bg-white rounded-[28px] lg:rounded-[32px] p-6 lg:p-10 border border-slate-200/80 shadow-sm space-y-6 relative">
 
     <!-- Floating Close Button -->
@@ -4012,18 +4028,18 @@ if (urlParams.get('preview') === 'admin') {
   // Normalize target view: transactions uses the spend view DOM
   const targetViewId = (tabId === 'transactions') ? 'spend' : tabId;
 
-  // Hide header completely on Archives, About, and Gallery tabs; show on all other tabs
+  // Hide header completely on standalone pages (archives, about, gallery, pos, notices, checklist, more)
   const header = document.getElementById('app-header');
   if (header) {
-    if (tabId === 'archives' || tabId === 'about' || tabId === 'gallery' || tabId === 'pos' || tabId === 'notices') {
-  header.classList.add('hidden');
-  if (tabId === 'pos') {
-    initPosTerminalData();
-  }
-  if (tabId === 'notices') {
-    loadNoticesData();
-  }
-} else {
+    if (tabId === 'archives' || tabId === 'about' || tabId === 'gallery' || tabId === 'pos' || tabId === 'notices' || tabId === 'checklist' || tabId === 'more') {
+      header.classList.add('hidden');
+      if (tabId === 'pos') {
+        initPosTerminalData();
+      }
+      if (tabId === 'notices') {
+        loadNoticesData();
+      }
+    } else {
       header.classList.remove('hidden');
       if (targetViewId === 'spend' && tabId !== 'transactions') {
         header.classList.remove('sticky');
@@ -9777,7 +9793,7 @@ function attachShowcaseTouch() {
   <div id="squad-chat-modal" class="hidden fixed inset-0 lg:inset-auto lg:bottom-6 lg:right-6 lg:w-[380px] lg:h-[540px] z-[1000] bg-white lg:rounded-[28px] lg:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] lg:border lg:border-slate-200/80 flex flex-col font-sans overflow-hidden">
 
     <!-- Chat Header -->
-    <div class="bg-gradient-to-br from-indigo-600 to-violet-700 px-4 py-3.5 text-white shadow-sm flex justify-between items-center relative z-20 shrink-0">
+    <div class="bg-gradient-to-br from-indigo-600 to-violet-700 px-4 py-3.5 text-white shadow-sm flex justify-between items-center relative z-20 shrink-0" style="padding-top: max(0.875rem, calc(env(safe-area-inset-top, 0px) + 0.5rem));">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
           <i data-lucide="messages-square" class="w-4 h-4 text-white"></i>
@@ -9964,7 +9980,7 @@ function attachShowcaseTouch() {
     <div class="w-full h-full sm:h-[82vh] sm:max-w-4xl bg-white rounded-none sm:rounded-[32px] shadow-none sm:shadow-2xl border-0 sm:border sm:border-slate-200 flex flex-col overflow-hidden relative">
       
       <!-- Sticky Top Header -->
-      <div class="px-4 py-3 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0 z-20">
+      <div class="px-4 py-3 sm:py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0 z-20" style="padding-top: max(0.75rem, calc(env(safe-area-inset-top, 0px) + 0.5rem));">
         <div class="flex items-center gap-2.5 min-w-0 pr-2">
           <!-- Back Button for Mobile, Icon for Desktop -->
           <button type="button" onclick="closeDriveGallery()" class="sm:hidden w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200 active:scale-90 transition-all shrink-0">
