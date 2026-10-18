@@ -6409,26 +6409,51 @@ const places = payload.places.filter(p => p.tripDay || p.location);
     // ==========================================
     // CSV DOWNLOAD GENERATOR
     // Maps JSON local object array to string blob file
+    // Columns: UTR NO, Type, Expense, Date(DD/MM/YYYY), Amount, Status
     // ==========================================
     function downloadLedgerCSV() {
       if (!globalLedgerDataBackup || globalLedgerDataBackup.length === 0) return;
       
-      let csvContent = "UTR Number,Date,Time,Category,Amount,Over Budget,Notes\n";
+      const escapeCsv = (val) => {
+        const s = val === null || val === undefined ? '' : String(val);
+        return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      };
+
+      let csvContent = "UTR NO,Type,Expense,Date(DD/MM/YYYY),Amount,Status\n";
       
       globalLedgerDataBackup.forEach(t => {
-        let dateStr = "", timeStr = "";
+        let dateStr = "";
         if (t.date) {
-           try { 
-             const d = new Date(t.date); 
-             dateStr = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }); 
-             timeStr = d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }); 
-           } catch(e) {} 
+          try { 
+            const d = new Date(t.date); 
+            if (!isNaN(d.getTime())) {
+              dateStr = new Intl.DateTimeFormat('en-GB', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric', 
+                timeZone: 'Asia/Kolkata' 
+              }).format(d);
+            }
+          } catch(e) {
+            try {
+              const d = new Date(t.date);
+              const day = String(d.getDate()).padStart(2, '0');
+              const month = String(d.getMonth() + 1).padStart(2, '0');
+              const year = d.getFullYear();
+              dateStr = `${day}/${month}/${year}`;
+            } catch(err) {
+              dateStr = String(t.date || '');
+            }
+          } 
         }
-        let safeNotes = (t.notes || "Expense").replace(/,/g, " "); // Strip commas to prevent breaking column CSV syntax
-        let over = t.overBudget ? "YES" : "NO";
-        let safeUtr = t.utr !== 'undefined' ? t.utr : "N/A";
         
-        csvContent += `${safeUtr},${dateStr},${timeStr},${t.category},${t.amount},${over},${safeNotes}\n`;
+        const safeUtr = (t.utr && t.utr !== 'undefined') ? String(t.utr) : "N/A";
+        const safeType = t.category || "Other";
+        const safeExpense = (t.notes || "Expense").replace(/[\r\n]+/g, ' ');
+        const safeAmount = (t.amount !== undefined && t.amount !== null && !isNaN(Number(t.amount))) ? Number(t.amount) : 0;
+        const status = (t.isVerified !== undefined ? (t.isVerified ? "Verified" : "Unverified") : (t.status || "Verified"));
+        
+        csvContent += `${escapeCsv(safeUtr)},${escapeCsv(safeType)},${escapeCsv(safeExpense)},${escapeCsv(dateStr)},${safeAmount},${escapeCsv(status)}\n`;
       });
       
       // Creates memory pointer link to trigger native browser file download
