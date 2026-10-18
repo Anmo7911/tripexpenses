@@ -14,12 +14,11 @@ const map = {
   Members: 'members_sheet',
   Places: 'places_sheet',
   Budget: 'budget_sheet',
-  Messages: 'messages_sheet',
   Archives: 'archives_sheet'
 };
 
 if (!sheetName || !csvPath || !map[sheetName]) {
-  throw new Error(`Usage: node scripts/import-sheet-csv.mjs <Settings|Transactions|Members|Places|Budget|Messages|Archives> <csv-file>`);
+  throw new Error(`Usage: node scripts/import-sheet-csv.mjs <Settings|Transactions|Members|Places|Budget|Archives> <csv-file>`);
 }
 
 const url = process.env.SUPABASE_URL;
