@@ -2699,10 +2699,10 @@
       <!-- LEFT COLUMN: SUMMARY BENTO CARDS (5 cols on Desktop) -->
       <div id="ui-top-cards-wrapper" class="w-full lg:col-span-5 transition-all duration-500 overflow-hidden opacity-100 origin-top">
         
-        <div class="flex flex-row lg:flex-col gap-2.5 lg:gap-4 h-[150px] lg:h-auto w-full relative">
+        <div class="flex flex-row lg:flex-col gap-1 lg:gap-4 h-[150px] lg:h-auto w-full relative">
 
           <!-- Flippable Balance Card (70% on Mobile, Full Width on Desktop) -->
-          <div id="balance-col" class="transition-all duration-[600ms] ease-[cubic-bezier(0.25,1,0.5,1)] h-full lg:h-[160px] z-20 w-[calc(70%-7px)] lg:w-full">
+          <div id="balance-col" class="transition-all duration-[600ms] ease-[cubic-bezier(0.25,1,0.5,1)] h-full lg:h-[160px] z-20 w-[calc(70%-3px)] lg:w-full">
             <div class="card-scene h-full w-full">
               <div id="card-flipper-engine" onclick="flipBalanceCard()" class="card-flipper cursor-pointer select-none">
 
@@ -2750,10 +2750,10 @@
           </div>
 
           <!-- Total Budget & Spent (30% on Mobile Stacked, Dual Columns on Desktop) -->
-          <div id="stats-col" class="transition-all duration-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col sm:flex-col lg:grid lg:grid-cols-2 justify-between h-full lg:h-auto w-[calc(30%-3px)] lg:w-full gap-2.5 lg:gap-3">
+          <div id="stats-col" class="transition-all duration-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col sm:flex-col lg:grid lg:grid-cols-2 justify-between h-full lg:h-auto w-[calc(30%-1px)] lg:w-full gap-1 lg:gap-3">
 
             <!-- Total Budget -->
-            <div id="ui-budget-wrapper" class="w-full h-[calc(50%-5px)] lg:h-[76px] rounded-[22px] overflow-hidden">
+            <div id="ui-budget-wrapper" class="w-full h-[calc(50%-2px)] lg:h-[76px] rounded-[22px] overflow-hidden">
               <div class="budget-scene-mount h-full w-full">
                 <div id="ui-budget-flip-engine" class="budget-card-inner-engine w-full h-full">
 
@@ -2781,7 +2781,7 @@
             </div>
 
             <!-- Spent Card -->
-            <div id="ui-spent-hero-card" onclick="toggleLedger()" class="w-full h-[calc(50%-5px)] lg:h-[76px] bg-slate-900/95 hover:bg-slate-900 backdrop-blur-md border border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 active:scale-[0.98]">
+            <div id="ui-spent-hero-card" onclick="toggleLedger()" class="w-full h-[calc(50%-2px)] lg:h-[76px] bg-slate-900/95 hover:bg-slate-900 backdrop-blur-md border border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 active:scale-[0.98]">
               <div class="flex flex-col justify-center items-center lg:items-start min-w-0">
                 <div class="flex items-center gap-1 mb-0.5">
                   <p id="ui-spent-label" class="text-[7.5px] sm:text-[8px] lg:text-[9px] font-black text-rose-400 uppercase tracking-wider">
@@ -4096,8 +4096,8 @@ if (urlParams.get('preview') === 'admin') {
     const balanceCol = document.getElementById('balance-col');
     const statsCol = document.getElementById('stats-col');
     if (balanceCol && statsCol && window.innerWidth < 1024) {
-      balanceCol.style.width = 'calc(70% - 7px)';
-      statsCol.style.width = 'calc(30% - 3px)';
+      balanceCol.style.width = 'calc(70% - 3px)';
+      statsCol.style.width = 'calc(30% - 1px)';
       statsCol.style.opacity = '1';
       statsCol.style.transform = 'translateX(0px) scale(1)';
     }
@@ -4192,8 +4192,8 @@ if (urlParams.get('preview') === 'admin') {
       statsCol.style.opacity = '0';
       statsCol.style.transform = 'translateX(10px) scale(0.95)';
     } else {
-      balanceCol.style.width = 'calc(70% - 7px)';
-      statsCol.style.width = 'calc(30% - 3px)';
+      balanceCol.style.width = 'calc(70% - 3px)';
+      statsCol.style.width = 'calc(30% - 1px)';
       statsCol.style.opacity = '1';
       statsCol.style.transform = 'translateX(0px) scale(1)';
     }
