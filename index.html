@@ -2707,28 +2707,28 @@
               <div id="card-flipper-engine" onclick="flipBalanceCard()" class="card-flipper cursor-pointer select-none">
 
                 <!-- Front -->
-                <div id="balance-card" class="face-front w-full h-full p-4 rounded-[26px] border border-white/80 bg-gradient-to-b from-emerald-50/90 to-emerald-100/70 shadow-sm transition-all duration-300 flex flex-col justify-between items-center text-center relative active:scale-[0.98]">
-                  <div class="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none opacity-[0.12] z-0">
-                    <i data-lucide="wallet" class="w-20 h-20 text-emerald-900 stroke-[1.2]"></i>
+                <div id="balance-card" class="face-front w-full h-full p-4 rounded-[26px] border border-emerald-500/40 bg-gradient-to-br from-emerald-950/80 via-slate-900 to-emerald-950/60 shadow-[0_8px_24px_rgba(16,185,129,0.2)] transition-all duration-300 flex flex-col justify-between items-center text-center relative active:scale-[0.98]">
+                  <div class="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none opacity-[0.08] z-0">
+                    <i data-lucide="wallet" class="w-20 h-20 text-emerald-400 stroke-[1.2]"></i>
                   </div>
 
                   <div class="w-full flex-1 flex flex-col items-center justify-center relative z-10">
                     <div class="flex items-center justify-center gap-1.5 mb-1">
                       <span class="relative flex h-2 w-2 shrink-0">
                         <span id="dot-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-emerald-400"></span>
-                        <span id="dot-main" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        <span id="dot-main" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
                       </span>
-                      <p id="balance-label" class="text-[9.5px] font-black text-emerald-600 uppercase tracking-widest leading-none">
+                      <p id="balance-label" class="text-[9px] font-black text-emerald-400 uppercase tracking-widest leading-none drop-shadow-sm">
                         Remaining
                       </p>
                     </div>
 
-                    <p id="stat-balance" class="text-4xl sm:text-4xl lg:text-5xl font-black text-emerald-700 tracking-tight text-center leading-none">
+                    <p id="stat-balance" class="text-4xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight text-center leading-none drop-shadow-[0_2px_10px_rgba(52,211,153,0.3)]">
                       ₹0
                     </p>
                   </div>
 
-                  <div id="balance-hint-footer" class="text-[9px] font-bold uppercase tracking-wider text-emerald-700/80 flex items-center justify-center gap-1.5 transition-colors duration-500 w-full relative z-10">
+                  <div id="balance-hint-footer" class="text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider text-emerald-300/80 flex items-center justify-center gap-1.5 transition-colors duration-500 w-full relative z-10">
                     <span>Allocations</span>
                     <i data-lucide="layers" class="w-3.5 h-3.5 stroke-[2.5]"></i>
                   </div>
@@ -2757,23 +2757,23 @@
               <div class="budget-scene-mount h-full w-full">
                 <div id="ui-budget-flip-engine" class="budget-card-inner-engine w-full h-full">
 
-                  <div class="budget-front bg-white border border-slate-200/80 shadow-sm px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] w-full h-full flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
+                  <div class="budget-front bg-slate-900/95 backdrop-blur-md border border-indigo-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] w-full h-full flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left transition-colors">
                     <div class="flex flex-col justify-center items-center lg:items-start min-w-0">
-                      <p class="text-[7.5px] sm:text-[8px] lg:text-[9.5px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 truncate">
+                      <p class="text-[7.5px] sm:text-[8px] lg:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-0.5 truncate">
                         Budget
                       </p>
-                      <p id="stat-budget" class="text-xs sm:text-sm lg:text-lg font-black text-slate-800 truncate">
+                      <p id="stat-budget" class="text-xs sm:text-sm lg:text-lg font-black text-white truncate">
                         ₹0
                       </p>
                     </div>
-                    <div class="hidden lg:flex w-8 h-8 rounded-xl bg-slate-50 items-center justify-center text-slate-400 shrink-0">
+                    <div class="hidden lg:flex w-8 h-8 rounded-xl bg-indigo-500/20 items-center justify-center text-indigo-300 shrink-0">
                       <i data-lucide="wallet-cards" class="w-4 h-4"></i>
                     </div>
                   </div>
 
-                  <div class="budget-back bg-gradient-to-b from-emerald-50 to-emerald-100 border border-emerald-100 p-2 text-center rounded-[22px] w-full h-full flex flex-col justify-center items-center">
-                    <p id="ui-peek-title-row" class="text-[9.5px] font-black tracking-wide text-emerald-600 uppercase"></p>
-                    <p id="ui-peek-notes-row" class="text-[8px] font-semibold text-emerald-600/90 truncate w-full mt-0.5"></p>
+                  <div class="budget-back bg-gradient-to-b from-indigo-950 to-slate-900 border border-indigo-500/40 p-2 text-center rounded-[22px] w-full h-full flex flex-col justify-center items-center backdrop-blur-md">
+                    <p id="ui-peek-title-row" class="text-[9.5px] font-black tracking-wide text-indigo-300 uppercase"></p>
+                    <p id="ui-peek-notes-row" class="text-[8px] font-semibold text-indigo-200/90 truncate w-full mt-0.5"></p>
                   </div>
 
                 </div>
@@ -2781,19 +2781,19 @@
             </div>
 
             <!-- Spent Card -->
-            <div id="ui-spent-hero-card" onclick="toggleLedger()" class="w-full h-[calc(50%-5px)] lg:h-[76px] bg-rose-50/70 border border-rose-100/80 shadow-sm px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 hover:bg-rose-50 active:scale-[0.98]">
+            <div id="ui-spent-hero-card" onclick="toggleLedger()" class="w-full h-[calc(50%-5px)] lg:h-[76px] bg-slate-900/95 hover:bg-slate-900 backdrop-blur-md border border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 active:scale-[0.98]">
               <div class="flex flex-col justify-center items-center lg:items-start min-w-0">
                 <div class="flex items-center gap-1 mb-0.5">
-                  <p id="ui-spent-label" class="text-[7.5px] sm:text-[8px] lg:text-[9.5px] font-black text-rose-500 uppercase tracking-wider">
+                  <p id="ui-spent-label" class="text-[7.5px] sm:text-[8px] lg:text-[9px] font-black text-rose-400 uppercase tracking-wider">
                     Spent
                   </p>
-                  <i data-lucide="receipt" class="w-2.5 h-2.5 text-rose-500 hidden lg:inline"></i>
+                  <i data-lucide="receipt" class="w-2.5 h-2.5 text-rose-400 hidden lg:inline"></i>
                 </div>
-                <p id="stat-spent" class="text-xs sm:text-sm lg:text-lg font-black text-rose-600 truncate">
+                <p id="stat-spent" class="text-xs sm:text-sm lg:text-lg font-black text-rose-200 truncate">
                   ₹0
                 </p>
               </div>
-              <div class="hidden lg:flex w-8 h-8 rounded-xl bg-rose-100/60 items-center justify-center text-rose-500 shrink-0">
+              <div class="hidden lg:flex w-8 h-8 rounded-xl bg-rose-500/20 items-center justify-center text-rose-400 shrink-0">
                 <i data-lucide="trending-up" class="w-4 h-4"></i>
               </div>
             </div>
@@ -5050,37 +5050,37 @@ if (data.routeStatus === "LOCKED") {
       const pLeft = data.stats.percentLeft;
       const currentBalance = data.stats.balance;
 
-      balanceCard.className = "face-front w-full h-full p-4 rounded-[26px] border border-white/60 transition-all duration-300 text-center flex flex-col justify-between items-center active:scale-[0.96] cursor-pointer";
+      balanceCard.className = "face-front w-full h-full p-4 rounded-[26px] border backdrop-blur-md transition-all duration-300 text-center flex flex-col justify-between items-center active:scale-[0.98] cursor-pointer relative overflow-hidden";
       if(dotPing) dotPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"; 
       if(dotMain) dotMain.className = "relative inline-flex rounded-full h-2 w-2";
 
       if (currentBalance < 0) {
-        balanceCard.classList.add('bg-gradient-to-b', 'from-rose-50', 'to-rose-100', 'warning-pulse', 'shadow-[0_12px_24px_rgba(225,29,72,0.08),inset_0_2px_6px_rgba(255,255,255,0.9)]');
+        balanceCard.classList.add('bg-gradient-to-br', 'from-rose-950/90', 'via-slate-900', 'to-rose-950/70', 'border-rose-500/40', 'warning-pulse', 'shadow-[0_8px_24px_rgba(244,63,94,0.25)]');
         if(balanceLabel) { 
-          balanceLabel.className = "text-[9.5px] font-black text-rose-600 uppercase tracking-widest drop-shadow-sm"; 
+          balanceLabel.className = "text-[9px] font-black text-rose-400 uppercase tracking-widest drop-shadow-sm"; 
           balanceLabel.innerText = "BUDGET EXCEEDED"; 
         }
-        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-rose-700 tracking-tight text-center drop-shadow-sm";
-        if(hintFooter) hintFooter.className = "text-[9px] font-bold uppercase tracking-wider text-rose-600 flex items-center justify-center gap-1 transition-colors duration-500 w-full drop-shadow-sm";
-        if(dotPing) dotPing.classList.add('bg-rose-500'); if(dotMain) dotMain.classList.add('bg-rose-600');
+        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-rose-100 tracking-tight text-center drop-shadow-sm";
+        if(hintFooter) hintFooter.className = "text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider text-rose-300/80 flex items-center justify-center gap-1.5 transition-colors duration-500 w-full drop-shadow-sm";
+        if(dotPing) dotPing.classList.add('bg-rose-500'); if(dotMain) dotMain.classList.add('bg-rose-500');
       } else if (pLeft > 20) { 
-        balanceCard.classList.add('bg-gradient-to-b', 'from-emerald-50', 'to-emerald-100', 'shadow-[0_12px_24px_rgba(16,185,129,0.06),inset_0_2px_6px_rgba(255,255,255,0.9)]');
-        if(balanceLabel) { balanceLabel.className = "text-[9.5px] font-black text-emerald-600 uppercase tracking-widest drop-shadow-sm"; balanceLabel.innerText = "Remaining"; }
-        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-emerald-700 tracking-tight text-center drop-shadow-sm";
-        if(hintFooter) hintFooter.className = "text-[9px] font-bold uppercase tracking-wider text-emerald-700 flex items-center justify-center gap-1 transition-colors duration-500 w-full drop-shadow-sm";
-        if(dotPing) dotPing.classList.add('bg-emerald-500'); if(dotMain) dotMain.classList.add('bg-emerald-600');
+        balanceCard.classList.add('bg-gradient-to-br', 'from-emerald-950/80', 'via-slate-900', 'to-emerald-950/60', 'border-emerald-500/40', 'shadow-[0_8px_24px_rgba(16,185,129,0.2)]');
+        if(balanceLabel) { balanceLabel.className = "text-[9px] font-black text-emerald-400 uppercase tracking-widest drop-shadow-sm"; balanceLabel.innerText = "Remaining"; }
+        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight text-center drop-shadow-[0_2px_10px_rgba(52,211,153,0.3)]";
+        if(hintFooter) hintFooter.className = "text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider text-emerald-300/80 flex items-center justify-center gap-1.5 transition-colors duration-500 w-full drop-shadow-sm";
+        if(dotPing) dotPing.classList.add('bg-emerald-400'); if(dotMain) dotMain.classList.add('bg-emerald-400');
       } else if (pLeft > 10) { 
-        balanceCard.classList.add('bg-gradient-to-b', 'from-amber-50', 'to-amber-100', 'shadow-[0_12px_24px_rgba(245,158,11,0.06),inset_0_2px_6px_rgba(255,255,255,0.9)]');
-        if(balanceLabel) { balanceLabel.className = "text-[9.5px] font-black text-amber-600 uppercase tracking-widest drop-shadow-sm"; balanceLabel.innerText = "Remaining"; }
-        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-amber-700 tracking-tight text-center drop-shadow-sm";
-        if(hintFooter) hintFooter.className = "text-[9px] font-bold uppercase tracking-wider text-amber-700 flex items-center justify-center gap-1 transition-colors duration-500 w-full drop-shadow-sm";
-        if(dotPing) dotPing.classList.add('bg-amber-500'); if(dotMain) dotMain.classList.add('bg-amber-600');
+        balanceCard.classList.add('bg-gradient-to-br', 'from-amber-950/80', 'via-slate-900', 'to-amber-950/60', 'border-amber-500/40', 'shadow-[0_8px_24px_rgba(245,158,11,0.2)]');
+        if(balanceLabel) { balanceLabel.className = "text-[9px] font-black text-amber-400 uppercase tracking-widest drop-shadow-sm"; balanceLabel.innerText = "Remaining"; }
+        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-amber-100 tracking-tight text-center drop-shadow-[0_2px_10px_rgba(251,191,36,0.3)]";
+        if(hintFooter) hintFooter.className = "text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider text-amber-300/80 flex items-center justify-center gap-1.5 transition-colors duration-500 w-full drop-shadow-sm";
+        if(dotPing) dotPing.classList.add('bg-amber-400'); if(dotMain) dotMain.classList.add('bg-amber-400');
       } else { 
-        balanceCard.classList.add('bg-gradient-to-b', 'from-rose-50', 'to-rose-100', 'warning-pulse', 'shadow-[0_12px_24px_rgba(225,29,72,0.08),inset_0_2px_6px_rgba(255,255,255,0.9)]');
-        if(balanceLabel) { balanceLabel.className = "text-[9.5px] font-black text-rose-600 uppercase tracking-widest drop-shadow-sm"; balanceLabel.innerText = "Remaining"; }
-        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-rose-700 tracking-tight text-center drop-shadow-sm";
-        if(hintFooter) hintFooter.className = "text-[9px] font-bold uppercase tracking-wider text-rose-600 flex items-center justify-center gap-1 transition-colors duration-500 w-full drop-shadow-sm";
-        if(dotPing) dotPing.classList.add('bg-rose-500'); if(dotMain) dotMain.classList.add('bg-rose-600');
+        balanceCard.classList.add('bg-gradient-to-br', 'from-rose-950/90', 'via-slate-900', 'to-rose-950/70', 'border-rose-500/40', 'warning-pulse', 'shadow-[0_8px_24px_rgba(244,63,94,0.25)]');
+        if(balanceLabel) { balanceLabel.className = "text-[9px] font-black text-rose-400 uppercase tracking-widest drop-shadow-sm"; balanceLabel.innerText = "Remaining"; }
+        if(balanceVal) balanceVal.className = "text-4xl sm:text-4xl lg:text-5xl font-black text-rose-100 tracking-tight text-center drop-shadow-sm";
+        if(hintFooter) hintFooter.className = "text-[8.5px] sm:text-[9px] font-bold uppercase tracking-wider text-rose-300/80 flex items-center justify-center gap-1.5 transition-colors duration-500 w-full drop-shadow-sm";
+        if(dotPing) dotPing.classList.add('bg-rose-500'); if(dotMain) dotMain.classList.add('bg-rose-500');
       }
 
       let runningTotal = 0;
