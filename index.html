@@ -2707,7 +2707,7 @@
               <div id="card-flipper-engine" onclick="flipBalanceCard()" class="card-flipper cursor-pointer select-none">
 
                 <!-- Front -->
-                <div id="balance-card" class="face-front w-full h-full p-4 rounded-[26px] border border-emerald-500/40 bg-gradient-to-br from-emerald-950/80 via-slate-900 to-emerald-950/60 shadow-[0_8px_24px_rgba(16,185,129,0.2)] transition-all duration-300 flex flex-col justify-between items-center text-center relative active:scale-[0.98]">
+                <div id="balance-card" class="face-front w-full h-full p-4 rounded-l-[26px] rounded-r-[4px] lg:rounded-[26px] border border-emerald-500/40 bg-gradient-to-br from-emerald-950/80 via-slate-900 to-emerald-950/60 shadow-[0_8px_24px_rgba(16,185,129,0.2)] transition-all duration-300 flex flex-col justify-between items-center text-center relative active:scale-[0.98]">
                   <div class="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none opacity-[0.08] z-0">
                     <i data-lucide="wallet" class="w-20 h-20 text-emerald-400 stroke-[1.2]"></i>
                   </div>
@@ -2753,11 +2753,11 @@
           <div id="stats-col" class="transition-all duration-[500ms] ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col sm:flex-col lg:grid lg:grid-cols-2 justify-between h-full lg:h-auto w-[calc(30%-1px)] lg:w-full gap-1 lg:gap-3">
 
             <!-- Total Budget -->
-            <div id="ui-budget-wrapper" class="w-full h-[calc(50%-2px)] lg:h-[76px] rounded-[22px] overflow-hidden">
+            <div id="ui-budget-wrapper" class="w-full h-[calc(50%-2px)] lg:h-[76px] rounded-tr-[22px] rounded-tl-[4px] rounded-b-[4px] lg:rounded-[22px] overflow-hidden">
               <div class="budget-scene-mount h-full w-full">
                 <div id="ui-budget-flip-engine" class="budget-card-inner-engine w-full h-full">
 
-                  <div class="budget-front bg-slate-900/95 backdrop-blur-md border border-indigo-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] w-full h-full flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left transition-colors">
+                  <div class="budget-front bg-slate-900/95 backdrop-blur-md border border-indigo-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-tr-[22px] rounded-tl-[4px] rounded-b-[4px] lg:rounded-[22px] w-full h-full flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left transition-colors">
                     <div class="flex flex-col justify-center items-center lg:items-start min-w-0">
                       <p class="text-[7.5px] sm:text-[8px] lg:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-0.5 truncate">
                         Budget
@@ -2771,7 +2771,7 @@
                     </div>
                   </div>
 
-                  <div class="budget-back bg-gradient-to-b from-indigo-950 to-slate-900 border border-indigo-500/40 p-2 text-center rounded-[22px] w-full h-full flex flex-col justify-center items-center backdrop-blur-md">
+                  <div class="budget-back bg-gradient-to-b from-indigo-950 to-slate-900 border border-indigo-500/40 p-2 text-center rounded-tr-[22px] rounded-tl-[4px] rounded-b-[4px] lg:rounded-[22px] w-full h-full flex flex-col justify-center items-center backdrop-blur-md">
                     <p id="ui-peek-title-row" class="text-[9.5px] font-black tracking-wide text-indigo-300 uppercase"></p>
                     <p id="ui-peek-notes-row" class="text-[8px] font-semibold text-indigo-200/90 truncate w-full mt-0.5"></p>
                   </div>
@@ -2781,7 +2781,7 @@
             </div>
 
             <!-- Spent Card -->
-            <div id="ui-spent-hero-card" onclick="toggleLedger()" class="w-full h-[calc(50%-2px)] lg:h-[76px] bg-slate-900/95 hover:bg-slate-900 backdrop-blur-md border border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 active:scale-[0.98]">
+            <div id="ui-spent-hero-card" onclick="toggleLedger()" class="w-full h-[calc(50%-2px)] lg:h-[76px] bg-slate-900/95 hover:bg-slate-900 backdrop-blur-md border border-rose-500/30 shadow-[0_4px_16px_rgba(0,0,0,0.18)] px-2.5 sm:px-3 lg:px-4 py-1.5 lg:py-2 rounded-br-[22px] rounded-bl-[4px] rounded-t-[4px] lg:rounded-[22px] flex flex-col justify-center items-center text-center lg:flex-row lg:items-center lg:justify-between lg:text-left cursor-pointer transition-all duration-300 active:scale-[0.98]">
               <div class="flex flex-col justify-center items-center lg:items-start min-w-0">
                 <div class="flex items-center gap-1 mb-0.5">
                   <p id="ui-spent-label" class="text-[7.5px] sm:text-[8px] lg:text-[9px] font-black text-rose-400 uppercase tracking-wider">
@@ -5050,7 +5050,7 @@ if (data.routeStatus === "LOCKED") {
       const pLeft = data.stats.percentLeft;
       const currentBalance = data.stats.balance;
 
-      balanceCard.className = "face-front w-full h-full p-4 rounded-[26px] border backdrop-blur-md transition-all duration-300 text-center flex flex-col justify-between items-center active:scale-[0.98] cursor-pointer relative overflow-hidden";
+      balanceCard.className = "face-front w-full h-full p-4 rounded-l-[26px] rounded-r-[4px] lg:rounded-[26px] border backdrop-blur-md transition-all duration-300 text-center flex flex-col justify-between items-center active:scale-[0.98] cursor-pointer relative overflow-hidden";
       if(dotPing) dotPing.className = "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"; 
       if(dotMain) dotMain.className = "relative inline-flex rounded-full h-2 w-2";
 
