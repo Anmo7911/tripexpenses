@@ -102,7 +102,6 @@ async function dashboard() {
     memberMetaResult,
     placesResult,
     budgetResult,
-    messagesResult,
     archivesResult,
     appMetaResult,
     checklistResult
@@ -113,7 +112,6 @@ async function dashboard() {
     supabase.from('member_sheet_meta').select('*').limit(1).maybeSingle(),
     supabase.from('places_sheet').select('*').order('id', { ascending: true }),
     supabase.from('budget_sheet').select('*').order('id', { ascending: true }),
-    supabase.from('messages_sheet').select('*').order('id', { ascending: false }).limit(50),
     supabase.from('archives_sheet').select('*').order('id', { ascending: false }),
     supabase.from('app_meta').select('*').limit(1).maybeSingle(),
     supabase.from('itinerary_checklist').select('*').order('id', { ascending: true })
@@ -297,12 +295,6 @@ async function dashboard() {
     cancelStatus: text(r.col_l)
   }));
 
-  const squadMessages = (messagesResult.data || []).map(r => ({
-    id: r.id,
-    timestamp: asIso(r.col_a),
-    sender: text(r.col_b),
-    text: text(r.col_c)
-  })).reverse();
 
   const pastTrips = [];
   for (const r of archivesResult.data || []) {
@@ -351,7 +343,7 @@ async function dashboard() {
     },
     allocations: { limits: categoryBudgets, spent: categorySpent },
     budgetRawList,
-    transactions, members, places, messages: squadMessages, pastTrips, checklist,
+    transactions, members, places, pastTrips, checklist,
     settingsRaw: settingsRows
   };
 }
@@ -427,14 +419,6 @@ async function saveFinalSignature(memberPin, base64Data) {
   return dashboard();
 }
 
-async function saveSquadMessage(sender, message) {
-  await supabase.from('messages_sheet').insert({
-    col_a: new Date().toISOString(),
-    col_b: sender || '',
-    col_c: message || ''
-  });
-  return dashboard();
-}
 
 async function changeMemberPIN(name, oldPin, newPin) {
   const { data } = await supabase.from('members_sheet').select('*').order('id', { ascending: true });
@@ -738,20 +722,6 @@ async function adminUploadFile(file) {
   return { publicUrl: publicData?.publicUrl || '', storagePath: `storage:${path}` };
 }
 
-async function adminEditMessage(id, messageText) {
-  await supabase.from('messages_sheet').update({ col_c: messageText }).eq('id', Number(id));
-  return dashboard();
-}
-
-async function adminDeleteMessage(id) {
-  await supabase.from('messages_sheet').delete().eq('id', Number(id));
-  return dashboard();
-}
-
-async function updatePollVote(msgId, pollText) {
-  await supabase.from('messages_sheet').update({ col_c: pollText }).eq('id', Number(msgId));
-  return dashboard();
-}
 
 async function fetchPastTripFromGoogleSheet(tripName) {
   if (!gasUrl || gasUrl.startsWith('YOUR_')) {
@@ -970,8 +940,7 @@ export default async function handler(req, res) {
       case 'place-status': return json(res, 200, await updatePlaceStatus(body.rowId, body.nextStatus));
       case 'ata': return json(res, 200, await stampATA(body.rowId));
       case 'signature': return json(res, 200, await saveFinalSignature(body.memberPin, body.base64Data));
-      case 'message': return json(res, 200, await saveSquadMessage(body.sender, body.text));
-      case 'change-pin': return json(res, 200, await changeMemberPIN(body.name, body.oldPin, body.newPin));
+            case 'change-pin': return json(res, 200, await changeMemberPIN(body.name, body.oldPin, body.newPin));
       case 'checklist-claim': return json(res, 200, await claimChecklistItem(body.id, body.userName));
       case 'checklist-revoke': return json(res, 200, await revokeChecklistItem(body.id, body.userName));
       case 'past-trip-ledger': return json(res, 200, await fetchPastTripFromGoogleSheet(body.tripName));
@@ -1001,10 +970,6 @@ export default async function handler(req, res) {
       case 'record-pos-invoice': return json(res, 200, await recordPosInvoice(body));
       case 'verify-notice': return json(res, 200, await fetchNoticeFromGoogleSheet(body.refNo || req.query?.refNo));
 
-      case 'admin-send-message': return json(res, 200, await saveSquadMessage(body.sender || 'Admin', body.text));
-      case 'admin-edit-message': return json(res, 200, await adminEditMessage(body.id, body.text));
-      case 'admin-delete-message': return json(res, 200, await adminDeleteMessage(body.id));
-      case 'poll-vote': return json(res, 200, await updatePollVote(body.id, body.text));
 
       default: return json(res, 200, await dashboard());
     }
