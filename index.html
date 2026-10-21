@@ -213,6 +213,7 @@
 
 .notice-page .barcode-container {
   display: inline-flex;
+  gap: 2.2mm;
 }
 
 .notice-page .barcode-col {
@@ -220,11 +221,6 @@
   flex-direction: column;
   align-items: center;
   width: 2.2mm;
-  margin-right: 2.2mm;
-}
-
-.notice-page .barcode-col:last-child {
-  margin-right: 0;
 }
 
 .notice-page .barcode-col i {
@@ -244,12 +240,12 @@
 
 .notice-page .barcode-col:nth-child(3),
 .notice-page .barcode-col:nth-child(5) {
-  margin-right: 4.8mm;
+  margin-right: 3mm;
 }
 
 .notice-page .code-top {
   position: absolute;
-  top: -7.7mm;
+  top: -7.3mm;
   right: .4mm;
 }
 
@@ -260,7 +256,7 @@
 .notice-page .bottom-code {
   position: absolute;
   left: 15mm;
-  bottom: -0.7mm;
+  bottom: -2.1mm;
 }
 
 .notice-page .bottom-code .barcode-col span {
@@ -1002,12 +998,6 @@
   position: relative;
   transform: translateY(0);
   will-change: transform;
-  font-family: 'Space Mono', 'Courier Prime', monospace !important;
-}
-
-.receipt-segment,
-.receipt-segment * {
-  font-family: 'Space Mono', 'Courier Prime', monospace !important;
 }
 
 /* Enhanced thermal jagged bottom tear edge with a realistic drop shadow */
@@ -3466,15 +3456,15 @@
   <!-- Terminal & Continuous Roll Mount -->
   <div class="pos-wrapper pt-2">
     <!-- Hardware Body -->
-    <div class="pos-terminal powered-off" id="terminal">
+    <div class="pos-terminal" id="terminal">
       
      <!-- Screen -->
       <div class="terminal-screen">
         <div class="screen-header">
           <span class="screen-title">EXPENSE CONFIG</span>
           <div class="status-indicator-wrap">
-            <span class="status-text" id="statusText">OFF</span>
-            <div class="status-light" id="statusLight" style="background: #ff7b72; box-shadow: 0 0 6px #ff7b72;"></div>
+            <span class="status-text" id="statusText">READY</span>
+            <div class="status-light" id="statusLight"></div>
           </div>
         </div>
 
@@ -3520,10 +3510,10 @@
 
       <!-- Control Buttons -->
       <div class="terminal-controls">
-        <button type="button" class="btn-edge btn-print" id="printBtn" disabled>PRINT BILL</button>
+        <button type="button" class="btn-edge btn-print" id="printBtn">PRINT BILL</button>
         <button type="button" class="btn-edge btn-tear" id="tearBtn" disabled>TEAR OFF</button>
         <button type="button" class="btn-edge btn-download" id="downloadBtn" disabled>DOWNLOAD</button>
-        <button type="button" class="btn-power inactive" id="powerBtn" onclick="togglePosPower()" title="Power ON/OFF">
+        <button type="button" class="btn-power active" id="powerBtn" onclick="togglePosPower()" title="Power ON/OFF">
           <i data-lucide="power" class="w-4 h-4 stroke-[2.5]"></i>
         </button>
       </div>
@@ -7807,7 +7797,7 @@ function updatePosScreenPreview() {
     if (screenInvoiceLabel) screenInvoiceLabel.textContent = `INV #${invoiceNo}`;
     if (screenItemCount) screenItemCount.textContent = `${filtered.length} EXPENSES`;
     if (screenTotal) screenTotal.textContent = `₹ ${netTotal.toFixed(2)}`;
-    if (printBtn && !posIsPrinting) printBtn.disabled = !posPowerState;
+    if (printBtn && !posIsPrinting) printBtn.disabled = false;
 
     let displayDateStr = "ALL DATES";
     if (posSelectedDate) {
@@ -8305,86 +8295,23 @@ function initPosListeners() {
 
       try {
         const clone = receiptRoll.cloneNode(true);
-
-        // 1. Copy canvas bitmaps from original to clone (especially QR codes)
-        const origCanvases = receiptRoll.querySelectorAll('canvas');
-        const cloneCanvases = clone.querySelectorAll('canvas');
-        origCanvases.forEach((orig, idx) => {
-          if (cloneCanvases[idx]) {
-            cloneCanvases[idx].width = orig.width;
-            cloneCanvases[idx].height = orig.height;
-            const ctx = cloneCanvases[idx].getContext('2d');
-            ctx.drawImage(orig, 0, 0);
-          }
-        });
-
-        // 2. Ensure QR images if present are displayed
-        clone.querySelectorAll('.receipt-segment img').forEach(img => {
-          img.style.display = 'block';
-          img.style.visibility = 'visible';
-        });
-
-        // 3. Preload all images inside clone (like logo) as Base64 Data URLs
-        const images = Array.from(clone.querySelectorAll('img'));
-        await Promise.all(images.map(img => {
-          return new Promise(resolve => {
-            if (!img.src || img.src.startsWith('data:')) return resolve();
-            const tempImg = new Image();
-            tempImg.crossOrigin = 'anonymous';
-            tempImg.onload = () => {
-              try {
-                const cvs = document.createElement('canvas');
-                cvs.width = tempImg.naturalWidth;
-                cvs.height = tempImg.naturalHeight;
-                const ctx = cvs.getContext('2d');
-                ctx.drawImage(tempImg, 0, 0);
-                img.src = cvs.toDataURL('image/png');
-              } catch (e) {}
-              resolve();
-            };
-            tempImg.onerror = () => resolve();
-            tempImg.src = img.src;
-          });
-        }));
-
-        // 4. Wrap clone in isolated offscreen container with exact fixed width and font
-        const rollWidth = Math.max(320, receiptRoll.clientWidth || 340);
-        const wrapper = document.createElement('div');
-        wrapper.style.position = 'fixed';
-        wrapper.style.left = '-12000px';
-        wrapper.style.top = '0';
-        wrapper.style.width = `${rollWidth}px`;
-        wrapper.style.background = '#ffffff';
-        wrapper.style.fontFamily = "'Space Mono', 'Courier Prime', monospace";
-        wrapper.style.zIndex = '-9999';
-
         clone.style.transform = 'none';
-        clone.style.position = 'relative';
-        clone.style.width = '100%';
+        clone.style.position = 'fixed';
+        clone.style.top = '-9999px';
+        clone.style.left = '0';
+        clone.style.width = '360px';
         clone.style.boxShadow = 'none';
-        clone.style.fontFamily = "'Space Mono', 'Courier Prime', monospace";
-
-        clone.querySelectorAll('*').forEach(el => {
-          el.style.fontFamily = "'Space Mono', 'Courier Prime', monospace";
-        });
-
-        wrapper.appendChild(clone);
-        document.body.appendChild(wrapper);
-
-        if (document.fonts) {
-          await document.fonts.ready;
-        }
+        document.body.appendChild(clone);
 
         const canvas = await html2canvas(clone, {
           scale: 2.5,
-          width: rollWidth,
           backgroundColor: '#ffffff',
           logging: false,
           useCORS: true,
-          allowTaint: false
+          allowTaint: true
         });
 
-        document.body.removeChild(wrapper);
+        document.body.removeChild(clone);
 
         canvas.toBlob(async (blob) => {
           if (!blob) {
@@ -8484,7 +8411,7 @@ function playPosBeepSound() {
 }
 
 // Updated Power Toggle with 1-Second Button Self-Test
-let posPowerState = false;
+let posPowerState = true;
 let posBootTimers = [];
 
 function clearPosBootTimers() {
@@ -8819,7 +8746,7 @@ function openNoticeA4Preview(pageIndex) {
   if (n.isImageOnly || (n.imageUrl && /^https?:\/\/.+/i.test(n.imageUrl))) {
     pageWrapper.innerHTML = `
       <main class="notice-page !p-0 !bg-transparent flex flex-col justify-center items-center relative overflow-hidden rounded-md shadow-2xl">
-        <img src="${n.imageUrl}" alt="Notice Document" class="w-full h-full object-contain rounded-md" crossorigin="anonymous" />
+        <img src="${n.imageUrl}" alt="Notice Document" class="w-full h-full object-contain rounded-md" />
         <div class="notice-qr-mount !left-4 !bottom-4 bg-white/90 p-1 rounded shadow-md" id="${qrId}"></div>
       </main>
     `;
@@ -8868,11 +8795,7 @@ function openNoticeA4Preview(pageIndex) {
     const stampBottom = (n.stampBottom && !isNaN(n.stampBottom)) ? n.stampBottom : 23.4;
     const stampSize = (n.stampSize && !isNaN(n.stampSize)) ? n.stampSize : 27;
     const stampStyle = `style="right: ${stampRight}mm; bottom: ${stampBottom}mm; width: ${stampSize}mm; height: ${stampSize}mm;"`;
-    
-    // Only render stamp if explicitly provided by notice data
-    const stampImgTag = (n.stampUrl && n.stampUrl.trim() !== '') 
-      ? `<img class="stamp" ${stampStyle} src="${n.stampUrl}" alt="Stamp" crossorigin="anonymous">` 
-      : '';
+    const stampImgTag = n.stampUrl ? `<img class="stamp" ${stampStyle} src="${n.stampUrl}" alt="Stamp">` : '';
 
     // Emblem Dynamic Coordinates (C9: Right, D9: Bottom, E9: Size) with CSS baseline fallbacks
     const emblemRight = (n.emblemRight && !isNaN(n.emblemRight)) ? n.emblemRight : 12;
@@ -8880,11 +8803,9 @@ function openNoticeA4Preview(pageIndex) {
     const emblemSize = (n.emblemSize && !isNaN(n.emblemSize)) ? n.emblemSize : 29;
     const emblemStyle = `style="right: ${emblemRight}mm; bottom: ${emblemBottom}mm; width: ${emblemSize}mm; height: ${emblemSize}mm;"`;
 
-    // Only render emblem if explicitly provided and not identical to stampUrl
-    const isDuplicateEmblem = (n.stampUrl && n.emblemUrl && n.stampUrl.trim() === n.emblemUrl.trim());
-    const emblemImgTag = (n.emblemUrl && n.emblemUrl.trim() !== '' && !isDuplicateEmblem) 
-      ? `<img class="emblem" ${emblemStyle} src="${n.emblemUrl}" alt="Emblem" crossorigin="anonymous">` 
-      : '';
+   const emblemImgTag = (n.emblemUrl && n.emblemUrl.trim() !== '') 
+  ? `<img class="emblem" ${emblemStyle} src="${n.emblemUrl}" alt="Emblem">` 
+  : '';
     
     pageWrapper.innerHTML = `
       <main class="notice-page">
@@ -9006,123 +8927,27 @@ window.addEventListener('resize', autoScaleNoticeA4);
   }
 
   try {
-    // 1. Deep clone notice page
+    // Clone node to render at full resolution without viewport CSS scaling distortion
     const clone = page.cloneNode(true);
-
-    // 2. Synchronize QR canvases from original to clone
-    const origCanvases = page.querySelectorAll('canvas');
-    const cloneCanvases = clone.querySelectorAll('canvas');
-    origCanvases.forEach((orig, idx) => {
-      if (cloneCanvases[idx]) {
-        cloneCanvases[idx].width = orig.width;
-        cloneCanvases[idx].height = orig.height;
-        const ctx = cloneCanvases[idx].getContext('2d');
-        ctx.drawImage(orig, 0, 0);
-      }
-    });
-
-    // 3. Ensure QR code image is visible
-    clone.querySelectorAll('.notice-qr-mount img').forEach(img => {
-      img.style.display = 'block';
-      img.style.visibility = 'visible';
-    });
-
-    // 4. Preload and convert all images in clone (stamps, emblems, logos) to Data URLs to prevent CORS omissions
-    const images = Array.from(clone.querySelectorAll('img'));
-    await Promise.all(images.map(img => {
-      return new Promise(resolve => {
-        if (!img.src || img.src.startsWith('data:')) return resolve();
-
-        // Check if original img already loaded in DOM
-        const origImg = page.querySelector(`img[src="${img.getAttribute('src')}"]`) || 
-                        page.querySelector(`.${img.className.split(' ')[0]}`);
-        if (origImg && origImg.complete && origImg.naturalWidth > 0) {
-          try {
-            const cvs = document.createElement('canvas');
-            cvs.width = origImg.naturalWidth;
-            cvs.height = origImg.naturalHeight;
-            const ctx = cvs.getContext('2d');
-            ctx.drawImage(origImg, 0, 0);
-            img.src = cvs.toDataURL('image/png');
-            return resolve();
-          } catch (e) {}
-        }
-
-        const tempImg = new Image();
-        tempImg.crossOrigin = 'anonymous';
-        tempImg.onload = () => {
-          try {
-            const cvs = document.createElement('canvas');
-            cvs.width = tempImg.naturalWidth;
-            cvs.height = tempImg.naturalHeight;
-            const ctx = cvs.getContext('2d');
-            ctx.drawImage(tempImg, 0, 0);
-            img.src = cvs.toDataURL('image/png');
-          } catch (e) {}
-          resolve();
-        };
-        tempImg.onerror = () => resolve();
-        tempImg.src = img.src;
-      });
-    }));
-
-    // 5. Force mixBlendMode to normal so html2canvas renders transparent PNGs without discarding them
-    clone.querySelectorAll('.stamp, .emblem').forEach(el => {
-      el.style.mixBlendMode = 'normal';
-      el.style.display = 'block';
-      el.style.visibility = 'visible';
-    });
-
-    // 6. Set exact pixel dimensions: 210mm = 794px, 297mm = 1123px (standard A4 at 96 DPI)
-    const pageWidthPx = 794;
-    const pageHeightPx = 1123;
-
     clone.style.transform = 'none';
-    clone.style.position = 'relative';
+    clone.style.position = 'fixed';
+    clone.style.top = '-9999px';
     clone.style.left = '0';
-    clone.style.top = '0';
     clone.style.margin = '0';
-    clone.style.width = `${pageWidthPx}px`;
-    clone.style.height = `${pageHeightPx}px`;
-    clone.style.minHeight = `${pageHeightPx}px`;
-    clone.style.maxHeight = `${pageHeightPx}px`;
+    clone.style.width = '210mm';
+    clone.style.minHeight = '297mm';
     clone.style.boxShadow = 'none';
-    clone.style.borderRadius = '0';
-    clone.style.overflow = 'hidden';
-
-    // 7. Mount into an isolated offscreen wrapper
-    const wrapper = document.createElement('div');
-    wrapper.style.position = 'fixed';
-    wrapper.style.left = '-15000px';
-    wrapper.style.top = '0';
-    wrapper.style.width = `${pageWidthPx}px`;
-    wrapper.style.height = `${pageHeightPx}px`;
-    wrapper.style.overflow = 'hidden';
-    wrapper.style.zIndex = '-9999';
-    wrapper.style.background = '#e5eef2';
-    wrapper.appendChild(clone);
-    document.body.appendChild(wrapper);
-
-    // Wait for fonts to be ready
-    if (document.fonts) {
-      await document.fonts.ready;
-    }
+    document.body.appendChild(clone);
 
     const canvas = await html2canvas(clone, {
       scale: 2.5,
-      width: pageWidthPx,
-      height: pageHeightPx,
-      windowWidth: pageWidthPx,
-      windowHeight: pageHeightPx,
       backgroundColor: '#e5eef2',
       useCORS: true,
-      allowTaint: false,
+      allowTaint: true,
       logging: false
     });
 
-    document.body.removeChild(wrapper);
-
-
+    document.body.removeChild(clone);
 
     canvas.toBlob((blob) => {
       if (!blob) {
@@ -9161,7 +8986,8 @@ window.addEventListener('resize', autoScaleNoticeA4);
   }
 }
 
-// ==========================================
+
+  // ==========================================
     // UPCOMING SHOWCASE RENDER ENGINE & TIMERS
     // ==========================================
     let showcaseCountdownTimer = null;
