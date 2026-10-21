@@ -249,7 +249,7 @@
 
 .notice-page .code-top {
   position: absolute;
-  top: -5mm;
+  top: -7.7mm;
   right: .4mm;
 }
 
@@ -260,7 +260,7 @@
 .notice-page .bottom-code {
   position: absolute;
   left: 15mm;
-  bottom: 1.5mm;
+  bottom: -0.7mm;
 }
 
 .notice-page .bottom-code .barcode-col span {
@@ -8868,8 +8868,11 @@ function openNoticeA4Preview(pageIndex) {
     const stampBottom = (n.stampBottom && !isNaN(n.stampBottom)) ? n.stampBottom : 23.4;
     const stampSize = (n.stampSize && !isNaN(n.stampSize)) ? n.stampSize : 27;
     const stampStyle = `style="right: ${stampRight}mm; bottom: ${stampBottom}mm; width: ${stampSize}mm; height: ${stampSize}mm;"`;
-    const stampImgUrl = n.stampUrl || (typeof globalActiveDataPayloadBackup !== 'undefined' && globalActiveDataPayloadBackup?.eidStampImage ? globalActiveDataPayloadBackup.eidStampImage : '');
-    const stampImgTag = stampImgUrl ? `<img class="stamp" ${stampStyle} src="${stampImgUrl}" alt="Stamp" crossorigin="anonymous">` : '';
+    
+    // Only render stamp if explicitly provided by notice data
+    const stampImgTag = (n.stampUrl && n.stampUrl.trim() !== '') 
+      ? `<img class="stamp" ${stampStyle} src="${n.stampUrl}" alt="Stamp" crossorigin="anonymous">` 
+      : '';
 
     // Emblem Dynamic Coordinates (C9: Right, D9: Bottom, E9: Size) with CSS baseline fallbacks
     const emblemRight = (n.emblemRight && !isNaN(n.emblemRight)) ? n.emblemRight : 12;
@@ -8877,7 +8880,9 @@ function openNoticeA4Preview(pageIndex) {
     const emblemSize = (n.emblemSize && !isNaN(n.emblemSize)) ? n.emblemSize : 29;
     const emblemStyle = `style="right: ${emblemRight}mm; bottom: ${emblemBottom}mm; width: ${emblemSize}mm; height: ${emblemSize}mm;"`;
 
-    const emblemImgTag = (n.emblemUrl && n.emblemUrl.trim() !== '') 
+    // Only render emblem if explicitly provided and not identical to stampUrl
+    const isDuplicateEmblem = (n.stampUrl && n.emblemUrl && n.stampUrl.trim() === n.emblemUrl.trim());
+    const emblemImgTag = (n.emblemUrl && n.emblemUrl.trim() !== '' && !isDuplicateEmblem) 
       ? `<img class="emblem" ${emblemStyle} src="${n.emblemUrl}" alt="Emblem" crossorigin="anonymous">` 
       : '';
     
@@ -9117,50 +9122,7 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
     document.body.removeChild(wrapper);
 
-    // 8. Direct composite fallback for stamp & emblem if not drawn
-    const origStamp = page.querySelector('.stamp');
-    if (origStamp && origStamp.naturalWidth > 0) {
-      try {
-        const pageRect = page.getBoundingClientRect();
-        const stampRect = origStamp.getBoundingClientRect();
-        const scaleX = canvas.width / pageRect.width;
-        const scaleY = canvas.height / pageRect.height;
-        const dx = (stampRect.left - pageRect.left) * scaleX;
-        const dy = (stampRect.top - pageRect.top) * scaleY;
-        const dWidth = stampRect.width * scaleX;
-        const dHeight = stampRect.height * scaleY;
 
-        const ctx = canvas.getContext('2d');
-        ctx.save();
-        ctx.globalAlpha = parseFloat(window.getComputedStyle(origStamp).opacity) || 0.75;
-        ctx.drawImage(origStamp, dx, dy, dWidth, dHeight);
-        ctx.restore();
-      } catch (e) {
-        console.warn('Direct stamp composite notice fallback error:', e);
-      }
-    }
-
-    const origEmblem = page.querySelector('.emblem');
-    if (origEmblem && origEmblem.naturalWidth > 0) {
-      try {
-        const pageRect = page.getBoundingClientRect();
-        const emblemRect = origEmblem.getBoundingClientRect();
-        const scaleX = canvas.width / pageRect.width;
-        const scaleY = canvas.height / pageRect.height;
-        const dx = (emblemRect.left - pageRect.left) * scaleX;
-        const dy = (emblemRect.top - pageRect.top) * scaleY;
-        const dWidth = emblemRect.width * scaleX;
-        const dHeight = emblemRect.height * scaleY;
-
-        const ctx = canvas.getContext('2d');
-        ctx.save();
-        ctx.globalAlpha = parseFloat(window.getComputedStyle(origEmblem).opacity) || 0.8;
-        ctx.drawImage(origEmblem, dx, dy, dWidth, dHeight);
-        ctx.restore();
-      } catch (e) {
-        console.warn('Direct emblem composite notice fallback error:', e);
-      }
-    }
 
     canvas.toBlob((blob) => {
       if (!blob) {
