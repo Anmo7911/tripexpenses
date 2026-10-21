@@ -8664,9 +8664,9 @@ function renderNoticesFeed(noticeData) {
       ? n.releaseDate
       : 'OFFICIAL CIRCULAR';
 
-    // 5. Current Trip Pill: Checks if B4 matches TEF1026
+    // 5. Current Trip Pill: Checks if B4 matches CRM1226
     const cleanB4 = (n.trackingCode || '').toString().trim().toUpperCase();
-    const isCurrentTrip = cleanB4 === 'TEF1026';
+    const isCurrentTrip = cleanB4 === 'CRM1226';
     const currentTripPill = isCurrentTrip
       ? `<span class="bg-indigo-600 text-white text-[8.5px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider shadow-xs">
           CURRENT TRIP
