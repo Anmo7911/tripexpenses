@@ -365,6 +365,8 @@
   opacity: .62;
   mix-blend-mode: multiply;
   pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .notice-page .emblem {
@@ -378,6 +380,8 @@
   opacity: .78;
   mix-blend-mode: multiply;
   pointer-events: none;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
   
 
@@ -8831,7 +8835,7 @@ function openNoticeA4Preview(pageIndex) {
     const stampBottom = (n.stampBottom && !isNaN(n.stampBottom)) ? n.stampBottom : 23.4;
     const stampSize = (n.stampSize && !isNaN(n.stampSize)) ? n.stampSize : 27;
     const stampStyle = `style="right: ${stampRight}mm; bottom: ${stampBottom}mm; width: ${stampSize}mm; height: ${stampSize}mm;"`;
-    const stampImgTag = n.stampUrl ? `<img class="stamp" ${stampStyle} src="${n.stampUrl}" alt="Stamp">` : '';
+    const stampImgTag = n.stampUrl ? `<img class="stamp" crossorigin="anonymous" ${stampStyle} src="${n.stampUrl}" alt="Stamp">` : '';
 
     // Emblem Dynamic Coordinates (C9: Right, D9: Bottom, E9: Size) with CSS baseline fallbacks
     const emblemRight = (n.emblemRight && !isNaN(n.emblemRight)) ? n.emblemRight : 12;
@@ -8840,7 +8844,7 @@ function openNoticeA4Preview(pageIndex) {
     const emblemStyle = `style="right: ${emblemRight}mm; bottom: ${emblemBottom}mm; width: ${emblemSize}mm; height: ${emblemSize}mm;"`;
 
    const emblemImgTag = (n.emblemUrl && n.emblemUrl.trim() !== '') 
-  ? `<img class="emblem" ${emblemStyle} src="${n.emblemUrl}" alt="Emblem">` 
+  ? `<img class="emblem" crossorigin="anonymous" ${emblemStyle} src="${n.emblemUrl}" alt="Emblem">` 
   : '';
     
     pageWrapper.innerHTML = `
@@ -9008,6 +9012,62 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
     staging.appendChild(clone);
     document.body.appendChild(staging);
+
+    // Wait for all images in clone to be decoded
+    const cloneImages = Array.from(clone.querySelectorAll('img'));
+    await Promise.all(cloneImages.map(img => {
+      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+      return new Promise(resolve => {
+        img.onload = resolve;
+        img.onerror = resolve;
+        setTimeout(resolve, 1500);
+      });
+    }));
+
+    // Emulate object-fit: contain for stamps/emblems in clone so html2canvas renders exact circular aspect ratios
+    const stampElements = clone.querySelectorAll('.stamp, .emblem');
+    stampElements.forEach(cloneImg => {
+      const isStamp = cloneImg.classList.contains('stamp');
+      const origImg = page.querySelector(isStamp ? '.stamp' : '.emblem');
+      const naturalWidth = (origImg && origImg.naturalWidth) || cloneImg.naturalWidth;
+      const naturalHeight = (origImg && origImg.naturalHeight) || cloneImg.naturalHeight;
+
+      if (naturalWidth && naturalHeight) {
+        const naturalRatio = naturalWidth / naturalHeight;
+        const boxW = parseFloat(cloneImg.style.width) || (isStamp ? 27 : 29);
+        const boxH = parseFloat(cloneImg.style.height) || (isStamp ? 27 : 29);
+        const origRight = parseFloat(cloneImg.style.right) || (isStamp ? 54 : 12);
+        const origBottom = parseFloat(cloneImg.style.bottom) || (isStamp ? 23.4 : 24);
+
+        let actualW = boxW;
+        let actualH = boxH;
+
+        if (naturalRatio >= 1) {
+          actualW = boxW;
+          actualH = boxW / naturalRatio;
+          if (actualH > boxH) {
+            actualH = boxH;
+            actualW = boxH * naturalRatio;
+          }
+        } else {
+          actualH = boxH;
+          actualW = boxH * naturalRatio;
+          if (actualW > boxW) {
+            actualW = boxW;
+            actualH = boxW / naturalRatio;
+          }
+        }
+
+        const newRight = origRight + (boxW - actualW) / 2;
+        const newBottom = origBottom + (boxH - actualH) / 2;
+
+        cloneImg.style.width = `${actualW.toFixed(3)}mm`;
+        cloneImg.style.height = `${actualH.toFixed(3)}mm`;
+        cloneImg.style.right = `${newRight.toFixed(3)}mm`;
+        cloneImg.style.bottom = `${newBottom.toFixed(3)}mm`;
+        cloneImg.style.objectFit = 'fill';
+      }
+    });
 
     const canvas = await html2canvas(clone, {
       scale: 2.5,
