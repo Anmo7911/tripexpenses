@@ -37,7 +37,7 @@
 <!-- Import Ultra-Bold Display Fonts (Anton, Bebas Neue, Teko) and Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Teko:wght@700&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Teko:wght@700&family=Inter:wght@400;600;800;900&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
   
   
   <!-- Define a Web App Manifest inline using a Data URI to allow the app to be installed (PWA) -->
@@ -185,7 +185,7 @@
   overflow: hidden;
   background: var(--notice-paper);
   padding: 7.1mm 19mm 12mm;
-  font-family: "Grandview", Arial, sans-serif;
+  font-family: "Inter", "Noto Naskh Arabic", "Noto Sans Devanagari", Arial, sans-serif;
   color: var(--notice-ink);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
@@ -271,26 +271,33 @@
 
 .notice-page .title {
   text-align: center;
-  padding: 4.2mm 0 4.0mm;
+  padding: 3.6mm 0 3.6mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .notice-page .title h1 {
   margin: 0;
+  padding: 0;
   color: #000;
   font-size: 20pt;
-  line-height: 1.05;
+  line-height: 1.25;
   font-weight: 700;
-  letter-spacing: .15mm;
+  letter-spacing: normal !important;
   text-transform: uppercase;
+  word-break: break-word;
 }
 
 .notice-page .title h2 {
-  margin: 3.0mm 0 0;
+  margin: 2.2mm 0 0;
+  padding: 0;
   color: #000;
   font-size: 13pt;
-  line-height: 1;
+  line-height: 1.15;
   font-weight: 700;
-  letter-spacing: .05mm;
+  letter-spacing: normal !important;
   text-transform: uppercase;
 }
 
@@ -988,6 +995,7 @@
 .receipt-roll {
   width: 100%;
   background: #ffffff;
+  font-family: 'Space Mono', 'Courier Prime', monospace !important;
   /* Added a stronger outer soft ambient shadow and side depth shadows to clearly separate white bill on white backgrounds */
   box-shadow: 
     0 20px 45px rgba(0, 0, 0, 0.65),
@@ -1021,8 +1029,14 @@
   padding: 16px 14px;
   font-size: 9px;
   line-height: 1.35;
+  font-family: 'Space Mono', 'Courier Prime', monospace !important;
   position: relative;
   border-bottom: 2px dashed #94a3b8;
+}
+
+.receipt-roll *,
+.receipt-segment * {
+  font-family: 'Space Mono', 'Courier Prime', monospace !important;
 }
 
 .receipt-segment:last-child {
@@ -8294,24 +8308,46 @@ function initPosListeners() {
       downloadBtn.textContent = 'SAVING...';
 
       try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        const staging = document.createElement('div');
+        staging.className = 'pos-wrapper';
+        staging.style.position = 'fixed';
+        staging.style.left = '-9999px';
+        staging.style.top = '0';
+        staging.style.width = '360px';
+        staging.style.margin = '0';
+        staging.style.padding = '0';
+        staging.style.fontFamily = "'Space Mono', 'Courier Prime', monospace";
+        staging.style.zIndex = '-9999';
+
         const clone = receiptRoll.cloneNode(true);
         clone.style.transform = 'none';
-        clone.style.position = 'fixed';
-        clone.style.top = '-9999px';
-        clone.style.left = '0';
+        clone.style.position = 'relative';
         clone.style.width = '360px';
         clone.style.boxShadow = 'none';
-        document.body.appendChild(clone);
+        clone.style.fontFamily = "'Space Mono', 'Courier Prime', monospace";
+
+        clone.querySelectorAll('*').forEach(el => {
+          el.style.fontFamily = "'Space Mono', 'Courier Prime', monospace";
+        });
+
+        staging.appendChild(clone);
+        document.body.appendChild(staging);
 
         const canvas = await html2canvas(clone, {
           scale: 2.5,
           backgroundColor: '#ffffff',
           logging: false,
           useCORS: true,
-          allowTaint: true
+          allowTaint: true,
+          scrollX: 0,
+          scrollY: 0
         });
 
-        document.body.removeChild(clone);
+        document.body.removeChild(staging);
 
         canvas.toBlob(async (blob) => {
           if (!blob) {
@@ -8927,27 +8963,64 @@ window.addEventListener('resize', autoScaleNoticeA4);
   }
 
   try {
-    // Clone node to render at full resolution without viewport CSS scaling distortion
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+
+    // Wrap clone in an isolated staging container positioned off-screen to preserve exact layout & vertical alignment
+    const staging = document.createElement('div');
+    staging.style.position = 'fixed';
+    staging.style.left = '-9999px';
+    staging.style.top = '0';
+    staging.style.width = '210mm';
+    staging.style.height = '297mm';
+    staging.style.margin = '0';
+    staging.style.padding = '0';
+    staging.style.zIndex = '-9999';
+
     const clone = page.cloneNode(true);
     clone.style.transform = 'none';
-    clone.style.position = 'fixed';
-    clone.style.top = '-9999px';
-    clone.style.left = '0';
+    clone.style.position = 'relative';
     clone.style.margin = '0';
     clone.style.width = '210mm';
-    clone.style.minHeight = '297mm';
+    clone.style.height = '297mm';
     clone.style.boxShadow = 'none';
-    document.body.appendChild(clone);
+
+    // Ensure title text between red lines in clone maintains exact balanced placement and no character splitting
+    const cloneTitle = clone.querySelector('.title');
+    if (cloneTitle) {
+      cloneTitle.style.padding = '3.6mm 0 3.6mm';
+      cloneTitle.style.textAlign = 'center';
+      const h1 = cloneTitle.querySelector('h1');
+      if (h1) {
+        h1.style.letterSpacing = 'normal';
+        h1.style.lineHeight = '1.25';
+        h1.style.margin = '0';
+      }
+      const h2 = cloneTitle.querySelector('h2');
+      if (h2) {
+        h2.style.letterSpacing = 'normal';
+        h2.style.lineHeight = '1.15';
+        h2.style.margin = '2.2mm 0 0 0';
+      }
+    }
+
+    staging.appendChild(clone);
+    document.body.appendChild(staging);
 
     const canvas = await html2canvas(clone, {
       scale: 2.5,
       backgroundColor: '#e5eef2',
       useCORS: true,
       allowTaint: true,
-      logging: false
+      logging: false,
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: 794,
+      windowHeight: 1123
     });
 
-    document.body.removeChild(clone);
+    document.body.removeChild(staging);
 
     canvas.toBlob((blob) => {
       if (!blob) {
