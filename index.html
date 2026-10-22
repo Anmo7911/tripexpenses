@@ -8989,19 +8989,20 @@ window.addEventListener('resize', autoScaleNoticeA4);
     // Ensure title text between red lines in clone maintains exact balanced placement and no character splitting
     const cloneTitle = clone.querySelector('.title');
     if (cloneTitle) {
-      cloneTitle.style.padding = '3.6mm 0 3.6mm';
+      // Offset top padding to compensate for html2canvas font-ascent/baseline calculation so text is vertically centered
+      cloneTitle.style.padding = '1.2mm 0 6.0mm';
       cloneTitle.style.textAlign = 'center';
       const h1 = cloneTitle.querySelector('h1');
       if (h1) {
         h1.style.letterSpacing = 'normal';
-        h1.style.lineHeight = '1.25';
+        h1.style.lineHeight = '1.18';
         h1.style.margin = '0';
       }
       const h2 = cloneTitle.querySelector('h2');
       if (h2) {
         h2.style.letterSpacing = 'normal';
-        h2.style.lineHeight = '1.15';
-        h2.style.margin = '2.2mm 0 0 0';
+        h2.style.lineHeight = '1.12';
+        h2.style.margin = '1.8mm 0 0 0';
       }
     }
 
