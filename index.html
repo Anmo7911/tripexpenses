@@ -3077,10 +3077,10 @@
 <!-- =========================================
      UPCOMING SHOWCASE MODE VIEW (APP EXPERIENCE MODE)
      ========================================= -->
-<div id="ui-upcoming-showcase" class="hidden w-full space-y-5 transition-all duration-500 overflow-hidden">
+<div id="ui-upcoming-showcase" class="hidden w-full space-y-5 transition-all duration-500">
   
   <!-- 1. Hero Media Carousel (Curved Corners, Behind Images Touch Sides of Screen, No Dots) -->
-  <div class="-mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full relative select-none overflow-hidden py-1">
+  <div class="-mx-4 sm:-mx-6 lg:-mx-8 w-[calc(100%+2rem)] sm:w-[calc(100%+3rem)] lg:w-[calc(100%+4rem)] relative select-none overflow-hidden py-1">
     <!-- Viewport with 3D Depth & Overflow -->
     <div class="relative w-full aspect-video max-h-[480px] sm:max-h-[520px] flex items-center justify-center overflow-hidden" style="perspective: 1200px;">
       <!-- Slides Track with 3D Depth Zoom positioning -->
@@ -9410,7 +9410,7 @@ window.addEventListener('resize', autoScaleNoticeA4);
       showcaseCurrentSlide = 0;
       // Sized larger with curved corners; behind images touch screen sides
       track.innerHTML = images.map((url, i) => `
-        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-[84%] sm:w-[78%] md:w-[72%] aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
+        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-[86%] sm:w-[80%] md:w-[76%] aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
           <img src="${url}" class="w-full h-full object-cover pointer-events-none select-none" alt="Showcase Media ${i+1}">
           <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none"></div>
         </div>
@@ -9524,16 +9524,16 @@ window.addEventListener('resize', autoScaleNoticeA4);
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'default';
         } else if (idx === prevIdx && N > 1) {
-          // Left Background Image - touches the left side of the screen seamlessly
-          s.style.transform = 'translate(calc(-50% - 16%), -50%) scale(0.88) rotateY(8deg) translateZ(-40px)';
+          // Left Background Image - attached seamlessly to the left side of the screen
+          s.style.transform = 'translate(calc(-50% - 32%), -50%) scale(0.86) rotateY(10deg) translateZ(-40px)';
           s.style.zIndex = '10';
           s.style.opacity = '0.78';
           s.style.filter = 'brightness(0.75)';
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'pointer';
         } else if (idx === nextIdx && N > 1) {
-          // Right Background Image - touches the right side of the screen seamlessly
-          s.style.transform = 'translate(calc(-50% + 16%), -50%) scale(0.88) rotateY(-8deg) translateZ(-40px)';
+          // Right Background Image - attached seamlessly to the right side of the screen
+          s.style.transform = 'translate(calc(-50% + 32%), -50%) scale(0.86) rotateY(-10deg) translateZ(-40px)';
           s.style.zIndex = '10';
           s.style.opacity = '0.78';
           s.style.filter = 'brightness(0.75)';
