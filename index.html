@@ -1350,79 +1350,198 @@
       }
     }
     
-    /* Milestone Summary Bento Box Interactive Engine */
+    /* =========================================
+       MILESTONE SUMMARY BENTO BOX WORK-THEMED STYLES
+       ========================================= */
     .milestone-box {
-      background-color: rgba(238, 242, 255, 0.95) !important;
-      border: 1px solid rgba(199, 210, 254, 0.85) !important;
       transition: all 0.28s cubic-bezier(0.25, 1, 0.5, 1) !important;
       cursor: pointer;
       position: relative;
+      border-radius: 1rem;
     }
     .milestone-box:hover {
-      background-color: rgba(224, 231, 255, 0.98) !important;
-      border-color: #818cf8 !important;
-      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25) !important;
       transform: translateY(-2px);
     }
-    /* Clicked / Active State: Indigo filled blurred morphism with glow */
-    .milestone-box:active,
     .milestone-box.is-active,
     .milestone-box.is-clicked {
-      background: rgba(79, 70, 229, 0.88) !important;
-      backdrop-filter: blur(16px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-      border-color: rgba(255, 255, 255, 0.45) !important;
-      box-shadow: 0 10px 28px -2px rgba(79, 70, 229, 0.6), 0 0 24px rgba(99, 102, 241, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
       transform: translateY(-2px) scale(1.02);
     }
     .milestone-box .milestone-val {
-      color: #0f172a !important;
       transition: color 0.25s ease, text-shadow 0.25s ease;
     }
-    .milestone-box:active .milestone-val,
-    .milestone-box.is-active .milestone-val,
-    .milestone-box.is-clicked .milestone-val {
-      color: #ffffff !important;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
-    }
     .milestone-box .milestone-lbl {
-      color: #4338ca !important;
       transition: color 0.25s ease;
     }
-    .milestone-box:active .milestone-lbl,
-    .milestone-box.is-active .milestone-lbl,
-    .milestone-box.is-clicked .milestone-lbl {
-      color: #e0e7ff !important;
-    }
     .milestone-box .milestone-icon-wrap {
-      background-color: rgba(224, 231, 255, 0.95) !important;
-      color: #4338ca !important;
-      border: 1px solid rgba(199, 210, 254, 0.9) !important;
       transition: all 0.25s ease;
     }
-    .milestone-box:active .milestone-icon-wrap,
-    .milestone-box.is-active .milestone-icon-wrap,
-    .milestone-box.is-clicked .milestone-icon-wrap {
+
+    /* 1. TRIPS COMPLETED: Indigo Theme */
+    .milestone-trips {
+      background-color: #f0f4ff !important;
+      border: 1px solid #dbe4ff !important;
+    }
+    .milestone-trips .milestone-val { color: #1e1b4b !important; }
+    .milestone-trips .milestone-lbl { color: #4f46e5 !important; }
+    .milestone-trips .milestone-icon-wrap {
+      background-color: #e0e7ff !important;
+      color: #4338ca !important;
+      border: 1px solid #c7d2fe !important;
+    }
+    .milestone-trips.is-active,
+    .milestone-trips.is-clicked {
+      background: #4f46e5 !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 8px 24px -4px rgba(79, 70, 229, 0.45) !important;
+    }
+    .milestone-trips.is-active .milestone-val,
+    .milestone-trips.is-clicked .milestone-val {
+      color: #ffffff !important;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    }
+    .milestone-trips.is-active .milestone-lbl,
+    .milestone-trips.is-clicked .milestone-lbl { color: #e0e7ff !important; }
+    .milestone-trips.is-active .milestone-icon-wrap,
+    .milestone-trips.is-clicked .milestone-icon-wrap {
       background-color: rgba(255, 255, 255, 0.22) !important;
       color: #ffffff !important;
-      border-color: rgba(255, 255, 255, 0.5) !important;
-      box-shadow: 0 0 14px rgba(255, 255, 255, 0.4) !important;
+      border-color: rgba(255, 255, 255, 0.45) !important;
     }
 
-    /* Option A: Spring Pop & Tilt Icon Animation on Click */
+    /* 2. TOTAL SPENT / MANAGED: Emerald Theme */
+    .milestone-spent {
+      background-color: #f0fdf4 !important;
+      border: 1px solid #bbf7d0 !important;
+    }
+    .milestone-spent .milestone-val { color: #064e3b !important; }
+    .milestone-spent .milestone-lbl { color: #059669 !important; }
+    .milestone-spent .milestone-icon-wrap {
+      background-color: #dcfce7 !important;
+      color: #047857 !important;
+      border: 1px solid #86efac !important;
+    }
+    .milestone-spent.is-active,
+    .milestone-spent.is-clicked {
+      background: #059669 !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 8px 24px -4px rgba(5, 150, 105, 0.45) !important;
+    }
+    .milestone-spent.is-active .milestone-val,
+    .milestone-spent.is-clicked .milestone-val {
+      color: #ffffff !important;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    }
+    .milestone-spent.is-active .milestone-lbl,
+    .milestone-spent.is-clicked .milestone-lbl { color: #d1fae5 !important; }
+    .milestone-spent.is-active .milestone-icon-wrap,
+    .milestone-spent.is-clicked .milestone-icon-wrap {
+      background-color: rgba(255, 255, 255, 0.22) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.45) !important;
+    }
+
+    /* 3. WAYPOINTS REACHED: Rose Theme */
+    .milestone-waypoints {
+      background-color: #fff1f2 !important;
+      border: 1px solid #fecdd3 !important;
+    }
+    .milestone-waypoints .milestone-val { color: #881337 !important; }
+    .milestone-waypoints .milestone-lbl { color: #e11d48 !important; }
+    .milestone-waypoints .milestone-icon-wrap {
+      background-color: #ffe4e6 !important;
+      color: #be123c !important;
+      border: 1px solid #fda4af !important;
+    }
+    .milestone-waypoints.is-active,
+    .milestone-waypoints.is-clicked {
+      background: #e11d48 !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 8px 24px -4px rgba(225, 29, 72, 0.45) !important;
+    }
+    .milestone-waypoints.is-active .milestone-val,
+    .milestone-waypoints.is-clicked .milestone-val {
+      color: #ffffff !important;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    }
+    .milestone-waypoints.is-active .milestone-lbl,
+    .milestone-waypoints.is-clicked .milestone-lbl { color: #ffe4e6 !important; }
+    .milestone-waypoints.is-active .milestone-icon-wrap,
+    .milestone-waypoints.is-clicked .milestone-icon-wrap {
+      background-color: rgba(255, 255, 255, 0.22) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.45) !important;
+    }
+
+    /* 4. STATES TRAVERSED: Amber / Orange Theme */
+    .milestone-states {
+      background-color: #fffbeb !important;
+      border: 1px solid #fde68a !important;
+    }
+    .milestone-states .milestone-val { color: #78350f !important; }
+    .milestone-states .milestone-lbl { color: #d97706 !important; }
+    .milestone-states .milestone-icon-wrap {
+      background-color: #fef3c7 !important;
+      color: #b45309 !important;
+      border: 1px solid #fcd34d !important;
+    }
+    .milestone-states.is-active,
+    .milestone-states.is-clicked {
+      background: #d97706 !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 8px 24px -4px rgba(217, 119, 6, 0.45) !important;
+    }
+    .milestone-states.is-active .milestone-val,
+    .milestone-states.is-clicked .milestone-val {
+      color: #ffffff !important;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    }
+    .milestone-states.is-active .milestone-lbl,
+    .milestone-states.is-clicked .milestone-lbl { color: #fef3c7 !important; }
+    .milestone-states.is-active .milestone-icon-wrap,
+    .milestone-states.is-clicked .milestone-icon-wrap {
+      background-color: rgba(255, 255, 255, 0.22) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.45) !important;
+    }
+
+    /* 5. KILOMETERS COVERED: Sky Blue Theme */
+    .milestone-km {
+      background-color: #f0f9ff !important;
+      border: 1px solid #bae6fd !important;
+    }
+    .milestone-km .milestone-val { color: #082f49 !important; }
+    .milestone-km .milestone-lbl { color: #0284c7 !important; }
+    .milestone-km .milestone-icon-wrap {
+      background-color: #e0f2fe !important;
+      color: #0369a1 !important;
+      border: 1px solid #7dd3fc !important;
+    }
+    .milestone-km.is-active,
+    .milestone-km.is-clicked {
+      background: #0284c7 !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 8px 24px -4px rgba(2, 132, 199, 0.45) !important;
+    }
+    .milestone-km.is-active .milestone-val,
+    .milestone-km.is-clicked .milestone-val {
+      color: #ffffff !important;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    }
+    .milestone-km.is-active .milestone-lbl,
+    .milestone-km.is-clicked .milestone-lbl { color: #e0f2fe !important; }
+    .milestone-km.is-active .milestone-icon-wrap,
+    .milestone-km.is-clicked .milestone-icon-wrap {
+      background-color: rgba(255, 255, 255, 0.22) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.45) !important;
+    }
+
+    /* Spring Pop & Tilt Icon Animation on Click */
     @keyframes iconSpringPop {
-      0% {
-        transform: scale(1) rotate(0deg);
-      }
-      35% {
-        transform: scale(1.35) rotate(-14deg);
-      }
-      70% {
-        transform: scale(0.92) rotate(4deg);
-      }
-      100% {
-        transform: scale(1) rotate(0deg);
-      }
+      0% { transform: scale(1) rotate(0deg); }
+      35% { transform: scale(1.35) rotate(-14deg); }
+      70% { transform: scale(0.92) rotate(4deg); }
+      100% { transform: scale(1) rotate(0deg); }
     }
     .milestone-box.is-active .milestone-icon-wrap i,
     .milestone-box.is-clicked .milestone-icon-wrap i {
@@ -2959,72 +3078,69 @@
      ========================================= -->
 <div id="ui-upcoming-showcase" class="hidden w-full space-y-5 transition-all duration-500 overflow-hidden">
   
-  <!-- 1. Hero Media Carousel (Curved Corners, 3D Overflow with Side Peeks) -->
+  <!-- 1. Hero Media Carousel (Curved Corners, Behind Images Touch Sides of Screen, No Dots) -->
   <div class="-mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full relative select-none overflow-hidden py-1">
     <!-- Viewport with 3D Depth & Overflow -->
-    <div class="relative w-full aspect-video max-h-[460px] flex items-center justify-center overflow-hidden" style="perspective: 1200px;">
+    <div class="relative w-full aspect-video max-h-[480px] sm:max-h-[520px] flex items-center justify-center overflow-hidden" style="perspective: 1200px;">
       <!-- Slides Track with 3D Depth Zoom positioning -->
       <div id="showcaseCarouselTrack" class="relative w-full h-full"></div>
-
-      <!-- Indicator Dots -->
-      <div id="carouselDotsContainer" class="absolute bottom-2.5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 pointer-events-auto bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md"></div>
     </div>
   </div>
 
-  <!-- 2. Track Record Bento Stats (Compact Milestone Boxes with Proper Gap & Light Indigo Fill, Blurred Morphism & Icon Animation on Click) -->
+  <!-- 2. Track Record Bento Stats (Compact Milestone Boxes with Work-Themed Colors, Smooth Glow, & Fast Number Count Effect) -->
   <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3 lg:gap-3.5 px-0.5 py-1">
-    <!-- Milestone 1: Trips -->
-    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="compass" class="w-3.5 h-3.5 stroke-[2.3]"></i>
+    <!-- Milestone 1: Trips (Indigo Theme) -->
+    <div onclick="handleMilestoneClick(this)" class="milestone-box milestone-trips p-2.5 sm:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="compass" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
         <p id="showcase-stat-trips-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">14</p>
-        <p id="showcase-stat-trips-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Trips Completed</p>
+        <p id="showcase-stat-trips-lbl" class="milestone-lbl text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Trips Completed</p>
       </div>
     </div>
 
-    <!-- Milestone 2: Spent/Managed -->
-    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="wallet" class="w-3.5 h-3.5 stroke-[2.3]"></i>
+    <!-- Milestone 2: Spent/Managed (Emerald Theme) -->
+    <div onclick="handleMilestoneClick(this)" class="milestone-box milestone-spent p-2.5 sm:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="wallet" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
         <p id="showcase-stat-spent-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">₹4.8L</p>
-        <p id="showcase-stat-spent-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Total Managed</p>
+        <p id="showcase-stat-spent-lbl" class="milestone-lbl text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Total Managed</p>
       </div>
     </div>
 
-    <!-- Milestone 3: Waypoints -->
-    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="map-pin" class="w-3.5 h-3.5 stroke-[2.3]"></i>
+    <!-- Milestone 3: Waypoints (Rose Theme) -->
+    <div onclick="handleMilestoneClick(this)" class="milestone-box milestone-waypoints p-2.5 sm:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
         <p id="showcase-stat-locations-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">85</p>
-        <p id="showcase-stat-locations-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Waypoints Reached</p>
+        <p id="showcase-stat-locations-lbl" class="milestone-lbl text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Waypoints Reached</p>
       </div>
     </div>
 
-    <!-- Milestone 4: States -->
-    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="map" class="w-3.5 h-3.5 stroke-[2.3]"></i>
+    <!-- Milestone 4: States (Amber Theme) -->
+    <div onclick="handleMilestoneClick(this)" class="milestone-box milestone-states p-2.5 sm:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="map" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
         <p id="showcase-stat-states-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">7</p>
-        <p id="showcase-stat-states-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">States Traversed</p>
+        <p id="showcase-stat-states-lbl" class="milestone-lbl text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">States Traversed</p>
       </div>
     </div>
 
-    <!-- Milestone 5: Kilometers -->
-    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="navigation" class="w-3.5 h-3.5 stroke-[2.3]"></i>
+    <!-- Milestone 5: Kilometers (Sky Theme) -->
+    <div onclick="handleMilestoneClick(this)" class="milestone-box milestone-km p-2.5 sm:p-3 shadow-xs flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 select-none group">
+      <div class="milestone-icon-wrap w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+        <i data-lucide="navigation" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
         <p id="showcase-stat-km-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">12,500</p>
-        <p id="showcase-stat-km-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Kilometers Covered</p>
+        <p id="showcase-stat-km-lbl" class="milestone-lbl text-[7.5px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Kilometers Covered</p>
       </div>
     </div>
   </div>
@@ -9158,23 +9274,38 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
       // 3. Populate Bento Stats (Supporting both flat API keys and nested objects)
       if (document.getElementById('showcase-stat-trips-val')) {
-        document.getElementById('showcase-stat-trips-val').innerText = cfg.statTripsVal || stats.trips?.value || '14';
+        const val = cfg.statTripsVal || stats.trips?.value || '14';
+        const el = document.getElementById('showcase-stat-trips-val');
+        el.innerText = val;
+        el.dataset.targetVal = val;
         document.getElementById('showcase-stat-trips-lbl').innerText = cfg.statTripsLabel || stats.trips?.label || 'Trips Completed';
       }
       if (document.getElementById('showcase-stat-spent-val')) {
-        document.getElementById('showcase-stat-spent-val').innerText = cfg.statSpentVal || stats.spent?.value || '₹4.8L';
+        const val = cfg.statSpentVal || stats.spent?.value || '₹4.8L';
+        const el = document.getElementById('showcase-stat-spent-val');
+        el.innerText = val;
+        el.dataset.targetVal = val;
         document.getElementById('showcase-stat-spent-lbl').innerText = cfg.statSpentLabel || stats.spent?.label || 'Total Managed';
       }
       if (document.getElementById('showcase-stat-locations-val')) {
-        document.getElementById('showcase-stat-locations-val').innerText = cfg.statLocationsVal || stats.locations?.value || '85';
+        const val = cfg.statLocationsVal || stats.locations?.value || '85';
+        const el = document.getElementById('showcase-stat-locations-val');
+        el.innerText = val;
+        el.dataset.targetVal = val;
         document.getElementById('showcase-stat-locations-lbl').innerText = cfg.statLocationsLabel || stats.locations?.label || 'Waypoints Reached';
       }
       if (document.getElementById('showcase-stat-states-val')) {
-        document.getElementById('showcase-stat-states-val').innerText = cfg.statStatesVal || stats.states?.value || '7';
+        const val = cfg.statStatesVal || stats.states?.value || '7';
+        const el = document.getElementById('showcase-stat-states-val');
+        el.innerText = val;
+        el.dataset.targetVal = val;
         document.getElementById('showcase-stat-states-lbl').innerText = cfg.statStatesLabel || stats.states?.label || 'States Traversed';
       }
       if (document.getElementById('showcase-stat-km-val')) {
-        document.getElementById('showcase-stat-km-val').innerText = cfg.statKmVal || stats.km?.value || '12,500';
+        const val = cfg.statKmVal || stats.km?.value || '12,500';
+        const el = document.getElementById('showcase-stat-km-val');
+        el.innerText = val;
+        el.dataset.targetVal = val;
         document.getElementById('showcase-stat-km-lbl').innerText = cfg.statKmLabel || stats.km?.label || 'Kilometers Covered';
       }
 
@@ -9192,7 +9323,8 @@ window.addEventListener('resize', autoScaleNoticeA4);
         parsedImages = rawImages.filter(u => typeof u === 'string' && u.trim().startsWith('http'));
       } else if (typeof rawImages === 'string') {
         parsedImages = rawImages
-          .split(/[\n,]+/)
+          .split(/[
+,]+/)
           .map(u => u.trim())
           .filter(u => /^https?:\/\//i.test(u));
       }
@@ -9273,23 +9405,16 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
     function buildShowcaseCarousel(images) {
       const track = document.getElementById('showcaseCarouselTrack');
-      const dotsContainer = document.getElementById('carouselDotsContainer');
       if (!track || !images || images.length === 0) return;
 
       showcaseCurrentSlide = 0;
-      // 16:9 Aspect Ratio with Curved Corners, Active ~78% center card, with prev & next peeking from edges
+      // Sized larger with curved corners; behind images touch screen sides
       track.innerHTML = images.map((url, i) => `
-        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-[78%] sm:w-[72%] md:w-[65%] aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
+        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-[84%] sm:w-[78%] md:w-[72%] aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
           <img src="${url}" class="w-full h-full object-cover pointer-events-none select-none" alt="Showcase Media ${i+1}">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20 pointer-events-none"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none"></div>
         </div>
       `).join('');
-
-      if (dotsContainer) {
-        dotsContainer.innerHTML = images.map((_, i) => `
-          <button type="button" onclick="goToShowcaseSlide(${i})" class="h-1.5 rounded-full transition-all duration-300 ${i === 0 ? 'bg-white w-5' : 'bg-white/40 w-1.5'}" title="Slide ${i+1}"></button>
-        `).join('');
-      }
 
       goToShowcaseSlide(0);
       attachShowcaseTouch();
@@ -9302,20 +9427,71 @@ window.addEventListener('resize', autoScaleNoticeA4);
       }
     }
 
+    // Fast counter ticker animation for milestone numbers
+    function animateFastNumberCounter(valEl) {
+      if (!valEl) return;
+      if (!valEl.dataset.targetVal) {
+        valEl.dataset.targetVal = valEl.innerText.trim();
+      }
+      const originalStr = valEl.dataset.targetVal;
+      const match = originalStr.match(/^([^0-9.]*)([0-9,.]+)(.*)$/);
+      if (!match) return;
+
+      const prefix = match[1] || '';
+      const numStr = match[2];
+      const suffix = match[3] || '';
+      const hasComma = numStr.includes(',');
+      const hasDot = numStr.includes('.');
+      const targetNum = parseFloat(numStr.replace(/,/g, ''));
+      if (isNaN(targetNum)) return;
+
+      if (valEl._counterTimer) {
+        clearInterval(valEl._counterTimer);
+        valEl._counterTimer = null;
+      }
+
+      const duration = 550; // Fast 550ms ticker
+      const steps = 22;
+      const stepTime = duration / steps;
+      let currentStep = 0;
+
+      valEl._counterTimer = setInterval(() => {
+        currentStep++;
+        const progress = currentStep / steps;
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentVal = targetNum * easeOut;
+
+        let displayVal = '';
+        if (hasDot) {
+          displayVal = currentVal.toFixed(1);
+        } else {
+          const rounded = Math.round(currentVal);
+          displayVal = hasComma ? rounded.toLocaleString('en-IN') : String(rounded);
+        }
+
+        valEl.innerText = `${prefix}${displayVal}${suffix}`;
+
+        if (currentStep >= steps) {
+          clearInterval(valEl._counterTimer);
+          valEl._counterTimer = null;
+          valEl.innerText = originalStr;
+        }
+      }, stepTime);
+    }
+
     function handleMilestoneClick(el) {
       if (!el) return;
+      // Stays active in its unique color until another box is touched
       document.querySelectorAll('.milestone-box').forEach(b => {
         b.classList.remove('is-active', 'is-clicked');
-        if (b._revertTimer) {
-          clearTimeout(b._revertTimer);
-          b._revertTimer = null;
-        }
       });
       el.classList.add('is-active', 'is-clicked');
-      el._revertTimer = setTimeout(() => {
-        el.classList.remove('is-active', 'is-clicked');
-        el._revertTimer = null;
-      }, 1500);
+
+      // Trigger fast counting animation on click
+      const valEl = el.querySelector('.milestone-val');
+      if (valEl) {
+        animateFastNumberCounter(valEl);
+      }
     }
 
     function toggleMilestoneActive(el) {
@@ -9331,7 +9507,6 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
     function goToShowcaseSlide(index) {
       const slides = document.querySelectorAll('#showcaseCarouselTrack > .carousel-slide-item');
-      const dots = document.querySelectorAll('#carouselDotsContainer > button');
       if (!slides.length) return;
 
       const N = slides.length;
@@ -9349,36 +9524,28 @@ window.addEventListener('resize', autoScaleNoticeA4);
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'default';
         } else if (idx === prevIdx && N > 1) {
-          // Left Background Image (peeking from left edge with 3D tilt & depth)
-          s.style.transform = 'translate(calc(-50% - 62%), -50%) scale(0.85) rotateY(15deg) translateZ(-60px)';
+          // Left Background Image - touches the left side of the screen seamlessly
+          s.style.transform = 'translate(calc(-50% - 16%), -50%) scale(0.88) rotateY(8deg) translateZ(-40px)';
           s.style.zIndex = '10';
-          s.style.opacity = '0.72';
-          s.style.filter = 'brightness(0.72)';
+          s.style.opacity = '0.78';
+          s.style.filter = 'brightness(0.75)';
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'pointer';
         } else if (idx === nextIdx && N > 1) {
-          // Right Background Image (peeking from right edge with 3D tilt & depth)
-          s.style.transform = 'translate(calc(-50% + 62%), -50%) scale(0.85) rotateY(-15deg) translateZ(-60px)';
+          // Right Background Image - touches the right side of the screen seamlessly
+          s.style.transform = 'translate(calc(-50% + 16%), -50%) scale(0.88) rotateY(-8deg) translateZ(-40px)';
           s.style.zIndex = '10';
-          s.style.opacity = '0.72';
-          s.style.filter = 'brightness(0.72)';
+          s.style.opacity = '0.78';
+          s.style.filter = 'brightness(0.75)';
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'pointer';
         } else {
-          // Inactive / Deep Background Slides - coming seamlessly from screen behind
+          // Inactive / Deep Background Slides
           s.style.transform = 'translate(-50%, -50%) scale(0.5) translateZ(-250px)';
           s.style.zIndex = '0';
           s.style.opacity = '0';
           s.style.filter = 'brightness(0.3)';
           s.style.pointerEvents = 'none';
-        }
-      });
-
-      dots.forEach((d, idx) => {
-        if (idx === showcaseCurrentSlide) {
-          d.className = "h-1.5 rounded-full transition-all duration-300 bg-white w-5";
-        } else {
-          d.className = "h-1.5 rounded-full transition-all duration-300 bg-white/40 w-1.5";
         }
       });
     }
