@@ -1352,51 +1352,81 @@
     
     /* Milestone Summary Bento Box Interactive Engine */
     .milestone-box {
-      background-color: rgba(238, 242, 255, 0.92) !important;
+      background-color: rgba(238, 242, 255, 0.95) !important;
       border: 1px solid rgba(199, 210, 254, 0.85) !important;
-      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+      transition: all 0.28s cubic-bezier(0.25, 1, 0.5, 1) !important;
       cursor: pointer;
+      position: relative;
     }
-    .milestone-box:hover,
+    .milestone-box:hover {
+      background-color: rgba(224, 231, 255, 0.98) !important;
+      border-color: #818cf8 !important;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.25) !important;
+      transform: translateY(-2px);
+    }
+    /* Clicked / Active State: Indigo filled blurred morphism with glow */
     .milestone-box:active,
-    .milestone-box.is-active {
-      background-color: #0b0f19 !important;
-      border-color: #6366f1 !important;
-      box-shadow: 0 0 24px rgba(99, 102, 241, 0.65), inset 0 0 10px rgba(99, 102, 241, 0.25) !important;
+    .milestone-box.is-active,
+    .milestone-box.is-clicked {
+      background: rgba(79, 70, 229, 0.88) !important;
+      backdrop-filter: blur(16px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+      border-color: rgba(255, 255, 255, 0.45) !important;
+      box-shadow: 0 10px 28px -2px rgba(79, 70, 229, 0.6), 0 0 24px rgba(99, 102, 241, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
       transform: translateY(-2px) scale(1.02);
     }
     .milestone-box .milestone-val {
       color: #0f172a !important;
-      transition: color 0.25s ease;
+      transition: color 0.25s ease, text-shadow 0.25s ease;
     }
-    .milestone-box:hover .milestone-val,
     .milestone-box:active .milestone-val,
-    .milestone-box.is-active .milestone-val {
+    .milestone-box.is-active .milestone-val,
+    .milestone-box.is-clicked .milestone-val {
       color: #ffffff !important;
-      text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
     }
     .milestone-box .milestone-lbl {
       color: #4338ca !important;
       transition: color 0.25s ease;
     }
-    .milestone-box:hover .milestone-lbl,
     .milestone-box:active .milestone-lbl,
-    .milestone-box.is-active .milestone-lbl {
-      color: #c7d2fe !important;
+    .milestone-box.is-active .milestone-lbl,
+    .milestone-box.is-clicked .milestone-lbl {
+      color: #e0e7ff !important;
     }
     .milestone-box .milestone-icon-wrap {
-      background-color: rgba(224, 231, 255, 0.9) !important;
+      background-color: rgba(224, 231, 255, 0.95) !important;
       color: #4338ca !important;
       border: 1px solid rgba(199, 210, 254, 0.9) !important;
       transition: all 0.25s ease;
     }
-    .milestone-box:hover .milestone-icon-wrap,
     .milestone-box:active .milestone-icon-wrap,
-    .milestone-box.is-active .milestone-icon-wrap {
-      background-color: #4f46e5 !important;
+    .milestone-box.is-active .milestone-icon-wrap,
+    .milestone-box.is-clicked .milestone-icon-wrap {
+      background-color: rgba(255, 255, 255, 0.22) !important;
       color: #ffffff !important;
-      border-color: #818cf8 !important;
-      box-shadow: 0 0 12px rgba(99, 102, 241, 0.8) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.4) !important;
+    }
+
+    /* Option A: Spring Pop & Tilt Icon Animation on Click */
+    @keyframes iconSpringPop {
+      0% {
+        transform: scale(1) rotate(0deg);
+      }
+      35% {
+        transform: scale(1.35) rotate(-14deg);
+      }
+      70% {
+        transform: scale(0.92) rotate(4deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+    }
+    .milestone-box.is-active .milestone-icon-wrap i,
+    .milestone-box.is-clicked .milestone-icon-wrap i {
+      animation: iconSpringPop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
     /* =========================================
@@ -2929,10 +2959,10 @@
      ========================================= -->
 <div id="ui-upcoming-showcase" class="hidden w-full space-y-5 transition-all duration-500 overflow-hidden">
   
-  <!-- 1. Hero Media Carousel (Frameless from mobile screen edges, No Enclosing Card) -->
-  <div class="-mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full relative select-none overflow-hidden">
-    <!-- Edge-to-Edge Frameless Viewport on Mobile, Rounded on Desktop -->
-    <div class="relative w-full aspect-video max-h-[460px] overflow-hidden flex items-center justify-center rounded-none sm:rounded-[32px]" style="perspective: 1200px;">
+  <!-- 1. Hero Media Carousel (Curved Corners, 3D Overflow with Side Peeks) -->
+  <div class="-mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full relative select-none overflow-hidden py-1">
+    <!-- Viewport with 3D Depth & Overflow -->
+    <div class="relative w-full aspect-video max-h-[460px] flex items-center justify-center overflow-hidden" style="perspective: 1200px;">
       <!-- Slides Track with 3D Depth Zoom positioning -->
       <div id="showcaseCarouselTrack" class="relative w-full h-full"></div>
 
@@ -2941,11 +2971,11 @@
     </div>
   </div>
 
-  <!-- 2. Track Record Bento Stats (Compact Milestone Boxes with Proper Gap & Light Indigo Fill, Glow & Dark on Click/Hover) -->
-  <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4 px-1 py-1">
+  <!-- 2. Track Record Bento Stats (Compact Milestone Boxes with Proper Gap & Light Indigo Fill, Blurred Morphism & Icon Animation on Click) -->
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3 lg:gap-3.5 px-0.5 py-1">
     <!-- Milestone 1: Trips -->
-    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
         <i data-lucide="compass" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
@@ -2955,8 +2985,8 @@
     </div>
 
     <!-- Milestone 2: Spent/Managed -->
-    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
         <i data-lucide="wallet" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
@@ -2966,8 +2996,8 @@
     </div>
 
     <!-- Milestone 3: Waypoints -->
-    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
         <i data-lucide="map-pin" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
@@ -2977,8 +3007,8 @@
     </div>
 
     <!-- Milestone 4: States -->
-    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
         <i data-lucide="map" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
@@ -2988,8 +3018,8 @@
     </div>
 
     <!-- Milestone 5: Kilometers -->
-    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 select-none group">
-      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+    <div onclick="handleMilestoneClick(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-105">
         <i data-lucide="navigation" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
       <div class="flex flex-col items-center justify-center w-full">
@@ -9247,9 +9277,9 @@ window.addEventListener('resize', autoScaleNoticeA4);
       if (!track || !images || images.length === 0) return;
 
       showcaseCurrentSlide = 0;
-      // 16:9 Aspect Ratio Frameless Slide Items with 3D Depth Zoom
+      // 16:9 Aspect Ratio with Curved Corners, Active ~78% center card, with prev & next peeking from edges
       track.innerHTML = images.map((url, i) => `
-        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-full sm:w-[82%] md:w-[78%] aspect-video rounded-none sm:rounded-3xl overflow-hidden shadow-none sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
+        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-[78%] sm:w-[72%] md:w-[65%] aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
           <img src="${url}" class="w-full h-full object-cover pointer-events-none select-none" alt="Showcase Media ${i+1}">
           <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20 pointer-events-none"></div>
         </div>
@@ -9272,14 +9302,24 @@ window.addEventListener('resize', autoScaleNoticeA4);
       }
     }
 
-    
-    function toggleMilestoneActive(el) {
+    function handleMilestoneClick(el) {
       if (!el) return;
-      const isAlreadyActive = el.classList.contains('is-active');
-      document.querySelectorAll('.milestone-box').forEach(b => b.classList.remove('is-active'));
-      if (!isAlreadyActive) {
-        el.classList.add('is-active');
-      }
+      document.querySelectorAll('.milestone-box').forEach(b => {
+        b.classList.remove('is-active', 'is-clicked');
+        if (b._revertTimer) {
+          clearTimeout(b._revertTimer);
+          b._revertTimer = null;
+        }
+      });
+      el.classList.add('is-active', 'is-clicked');
+      el._revertTimer = setTimeout(() => {
+        el.classList.remove('is-active', 'is-clicked');
+        el._revertTimer = null;
+      }, 1500);
+    }
+
+    function toggleMilestoneActive(el) {
+      handleMilestoneClick(el);
     }
 
     function handleShowcaseSlideClick(i) {
@@ -9301,7 +9341,7 @@ window.addEventListener('resize', autoScaleNoticeA4);
 
       slides.forEach((s, idx) => {
         if (idx === showcaseCurrentSlide) {
-          // Main Center Active Image - in full view and zoomed in
+          // Main Center Active Image - in full view with curved corners
           s.style.transform = 'translate(-50%, -50%) scale(1) translateZ(0px)';
           s.style.zIndex = '20';
           s.style.opacity = '1';
@@ -9309,24 +9349,24 @@ window.addEventListener('resize', autoScaleNoticeA4);
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'default';
         } else if (idx === prevIdx && N > 1) {
-          // Left Background Image (scaled down in 3D depth)
-          s.style.transform = 'translate(calc(-50% - 34%), -50%) scale(0.82) translateZ(-120px)';
+          // Left Background Image (peeking from left edge with 3D tilt & depth)
+          s.style.transform = 'translate(calc(-50% - 62%), -50%) scale(0.85) rotateY(15deg) translateZ(-60px)';
           s.style.zIndex = '10';
-          s.style.opacity = '0.55';
-          s.style.filter = 'brightness(0.65)';
+          s.style.opacity = '0.72';
+          s.style.filter = 'brightness(0.72)';
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'pointer';
         } else if (idx === nextIdx && N > 1) {
-          // Right Background Image (scaled down in 3D depth)
-          s.style.transform = 'translate(calc(-50% + 34%), -50%) scale(0.82) translateZ(-120px)';
+          // Right Background Image (peeking from right edge with 3D tilt & depth)
+          s.style.transform = 'translate(calc(-50% + 62%), -50%) scale(0.85) rotateY(-15deg) translateZ(-60px)';
           s.style.zIndex = '10';
-          s.style.opacity = '0.55';
-          s.style.filter = 'brightness(0.65)';
+          s.style.opacity = '0.72';
+          s.style.filter = 'brightness(0.72)';
           s.style.pointerEvents = 'auto';
           s.style.cursor = 'pointer';
         } else {
-          // Inactive / Deep Background Slides - coming from screen behind
-          s.style.transform = 'translate(-50%, -50%) scale(0.4) translateZ(-280px)';
+          // Inactive / Deep Background Slides - coming seamlessly from screen behind
+          s.style.transform = 'translate(-50%, -50%) scale(0.5) translateZ(-250px)';
           s.style.zIndex = '0';
           s.style.opacity = '0';
           s.style.filter = 'brightness(0.3)';
