@@ -1350,6 +1350,55 @@
       }
     }
     
+    /* Milestone Summary Bento Box Interactive Engine */
+    .milestone-box {
+      background-color: rgba(238, 242, 255, 0.92) !important;
+      border: 1px solid rgba(199, 210, 254, 0.85) !important;
+      transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+      cursor: pointer;
+    }
+    .milestone-box:hover,
+    .milestone-box:active,
+    .milestone-box.is-active {
+      background-color: #0b0f19 !important;
+      border-color: #6366f1 !important;
+      box-shadow: 0 0 24px rgba(99, 102, 241, 0.65), inset 0 0 10px rgba(99, 102, 241, 0.25) !important;
+      transform: translateY(-2px) scale(1.02);
+    }
+    .milestone-box .milestone-val {
+      color: #0f172a !important;
+      transition: color 0.25s ease;
+    }
+    .milestone-box:hover .milestone-val,
+    .milestone-box:active .milestone-val,
+    .milestone-box.is-active .milestone-val {
+      color: #ffffff !important;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+    }
+    .milestone-box .milestone-lbl {
+      color: #4338ca !important;
+      transition: color 0.25s ease;
+    }
+    .milestone-box:hover .milestone-lbl,
+    .milestone-box:active .milestone-lbl,
+    .milestone-box.is-active .milestone-lbl {
+      color: #c7d2fe !important;
+    }
+    .milestone-box .milestone-icon-wrap {
+      background-color: rgba(224, 231, 255, 0.9) !important;
+      color: #4338ca !important;
+      border: 1px solid rgba(199, 210, 254, 0.9) !important;
+      transition: all 0.25s ease;
+    }
+    .milestone-box:hover .milestone-icon-wrap,
+    .milestone-box:active .milestone-icon-wrap,
+    .milestone-box.is-active .milestone-icon-wrap {
+      background-color: #4f46e5 !important;
+      color: #ffffff !important;
+      border-color: #818cf8 !important;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.8) !important;
+    }
+
     /* =========================================
        CUSTOM CSS & ANIMATIONS ENGINE
        ========================================= */
@@ -2865,7 +2914,7 @@
         </div>
 
         <!-- ALL TRANSACTIONS QUICK LINK (Click to open transaction ledger) -->
-        <div class="flex justify-center pt-3 pb-0.5">
+        <div class="flex justify-center pt-3 pb-0.5" style="transform: translateY(5px);">
           <button type="button" onclick="openTransactionsTab(this)" class="group flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-600 active:scale-95 transition-all outline-none cursor-pointer select-none">
             <span class="tracking-wide">All Transactions</span>
             <i data-lucide="chevron-down" class="w-3.5 h-3.5 stroke-[2.5] text-slate-400 group-hover:text-slate-600 group-hover:translate-y-0.5 transition-transform duration-200"></i>
@@ -2878,78 +2927,74 @@
 <!-- =========================================
      UPCOMING SHOWCASE MODE VIEW (APP EXPERIENCE MODE)
      ========================================= -->
-<div id="ui-upcoming-showcase" class="hidden w-full space-y-6 transition-all duration-500 overflow-hidden">
+<div id="ui-upcoming-showcase" class="hidden w-full space-y-5 transition-all duration-500 overflow-hidden">
   
-  <!-- 1. Hero Frameless 3D Perspective Media Carousel (16:9 Aspect Ratio, Frameless, No Arrows/Headers) -->
-  <div class="w-full relative select-none">
-    <div class="relative w-full aspect-video max-h-[460px] overflow-hidden flex items-center justify-center rounded-[28px] sm:rounded-[36px] shadow-2xl bg-slate-950/90 border border-slate-800/60" style="perspective: 1200px;">
-      <!-- Slides Track with 3D Depth Zoom positioning (behind images come from screen) -->
+  <!-- 1. Hero Media Carousel (Frameless from mobile screen edges, No Enclosing Card) -->
+  <div class="-mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full relative select-none overflow-hidden">
+    <!-- Edge-to-Edge Frameless Viewport on Mobile, Rounded on Desktop -->
+    <div class="relative w-full aspect-video max-h-[460px] overflow-hidden flex items-center justify-center rounded-none sm:rounded-[32px]" style="perspective: 1200px;">
+      <!-- Slides Track with 3D Depth Zoom positioning -->
       <div id="showcaseCarouselTrack" class="relative w-full h-full"></div>
 
       <!-- Indicator Dots -->
-      <div id="carouselDotsContainer" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 pointer-events-auto bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full shadow-md"></div>
+      <div id="carouselDotsContainer" class="absolute bottom-2.5 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 pointer-events-auto bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full shadow-md"></div>
     </div>
   </div>
 
-  <!-- 2. Track Record Bento Stats (5 Glassmorphic Glowing Milestone Boxes in App Theme) -->
-  <div class="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3 p-0.5">
+  <!-- 2. Track Record Bento Stats (Compact Milestone Boxes with Proper Gap & Light Indigo Fill, Glow & Dark on Click/Hover) -->
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-3.5 lg:gap-4 px-1 py-1">
     <!-- Milestone 1: Trips -->
-    <div class="relative overflow-hidden backdrop-blur-xl bg-white/70 border border-indigo-200/60 shadow-[0_4px_20px_-2px_rgba(79,70,229,0.18)] hover:shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:border-indigo-400/80 rounded-2xl p-3 sm:p-4 transition-all duration-300 flex flex-col items-center justify-center text-center group ring-1 ring-indigo-500/10 hover:ring-indigo-500/30">
-      <div class="absolute -right-6 -top-6 w-16 h-16 bg-indigo-500/15 rounded-full blur-xl pointer-events-none group-hover:bg-indigo-500/25 transition-all"></div>
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-500/10 text-indigo-600 border border-indigo-200/60 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="compass" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
+    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+        <i data-lucide="compass" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
-      <div class="flex flex-col items-center justify-center w-full relative z-10">
-        <p id="showcase-stat-trips-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">14</p>
-        <p id="showcase-stat-trips-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 text-center">Trips Completed</p>
+      <div class="flex flex-col items-center justify-center w-full">
+        <p id="showcase-stat-trips-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">14</p>
+        <p id="showcase-stat-trips-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Trips Completed</p>
       </div>
     </div>
 
     <!-- Milestone 2: Spent/Managed -->
-    <div class="relative overflow-hidden backdrop-blur-xl bg-white/70 border border-indigo-200/60 shadow-[0_4px_20px_-2px_rgba(79,70,229,0.18)] hover:shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:border-indigo-400/80 rounded-2xl p-3 sm:p-4 transition-all duration-300 flex flex-col items-center justify-center text-center group ring-1 ring-indigo-500/10 hover:ring-indigo-500/30">
-      <div class="absolute -right-6 -top-6 w-16 h-16 bg-emerald-500/15 rounded-full blur-xl pointer-events-none group-hover:bg-emerald-500/25 transition-all"></div>
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/10 text-emerald-600 border border-emerald-200/60 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="wallet" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
+    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+        <i data-lucide="wallet" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
-      <div class="flex flex-col items-center justify-center w-full relative z-10">
-        <p id="showcase-stat-spent-val" class="text-lg sm:text-xl font-black text-emerald-600 leading-tight text-center">₹4.8L</p>
-        <p id="showcase-stat-spent-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 text-center">Total Managed</p>
+      <div class="flex flex-col items-center justify-center w-full">
+        <p id="showcase-stat-spent-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">₹4.8L</p>
+        <p id="showcase-stat-spent-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Total Managed</p>
       </div>
     </div>
 
     <!-- Milestone 3: Waypoints -->
-    <div class="relative overflow-hidden backdrop-blur-xl bg-white/70 border border-indigo-200/60 shadow-[0_4px_20px_-2px_rgba(79,70,229,0.18)] hover:shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:border-indigo-400/80 rounded-2xl p-3 sm:p-4 transition-all duration-300 flex flex-col items-center justify-center text-center group ring-1 ring-indigo-500/10 hover:ring-indigo-500/30">
-      <div class="absolute -right-6 -top-6 w-16 h-16 bg-blue-500/15 rounded-full blur-xl pointer-events-none group-hover:bg-blue-500/25 transition-all"></div>
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-500/10 text-blue-600 border border-blue-200/60 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="map-pin" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
+    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
-      <div class="flex flex-col items-center justify-center w-full relative z-10">
-        <p id="showcase-stat-locations-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">85</p>
-        <p id="showcase-stat-locations-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 text-center">Waypoints Reached</p>
+      <div class="flex flex-col items-center justify-center w-full">
+        <p id="showcase-stat-locations-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">85</p>
+        <p id="showcase-stat-locations-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Waypoints Reached</p>
       </div>
     </div>
 
     <!-- Milestone 4: States -->
-    <div class="relative overflow-hidden backdrop-blur-xl bg-white/70 border border-indigo-200/60 shadow-[0_4px_20px_-2px_rgba(79,70,229,0.18)] hover:shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:border-indigo-400/80 rounded-2xl p-3 sm:p-4 transition-all duration-300 flex flex-col items-center justify-center text-center group ring-1 ring-indigo-500/10 hover:ring-indigo-500/30">
-      <div class="absolute -right-6 -top-6 w-16 h-16 bg-purple-500/15 rounded-full blur-xl pointer-events-none group-hover:bg-purple-500/25 transition-all"></div>
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple-500/10 text-purple-600 border border-purple-200/60 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="map" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
+    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+        <i data-lucide="map" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
-      <div class="flex flex-col items-center justify-center w-full relative z-10">
-        <p id="showcase-stat-states-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">7</p>
-        <p id="showcase-stat-states-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 text-center">States Traversed</p>
+      <div class="flex flex-col items-center justify-center w-full">
+        <p id="showcase-stat-states-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">7</p>
+        <p id="showcase-stat-states-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">States Traversed</p>
       </div>
     </div>
 
     <!-- Milestone 5: Kilometers -->
-    <div class="relative overflow-hidden backdrop-blur-xl bg-white/70 border border-indigo-200/60 shadow-[0_4px_20px_-2px_rgba(79,70,229,0.18)] hover:shadow-[0_8px_30px_rgba(79,70,229,0.3)] hover:border-indigo-400/80 rounded-2xl p-3 sm:p-4 transition-all duration-300 flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 group ring-1 ring-indigo-500/10 hover:ring-indigo-500/30">
-      <div class="absolute -right-6 -top-6 w-16 h-16 bg-amber-500/15 rounded-full blur-xl pointer-events-none group-hover:bg-amber-500/25 transition-all"></div>
-      <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/10 text-amber-600 border border-amber-200/60 flex items-center justify-center mx-auto mb-1.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
-        <i data-lucide="navigation" class="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]"></i>
+    <div onclick="toggleMilestoneActive(this)" class="milestone-box rounded-xl sm:rounded-2xl p-2 sm:p-2.5 lg:p-3 shadow-xs flex flex-col items-center justify-center text-center col-span-2 lg:col-span-1 select-none group">
+      <div class="milestone-icon-wrap w-6 h-6 sm:w-7 sm:h-7 rounded-lg sm:rounded-xl flex items-center justify-center mx-auto mb-1 shadow-xs transition-transform duration-300 group-hover:scale-110">
+        <i data-lucide="navigation" class="w-3.5 h-3.5 stroke-[2.3]"></i>
       </div>
-      <div class="flex flex-col items-center justify-center w-full relative z-10">
-        <p id="showcase-stat-km-val" class="text-lg sm:text-xl font-black text-slate-800 leading-tight text-center">12,500</p>
-        <p id="showcase-stat-km-lbl" class="text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-wider mt-0.5 text-center">Kilometers Covered</p>
+      <div class="flex flex-col items-center justify-center w-full">
+        <p id="showcase-stat-km-val" class="milestone-val text-sm sm:text-base font-black leading-tight text-center">12,500</p>
+        <p id="showcase-stat-km-lbl" class="milestone-lbl text-[7px] sm:text-[8px] font-bold uppercase tracking-wider mt-0.5 text-center leading-none">Kilometers Covered</p>
       </div>
     </div>
   </div>
@@ -9204,7 +9249,7 @@ window.addEventListener('resize', autoScaleNoticeA4);
       showcaseCurrentSlide = 0;
       // 16:9 Aspect Ratio Frameless Slide Items with 3D Depth Zoom
       track.innerHTML = images.map((url, i) => `
-        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-[88%] sm:w-[82%] md:w-[78%] aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
+        <div class="carousel-slide-item absolute top-1/2 left-1/2 w-full sm:w-[82%] md:w-[78%] aspect-video rounded-none sm:rounded-3xl overflow-hidden shadow-none sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
           <img src="${url}" class="w-full h-full object-cover pointer-events-none select-none" alt="Showcase Media ${i+1}">
           <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/20 pointer-events-none"></div>
         </div>
@@ -9224,6 +9269,16 @@ window.addEventListener('resize', autoScaleNoticeA4);
         showcaseCarouselTimer = setInterval(() => {
           nextShowcaseSlide();
         }, 4000);
+      }
+    }
+
+    
+    function toggleMilestoneActive(el) {
+      if (!el) return;
+      const isAlreadyActive = el.classList.contains('is-active');
+      document.querySelectorAll('.milestone-box').forEach(b => b.classList.remove('is-active'));
+      if (!isAlreadyActive) {
+        el.classList.add('is-active');
       }
     }
 
