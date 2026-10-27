@@ -20,6 +20,7 @@
 
   <!-- iOS specific meta tags to enable full-screen standalone mode -->
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#4f46e5">
   
@@ -9323,8 +9324,7 @@ window.addEventListener('resize', autoScaleNoticeA4);
         parsedImages = rawImages.filter(u => typeof u === 'string' && u.trim().startsWith('http'));
       } else if (typeof rawImages === 'string') {
         parsedImages = rawImages
-          .split(/[
-,]+/)
+          .split(/[\r\n,]+/)
           .map(u => u.trim())
           .filter(u => /^https?:\/\//i.test(u));
       }
