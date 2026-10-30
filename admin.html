@@ -778,7 +778,7 @@
               <i data-lucide="send" class="w-4 h-4 text-emerald-400"></i>
               Request Money from Member (WhatsApp & UPI QR)
             </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Select a member, enter amount and UPI details, and launch WhatsApp directly with an automated payment message</p>
+            <p class="text-xs text-slate-400 mt-0.5">Select a member, enter amount and UPI details, and launch WhatsApp directly with an automated payment message & QR</p>
           </div>
           <button type="button" onclick="resetTreasuryRequestForm()" class="text-[11px] font-bold text-slate-400 hover:text-indigo-400 transition flex items-center gap-1 self-start sm:self-auto">
             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form
@@ -795,6 +795,13 @@
                 <i data-lucide="sliders" class="w-3.5 h-3.5 text-indigo-400"></i> Request Configuration
               </h3>
               <span class="text-[10px] text-emerald-400 font-bold uppercase">No Gateway • 0% Fee</span>
+            </div>
+
+            <!-- Trip Name / Title Field -->
+            <div class="space-y-1">
+              <label for="treasuryTripName" class="block text-[10px] font-black uppercase tracking-wider text-indigo-400">Trip Name / Title</label>
+              <input type="text" id="treasuryTripName" oninput="updateWhatsAppPreview()" placeholder="Trip Name"
+                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 transition font-bold">
             </div>
 
             <!-- 1. Squad Member Dropdown (Name, Position, Mobile) -->
@@ -847,20 +854,20 @@
               </div>
             </div>
 
-            <!-- 4. Receiving Payee Details (Manual Entry) -->
+            <!-- 4. Receiving Payee Details (Pre-filled with Admin Department) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div class="space-y-1">
                 <label for="treasuryUpiId" class="block text-[10px] font-black uppercase tracking-wider text-slate-300">
                   Receiving UPI ID <span class="text-indigo-400 font-mono">(Manual Entry)</span>
                 </label>
-                <input type="text" id="treasuryUpiId" oninput="updateWhatsAppPreview()" placeholder="e.g. yourname@upi or mobile@upi"
+                <input type="text" id="treasuryUpiId" value="ambujy474@okaxis" oninput="updateWhatsAppPreview()" placeholder="e.g. yourname@upi or mobile@upi"
                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500 transition font-medium">
               </div>
               <div class="space-y-1">
                 <label for="treasuryPayeeName" class="block text-[10px] font-black uppercase tracking-wider text-slate-300">
-                  Receiving Account Name <span class="text-slate-500 font-normal">(Manual Entry)</span>
+                  Receiving Account Name
                 </label>
-                <input type="text" id="treasuryPayeeName" oninput="updateWhatsAppPreview()" placeholder="e.g. Chief Treasurer"
+                <input type="text" id="treasuryPayeeName" value="Admin Department" oninput="updateWhatsAppPreview()" placeholder="Admin Department"
                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 transition font-medium">
               </div>
             </div>
@@ -879,17 +886,34 @@
               </div>
             </div>
 
-            <!-- 6. Action Buttons -->
-            <div class="pt-2 flex flex-col sm:flex-row gap-2.5">
-              <button type="button" onclick="sendWhatsAppRequest()"
-                class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition">
+            <!-- 6. Action Buttons: Send WhatsApp Link, Share QR & Copy -->
+            <div class="pt-2 flex flex-col gap-2.5">
+              <!-- Primary WhatsApp Action (Native anchor tag with fallback script to prevent popup blocker) -->
+              <a id="btnSendWaLink" href="#" target="_blank" rel="noopener noreferrer" onclick="return handleWhatsAppSend(event)"
+                class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition cursor-pointer text-center">
                 <i data-lucide="message-circle" class="w-4 h-4 stroke-[2.5]"></i>
                 <span id="btnSendWaText">Send Request on WhatsApp</span>
-              </button>
-              <button type="button" onclick="copyWhatsAppMessage()"
-                class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 border border-slate-700 transition">
-                <i data-lucide="copy" class="w-4 h-4"></i> Copy Text
-              </button>
+              </a>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <!-- Native Web Share API: Attaches QR PNG Image directly to WhatsApp -->
+                <button type="button" onclick="shareQrWithWhatsApp()"
+                  class="py-2.5 px-3 bg-indigo-600 hover:bg-indigo-500 text-white active:scale-95 rounded-xl text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20 transition">
+                  <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share QR + Text
+                </button>
+
+                <!-- Copy QR Image directly to Clipboard for instant Ctrl+V in WhatsApp -->
+                <button type="button" onclick="copyQrImageToClipboard()"
+                  class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 rounded-xl text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 border border-slate-700 transition">
+                  <i data-lucide="image" class="w-3.5 h-3.5 text-indigo-400"></i> Copy QR Image
+                </button>
+
+                <!-- Copy Text Message -->
+                <button type="button" onclick="copyWhatsAppMessage()"
+                  class="col-span-2 sm:col-span-1 py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 rounded-xl text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 border border-slate-700 transition">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Text
+                </button>
+              </div>
             </div>
           </div>
 
@@ -914,9 +938,14 @@
 
             <!-- Dynamic QR Code Card -->
             <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col items-center text-center space-y-3">
-              <div class="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-slate-300">
-                <i data-lucide="qr-code" class="w-4 h-4 text-emerald-400"></i>
-                <span>Direct Payment QR Code</span>
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-slate-300">
+                  <i data-lucide="qr-code" class="w-4 h-4 text-emerald-400"></i>
+                  <span>Dynamic Payment QR</span>
+                </div>
+                <button type="button" onclick="downloadQrImage()" class="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center gap-1">
+                  <i data-lucide="download" class="w-3 h-3"></i> Download PNG
+                </button>
               </div>
 
               <div class="p-3 bg-white rounded-xl shadow inline-block">
@@ -924,7 +953,7 @@
               </div>
 
               <p class="text-[10px] text-slate-400 leading-normal">
-                Encodes the exact <code class="text-indigo-400 font-mono">upi://pay</code> link. Squad members can scan this directly using Google Pay, PhonePe, or Paytm.
+                Encodes the exact <code class="text-indigo-400 font-mono">upi://pay</code> link. Use <strong class="text-white">Share QR + Text</strong> or <strong class="text-white">Copy QR Image</strong> to send this QR directly into WhatsApp chat.
               </p>
             </div>
 
@@ -932,8 +961,7 @@
 
         </div>
       </div>
-
-    </section>
+</section>
 
     <!-- ====================================================
          SECTION 4: MEDIA & ARCHIVES (Uploads, Stamp, Past Trips)
@@ -2872,18 +2900,23 @@
       select.innerHTML = optionsHtml;
       if (currentVal) select.value = currentVal;
 
-      // Set default payee name & UPI ID from coordinator if form is blank
-      const upiInput = document.getElementById('treasuryUpiId');
+      // 1. Pre-fill Receiving Account with "Admin Department"
       const payeeInput = document.getElementById('treasuryPayeeName');
+      if (payeeInput && (!payeeInput.value.trim() || payeeInput.value.trim() === 'Ambuj Yadav (Chief Treasurer)')) {
+        payeeInput.value = 'Admin Department';
+      }
+
+      // 2. Pre-fill Trip Name from Settings
+      const tripInput = document.getElementById('treasuryTripName');
+      if (tripInput && !tripInput.value.trim()) {
+        const tName = (document.getElementById('setTripName')?.value || (globalData && globalData.tripName) || 'Trip Name').trim();
+        tripInput.value = tName;
+      }
+
+      // 3. Pre-fill receiving UPI ID
+      const upiInput = document.getElementById('treasuryUpiId');
       if (upiInput && !upiInput.value.trim()) {
-        const coord = mems.find(m => (m.role || '').toLowerCase().includes('coordinator') || (m.designation || '').toLowerCase().includes('coordinator'));
-        if (coord) {
-          if (coord.mobile) upiInput.value = `${coord.mobile}@upi`;
-          payeeInput.value = coord.rawName || coord.name || 'Chief Coordinator';
-        } else {
-          upiInput.value = 'ambujy474@okaxis';
-          payeeInput.value = 'Ambuj Yadav (Chief Treasurer)';
-        }
+        upiInput.value = 'ambujy474@okaxis';
       }
 
       updateWhatsAppPreview();
@@ -2917,11 +2950,15 @@
       const memberRole = (document.getElementById('treasuryMemberRole')?.value || '').trim();
       const rawMobile = (document.getElementById('treasuryMemberMobile')?.value || '').trim();
       const amountVal = parseFloat(document.getElementById('treasuryAmount')?.value) || 0;
-      const upiId = (document.getElementById('treasuryUpiId')?.value || '').trim() || 'treasurer@upi';
-      const payeeName = (document.getElementById('treasuryPayeeName')?.value || '').trim() || 'Chief Treasurer';
+      const upiId = (document.getElementById('treasuryUpiId')?.value || '').trim() || 'ambujy474@okaxis';
+      
+      // Receiving Account strictly pre-filled / set to "Admin Department" or custom
+      const payeeName = (document.getElementById('treasuryPayeeName')?.value || '').trim() || 'Admin Department';
       const purpose = (document.getElementById('treasuryPurpose')?.value || '').trim() || 'Expedition Pool Contribution';
       const deadline = (document.getElementById('treasuryDeadline')?.value || '').trim();
-      const tripName = (globalData && globalData.tripName) ? globalData.tripName.replace(/^[^\w\s]+|[^\w\s]+$/g, '').trim() : 'BHARAT WAY EXPEDITION';
+      
+      // Title is dynamically the Trip Name
+      const tripName = (document.getElementById('treasuryTripName')?.value || document.getElementById('setTripName')?.value || (globalData && globalData.tripName) || 'Trip Name').trim();
 
       const formattedAmount = `₹${amountVal.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
       
@@ -2934,49 +2971,42 @@
       upiParams.set('tn', `${tripName} - ${purpose}`);
       const upiUri = `upi://pay?${upiParams.toString()}`;
 
-      // Formatted WhatsApp message with bolding and emojis
-      let msg = `🏔️ *${tripName.toUpperCase()} — TREASURY REQUEST*
-`;
-      msg += `━━━━━━━━━━━━━━━━━━━━━
-`;
-      msg += `Namaste *${memberName}*${memberRole ? ` (${memberRole})` : ''}!
-
-`;
-      msg += `A treasury contribution has been requested for our journey:
-
-`;
-      msg += `💰 *Amount Due:* ${formattedAmount}
-`;
-      msg += `📌 *Purpose:* ${purpose}
-`;
-      msg += `👤 *Payee:* ${payeeName}
-`;
-      msg += `🏦 *UPI ID:* ${upiId}
-
-`;
+      // Formatted WhatsApp message with bolding, emojis, and QR view link
+      let msg = `🏔️ *${tripName.toUpperCase()} — TREASURY REQUEST*\n`;
+      msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+      msg += `Namaste *${memberName}*${memberRole ? ` (${memberRole})` : ''}!\n\n`;
+      msg += `A treasury contribution has been requested for *${tripName}*:\n\n`;
+      msg += `💰 *Amount Due:* ${formattedAmount}\n`;
+      msg += `📌 *Purpose:* ${purpose}\n`;
+      msg += `👤 *Receiving Account:* ${payeeName}\n`;
+      msg += `🏦 *UPI ID:* ${upiId}\n\n`;
       if (deadline) {
-        msg += `⏳ *Deadline:* ${deadline}
-
-`;
+        msg += `⏳ *Deadline:* ${deadline}\n\n`;
       }
-      msg += `📲 *1-Tap Direct UPI Pay (GPay / PhonePe / Paytm):*
-${upiUri}
-
-`;
-      msg += `⚠️ *Note:* After transferring, please reply with your 12-digit UTR reference number or receipt screenshot so your official trip pass gets verified!
-`;
+      msg += `📲 *1-Tap Direct UPI Pay (GPay / PhonePe / Paytm):*\n${upiUri}\n\n`;
+      msg += `⚠️ *Note:* After transferring, please reply with your 12-digit UTR reference number or receipt screenshot so your official trip pass gets verified in the squad ledger!\n`;
       msg += `━━━━━━━━━━━━━━━━━━━━━`;
 
-      return { msg, upiUri, rawMobile, memberName, amountVal, upiId };
+      return { msg, upiUri, rawMobile, memberName, amountVal, upiId, payeeName, tripName };
     }
 
     function updateWhatsAppPreview() {
       const previewBox = document.getElementById('whatsappPreviewBox');
       const qrBox = document.getElementById('treasuryQrCode');
+      const waLink = document.getElementById('btnSendWaLink');
       if (!previewBox) return;
 
-      const { msg, upiUri } = generateTreasuryPayload();
+      const { msg, upiUri, rawMobile } = generateTreasuryPayload();
       previewBox.innerText = msg;
+
+      // Update native href on WhatsApp link
+      const cleanDigits = rawMobile.replace(/\D/g, '');
+      if (cleanDigits) {
+        const fullPhone = cleanDigits.length === 10 ? `91${cleanDigits}` : cleanDigits;
+        if (waLink) waLink.href = `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`;
+      } else {
+        if (waLink) waLink.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+      }
 
       // Render Dynamic QR Code
       if (qrBox && typeof QRCode !== 'undefined') {
@@ -2998,27 +3028,123 @@ ${upiUri}
       }
     }
 
-    function sendWhatsAppRequest() {
+    // Direct WhatsApp Click Handler (Works reliably across all browsers & pop-up blockers)
+    function handleWhatsAppSend(e) {
       if (navigator.vibrate) navigator.vibrate(15);
-      const { msg, rawMobile, memberName } = generateTreasuryPayload();
-
-      // Extract only digits
+      const rawMobile = (document.getElementById('treasuryMemberMobile')?.value || '').trim();
       const cleanDigits = rawMobile.replace(/\D/g, '');
+
       if (!cleanDigits || cleanDigits.length < 10) {
-        showAlert("Missing Mobile Number", `Please select a member with a valid mobile number or type one in the WhatsApp Mobile field for ${memberName}.`, true);
+        if (e) e.preventDefault();
+        showAlert("Missing Mobile Number", "Please select a member with a mobile number or enter one manually in the form.", true);
         const mobileInput = document.getElementById('treasuryMemberMobile');
         if (mobileInput) mobileInput.focus();
-        return;
+        return false;
       }
 
-      // Format Indian phone number (10 digits -> prepend 91)
+      const { msg, memberName } = generateTreasuryPayload();
       const fullPhone = cleanDigits.length === 10 ? `91${cleanDigits}` : cleanDigits;
       const waUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`;
 
+      if (e && e.currentTarget) {
+        e.currentTarget.href = waUrl;
+      }
+
       showToast(`Opening WhatsApp for ${memberName}...`);
-      window.open(waUrl, '_blank');
+      
+      // Fallback window open in case default click doesn't trigger
+      try {
+        const w = window.open(waUrl, '_blank');
+        if (!w || w.closed || typeof w.closed === 'undefined') {
+          window.location.href = waUrl;
+        }
+      } catch (err) {
+        window.location.href = waUrl;
+      }
+
+      return true;
     }
 
+    // Share QR Image + Message via Web Share API directly to WhatsApp
+    async function shareQrWithWhatsApp() {
+      if (navigator.vibrate) navigator.vibrate(12);
+      const qrCanvas = document.querySelector('#treasuryQrCode canvas');
+      const { msg, memberName, tripName } = generateTreasuryPayload();
+
+      if (!qrCanvas) {
+        showAlert("QR Not Ready", "Please wait for QR code to render.", true);
+        return;
+      }
+
+      qrCanvas.toBlob(async (blob) => {
+        if (!blob) {
+          showAlert("QR Error", "Could not convert QR code to image.", true);
+          return;
+        }
+
+        const fileName = `${memberName.replace(/\s+/g, '_')}_Payment_QR.png`;
+        const file = new File([blob], fileName, { type: 'image/png' });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: `${tripName} Payment QR`,
+              text: msg
+            });
+            showToast('Opening WhatsApp with QR image...');
+            return;
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              console.log('Share canceled or failed', err);
+            }
+          }
+        }
+
+        // Desktop Fallback: Copy QR Image to Clipboard automatically so user can paste into WhatsApp
+        copyQrImageToClipboard();
+        showAlert("QR Image Copied!", "The QR code image is copied to your clipboard. In WhatsApp chat, press Ctrl+V (or Paste) to send the QR photo directly!");
+      }, 'image/png');
+    }
+
+    // Copy QR Image to Clipboard
+    function copyQrImageToClipboard() {
+      if (navigator.vibrate) navigator.vibrate(10);
+      const qrCanvas = document.querySelector('#treasuryQrCode canvas');
+      if (!qrCanvas) {
+        showAlert("QR Not Ready", "Please wait for QR code to render.", true);
+        return;
+      }
+
+      qrCanvas.toBlob(async (blob) => {
+        try {
+          if (navigator.clipboard && window.ClipboardItem) {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            showToast('QR Image copied! Press Paste (Ctrl+V) in WhatsApp');
+          } else {
+            downloadQrImage();
+          }
+        } catch (err) {
+          downloadQrImage();
+        }
+      }, 'image/png');
+    }
+
+    // Download QR Image as PNG
+    function downloadQrImage() {
+      const qrCanvas = document.querySelector('#treasuryQrCode canvas');
+      if (!qrCanvas) return;
+      const { memberName } = generateTreasuryPayload();
+      const a = document.createElement('a');
+      a.download = `${(memberName || 'Member').replace(/\s+/g, '_')}_Payment_QR.png`;
+      a.href = qrCanvas.toDataURL('image/png');
+      a.click();
+      showToast('QR Code PNG downloaded!');
+    }
+
+    // Copy formatted text message
     function copyWhatsAppMessage() {
       if (navigator.vibrate) navigator.vibrate(10);
       const { msg } = generateTreasuryPayload();
@@ -3054,13 +3180,17 @@ ${upiUri}
       document.getElementById('treasuryMemberRole').value = '';
       document.getElementById('treasuryMemberMobile').value = '';
       document.getElementById('treasuryAmount').value = '5000';
+      document.getElementById('treasuryPayeeName').value = 'Admin Department';
       document.getElementById('treasuryPurpose').value = 'Pre-Trip Initial Pool Collection';
       document.getElementById('treasuryDeadline').value = 'Before Departure (6:00 PM)';
       document.getElementById('btnSendWaText').innerText = 'Send Request on WhatsApp';
+      
+      const tName = (document.getElementById('setTripName')?.value || (globalData && globalData.tripName) || 'Trip Name').trim();
+      document.getElementById('treasuryTripName').value = tName;
+      
       updateWhatsAppPreview();
       showToast('Treasury form reset');
     }
-
-  </script>
+</script>
 </body>
 </html>
