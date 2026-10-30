@@ -2375,6 +2375,100 @@
       }
     }
 
+
+    /* =========================================
+       BHARAT WAY: PRIMARY ELEMENT ENTRANCE ANIMATIONS
+       Staggered Card Cascade & Horizon Flare
+       ========================================= */
+
+    /* Fluid View Entrance */
+    .tab-content.active-tab.view-enter-active {
+      animation: viewCanvasFade 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes viewCanvasFade {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.99);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Staggered Element Entrance for Cards, Headers, Grids */
+    .elem-stagger-enter {
+      animation: elementStaggerRise 0.52s cubic-bezier(0.16, 1, 0.3, 1) var(--stagger-delay, 0ms) both;
+      will-change: transform, opacity;
+    }
+
+    @keyframes elementStaggerRise {
+      0% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+      }
+      65% {
+        opacity: 0.96;
+        transform: translateY(-2px) scale(1.006);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Signature Horizon Flare Sweep on Hero / Primary Highlight Card */
+    .hero-horizon-flare {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-horizon-flare::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        108deg,
+        transparent 15%,
+        rgba(255, 255, 255, 0.45) 42%,
+        rgba(99, 102, 241, 0.3) 50%,
+        rgba(245, 158, 11, 0.25) 58%,
+        transparent 80%
+      );
+      transform: translateX(-130%);
+      animation: horizonFlareSweep 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.12s forwards;
+      pointer-events: none;
+      border-radius: inherit;
+      z-index: 40;
+    }
+
+    @keyframes horizonFlareSweep {
+      0% {
+        transform: translateX(-130%);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(130%);
+        opacity: 0;
+      }
+    }
+
+    /* Enhanced Card Tactile Feedback */
+    .tactile-hover-lift {
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+    }
+    .tactile-hover-lift:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px -8px rgba(0, 0, 0, 0.08);
+    }
+    .tactile-hover-lift:active {
+      transform: scale(0.985);
+    }
+
   </style>
 </head>
 
@@ -4327,7 +4421,10 @@ if (urlParams.get('preview') === 'admin') {
 
   // Show the selected view container
   const targetView = document.getElementById('view-' + targetViewId);
-  if (targetView) targetView.classList.add('active-tab');
+  if (targetView) {
+    targetView.classList.add('active-tab');
+    animateViewElements(targetView);
+  }
 
   // Sync active state for Desktop Sidebar button
   const desktopBtn = document.querySelector(`.desktop-nav-btn[data-tab="${tabId}"]`);
@@ -7187,6 +7284,8 @@ function hideCustomSplash() {
       splash.classList.remove('iris-reveal-exit');
       splash.style.pointerEvents = 'none';
       splash.style.display = 'none';
+      const activeView = document.querySelector('.tab-content.active-tab') || document.getElementById('view-spend');
+      if (activeView) animateViewElements(activeView);
     }, 850);
   }
 }
@@ -9874,7 +9973,99 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     updateHighwayTrail('spend');
   }, 150);
+
+  // Trigger initial element animation on app open
+  setTimeout(() => {
+    const initView = document.querySelector('.tab-content.active-tab') || document.getElementById('view-spend');
+    if (initView) animateViewElements(initView);
+  }, 220);
+
 });
+
+
+// ========================================================
+// BHARAT WAY: PRIMARY ELEMENT ENTRANCE ANIMATION CONTROLLER
+// ========================================================
+function animateViewElements(targetView) {
+  if (!targetView) return;
+
+  // 1. Re-trigger view container entrance
+  targetView.classList.remove('view-enter-active');
+  void targetView.offsetWidth; // Force layout recalculation
+  targetView.classList.add('view-enter-active');
+
+  // 2. Identify candidate primary elements within the active tab
+  let animElements = [];
+
+  const viewId = targetView.id;
+  if (viewId === 'view-spend') {
+    animElements = [
+      targetView.querySelector('#ui-top-cards-wrapper'),
+      targetView.querySelector('#balance-card'),
+      targetView.querySelector('#stats-col'),
+      targetView.querySelector('#ui-form-wrapper'),
+      targetView.querySelector('#ui-upcoming-showcase'),
+      targetView.querySelector('#ui-spend-chart-wrapper'),
+      targetView.querySelector('#ui-ledger-container')
+    ];
+  } else if (viewId === 'view-squad') {
+    animElements = [
+      targetView.querySelector('#squad-members-wrapper > div:first-child'),
+      ...Array.from(targetView.querySelectorAll('#squad-members-wrapper > div')).slice(1, 8)
+    ];
+  } else if (viewId === 'view-places') {
+    animElements = [
+      targetView.querySelector('#route-lock-vault'),
+      targetView.querySelector('#route-secure-content > div:first-child'),
+      targetView.querySelector('#ui-timeline-container'),
+      ...Array.from(targetView.querySelectorAll('.tracker-node')).slice(0, 6)
+    ];
+  } else if (viewId === 'view-notices') {
+    animElements = [
+      targetView.querySelector('#notices-list-view > div:first-child'),
+      ...Array.from(targetView.querySelectorAll('#notices-feed-container > div')).slice(0, 6)
+    ];
+  } else if (viewId === 'view-checklist') {
+    animElements = [
+      targetView.querySelector(':scope > div:first-child'),
+      ...Array.from(targetView.querySelectorAll('#checklist-container > div')).slice(0, 7)
+    ];
+  } else if (viewId === 'view-pos') {
+    animElements = [
+      targetView.querySelector(':scope > div:first-child'),
+      targetView.querySelector('.pos-terminal'),
+      targetView.querySelector('.terminal-screen'),
+      targetView.querySelector('.terminal-controls')
+    ];
+  } else if (viewId === 'view-archives') {
+    animElements = [
+      targetView.querySelector('#archives-list-view > div:first-child'),
+      ...Array.from(targetView.querySelectorAll('#archives-page-content > div')).slice(0, 6)
+    ];
+  } else {
+    // Generic fallback for any other tab: select visible direct child cards
+    animElements = Array.from(targetView.querySelectorAll(':scope > div, :scope > div > div')).slice(0, 6);
+  }
+
+  // Filter valid non-null elements
+  animElements = animElements.filter(el => el && el.nodeType === 1);
+
+  // Apply sequential stagger delays with smooth spring timing
+  animElements.forEach((el, idx) => {
+    el.classList.remove('elem-stagger-enter');
+    void el.offsetWidth;
+    el.style.setProperty('--stagger-delay', `${Math.min(idx * 65, 360)}ms`);
+    el.classList.add('elem-stagger-enter');
+  });
+
+  // 3. Trigger signature Horizon Flare sweep across primary hero cards
+  const heroCard = targetView.querySelector('#balance-card, .pos-terminal, #archives-list-view .bg-slate-900, #route-secure-content .bg-slate-900, .hero-themed-card');
+  if (heroCard) {
+    heroCard.classList.remove('hero-horizon-flare');
+    void heroCard.offsetWidth;
+    heroCard.classList.add('hero-horizon-flare');
+  }
+}
 
 </script>
 
