@@ -778,7 +778,7 @@
               <i data-lucide="send" class="w-4 h-4 text-emerald-400"></i>
               Treasury Fund Request & "Scan To Pay" Hero Card
             </h2>
-            <p class="text-xs text-slate-400 mt-0.5">Select a member, set the budget and share amount, and send a branded "Scan to Pay" card & WhatsApp message</p>
+            <p class="text-xs text-slate-400 mt-0.5">Select a member, enter budget and share amount, and send a branded light-theme "Scan to Pay" card & WhatsApp message</p>
           </div>
           <button type="button" onclick="resetTreasuryRequestForm()" class="text-[11px] font-bold text-slate-400 hover:text-indigo-400 transition flex items-center gap-1 self-start sm:self-auto">
             <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form
@@ -876,7 +876,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div class="space-y-1">
                 <label for="treasuryUpiId" class="block text-[10px] font-black uppercase tracking-wider text-slate-300">
-                  Receiving UPI ID <span class="text-indigo-400 font-mono">(Manual / Pre-filled)</span>
+                  Receiving UPI ID <span class="text-indigo-400 font-mono">(Pre-filled)</span>
                 </label>
                 <input type="text" id="treasuryUpiId" value="8858629@ybl" oninput="updateWhatsAppPreview()" placeholder="e.g. 8858629@ybl"
                   class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500 transition font-medium">
@@ -904,19 +904,7 @@
               </div>
             </div>
 
-            <!-- 6. Web Payment Link Base URL (Ensures clicking link in WhatsApp opens GPay/PhonePe) -->
-            <div class="space-y-1">
-              <div class="flex items-center justify-between">
-                <label for="treasuryWebDomain" class="block text-[10px] font-black uppercase tracking-wider text-slate-400">
-                  1-Tap Web Payment Page Link (Opens GPay / PhonePe from WhatsApp)
-                </label>
-                <span class="text-[9px] text-emerald-400 font-semibold">Solves WhatsApp Link Click Issue</span>
-              </div>
-              <input type="text" id="treasuryWebDomain" oninput="updateWhatsAppPreview()" placeholder="https://bharatway.vercel.app/payment.html"
-                class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-slate-300 focus:outline-none focus:border-indigo-500 transition">
-            </div>
-
-            <!-- 7. Action Buttons -->
+            <!-- 6. Action Buttons -->
             <div class="pt-2 flex flex-col gap-2.5">
               <!-- Primary WhatsApp Action -->
               <a id="btnSendWaLink" href="#" target="_blank" rel="noopener noreferrer" onclick="return handleWhatsAppSend(event)"
@@ -926,7 +914,7 @@
               </a>
 
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                <!-- Native Web Share API: Attaches the Hero Card image directly into WhatsApp -->
+                <!-- Native Web Share API: Attaches the Light Hero Card image directly into WhatsApp -->
                 <button type="button" onclick="shareQrHeroCardWithWhatsApp()"
                   class="py-2.5 px-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white active:scale-95 rounded-xl text-[11px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md shadow-indigo-600/20 transition">
                   <i data-lucide="share-2" class="w-3.5 h-3.5"></i> Share Hero Card
@@ -947,7 +935,7 @@
             </div>
           </div>
 
-          <!-- RIGHT: Live WhatsApp Preview & "SCAN TO PAY" Hero Card (5 cols) -->
+          <!-- RIGHT: Live WhatsApp Preview & "SCAN TO PAY" Hero Card (Light Theme) (5 cols) -->
           <div class="lg:col-span-5 space-y-4">
             
             <!-- WhatsApp Bubble Mockup -->
@@ -966,43 +954,43 @@
               </div>
             </div>
 
-            <!-- "SCAN TO PAY" HERO CARD PREVIEW -->
-            <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-indigo-950/60 border border-indigo-500/30 rounded-3xl p-5 shadow-2xl flex flex-col items-center text-center space-y-3 relative overflow-hidden">
+            <!-- "SCAN TO PAY" HERO CARD PREVIEW (LIGHT THEME WITH BORDERED QR) -->
+            <div class="bg-white border-2 border-slate-200 rounded-3xl p-5 shadow-2xl flex flex-col items-center text-center space-y-3.5 relative overflow-hidden text-slate-900">
               <!-- Top Header & Badge -->
-              <div class="w-full flex items-center justify-between border-b border-slate-800/80 pb-2.5">
+              <div class="w-full flex items-center justify-between border-b border-slate-100 pb-2.5">
                 <div class="text-left">
-                  <span id="heroCardTripName" class="text-xs font-black uppercase tracking-wider text-white">VALLEY OF FLOWERS</span>
-                  <p class="text-[9px] text-slate-400 font-semibold uppercase">Official Treasury Pass</p>
+                  <span id="heroCardTripName" class="text-xs font-black uppercase tracking-wider text-slate-900">VALLEY OF FLOWERS</span>
+                  <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Official Treasury Pass</p>
                 </div>
-                <button type="button" onclick="downloadHeroCardPng()" class="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition flex items-center gap-1 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/20">
+                <button type="button" onclick="downloadHeroCardPng()" class="text-[10px] font-bold text-slate-700 hover:text-slate-900 transition flex items-center gap-1 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs">
                   <i data-lucide="download" class="w-3 h-3"></i> Save Card
                 </button>
               </div>
 
-              <!-- Glowing "SCAN TO PAY" pill -->
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-lg shadow-emerald-500/10 animate-pulse">
-                <i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-400 stroke-[3]"></i>
-                <span class="text-[11px] font-black uppercase tracking-widest">SCAN TO PAY</span>
+              <!-- Glowing "SCAN TO PAY" pill (Light theme) -->
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border-2 border-emerald-300 shadow-xs font-black text-[11px] tracking-widest uppercase">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-600 stroke-[3]"></i>
+                <span>SCAN TO PAY VIA ANY UPI APP</span>
               </div>
 
-              <!-- Framed QR code container -->
-              <div class="p-3.5 bg-white rounded-2xl shadow-xl inline-block border-2 border-slate-200">
+              <!-- Framed QR code container with DISTINCT 4px DARK BORDER -->
+              <div class="p-3 bg-white rounded-2xl border-4 border-slate-900 shadow-md inline-block">
                 <div id="treasuryQrCode" class="w-[150px] h-[150px] flex items-center justify-center"></div>
               </div>
 
-              <!-- Card Details -->
-              <div class="w-full space-y-1 pt-1">
-                <p id="heroCardMember" class="text-xs font-bold text-slate-300">For: <span class="text-white font-black">Squad Member</span></p>
+              <!-- Card Details in Clean High-Contrast Typography -->
+              <div class="w-full space-y-1 pt-0.5">
+                <p id="heroCardMember" class="text-xs font-bold text-slate-600">For: <span class="text-slate-900 font-black">Squad Member</span></p>
                 <div class="flex items-center justify-center gap-1.5">
-                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Your Share:</span>
-                  <span id="heroCardAmount" class="text-xl font-black text-emerald-400 font-mono">₹5,000</span>
+                  <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Your Share:</span>
+                  <span id="heroCardAmount" class="text-2xl font-black text-emerald-600 font-mono">₹5,000</span>
                 </div>
-                <p id="heroCardBudget" class="text-[10px] text-slate-400">Total Budget: ₹20,000</p>
-                <p class="text-[10px] font-mono text-indigo-300 pt-0.5">Pay to: <span class="text-white font-bold">Admin Department</span> (<span id="heroCardUpiText">8858629@ybl</span>)</p>
+                <p id="heroCardBudget" class="text-[11px] font-bold text-slate-500">Total Budget: ₹20,000</p>
+                <p class="text-[11px] text-slate-700 font-medium pt-0.5">Pay to: <span class="text-slate-900 font-bold">Admin Department</span> (<span id="heroCardUpiText" class="font-mono text-indigo-600 font-bold">8858629@ybl</span>)</p>
               </div>
 
               <!-- Supported UPI Apps Row -->
-              <div class="pt-2 border-t border-slate-800/80 w-full flex items-center justify-around text-[10px] font-black uppercase tracking-wider text-slate-400">
+              <div class="pt-2.5 border-t border-slate-100 w-full flex items-center justify-around text-[10px] font-black uppercase tracking-wider text-slate-500">
                 <span>Google Pay</span>
                 <span>•</span>
                 <span>PhonePe</span>
@@ -1013,7 +1001,7 @@
               </div>
             </div>
 
-            <!-- Hidden Canvas for generating the high-resolution Hero Card image export -->
+            <!-- Hidden Canvas for generating the high-resolution Light Theme Hero Card image export -->
             <canvas id="heroCardExportCanvas" width="600" height="780" class="hidden"></canvas>
 
           </div>
@@ -2978,17 +2966,6 @@
         tripInput.value = tName;
       }
 
-      // 4. Pre-fill Payment Base URL
-      const webDomainInput = document.getElementById('treasuryWebDomain');
-      if (webDomainInput && !webDomainInput.value.trim()) {
-        const origin = window.location.origin;
-        if (origin && origin !== 'null' && !origin.includes('file://')) {
-          webDomainInput.value = `${origin}/payment.html`;
-        } else {
-          webDomainInput.value = 'https://bharatway.vercel.app/payment.html';
-        }
-      }
-
       updateWhatsAppPreview();
     }
 
@@ -3027,17 +3004,10 @@
       const deadline = (document.getElementById('treasuryDeadline')?.value || '').trim();
       const tripName = (document.getElementById('treasuryTripName')?.value || document.getElementById('setTripName')?.value || (globalData && globalData.tripName) || 'VALLEY OF FLOWERS').trim();
 
-      let webBase = (document.getElementById('treasuryWebDomain')?.value || '').trim();
-      if (!webBase) {
-        webBase = (window.location.origin && window.location.origin !== 'null' && !window.location.origin.includes('file://')) 
-          ? `${window.location.origin}/payment.html` 
-          : 'https://bharatway.vercel.app/payment.html';
-      }
-
       const formattedTotalBudget = `₹${totalBudgetVal.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
       const formattedShareAmount = `₹${shareAmountVal.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
       
-      // Standard NPCI P2P UPI Intent URI
+      // Standard NPCI P2P UPI Intent URI used for the QR Code
       const upiParams = new URLSearchParams();
       upiParams.set('pa', upiId);
       upiParams.set('pn', payeeName);
@@ -3046,17 +3016,7 @@
       upiParams.set('tn', `${tripName} - ${purpose}`);
       const upiUri = `upi://pay?${upiParams.toString()}`;
 
-      // Clickable HTTPS Web Payment Link that automatically triggers GPay/PhonePe when tapped inside WhatsApp!
-      const webPayParams = new URLSearchParams();
-      webPayParams.set('pa', upiId);
-      webPayParams.set('pn', payeeName);
-      webPayParams.set('am', shareAmountVal.toFixed(2));
-      webPayParams.set('tn', `${tripName} - ${purpose}`);
-      webPayParams.set('name', memberName);
-      webPayParams.set('autolaunch', '1');
-      const webPayUrl = `${webBase}?${webPayParams.toString()}`;
-
-      // Formatted WhatsApp message with bolding, emojis, and clickable web link
+      // Formatted WhatsApp message: NO payment links included (QR Card is attached/scanned)
       let msg = `🏔️ *${tripName.toUpperCase()} — TREASURY REQUEST*\n`;
       msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
       msg += `Namaste *${memberName}*${memberRole ? ` (${memberRole})` : ''}!\n\n`;
@@ -3069,12 +3029,11 @@
       if (deadline) {
         msg += `⏳ *Deadline:* ${deadline}\n\n`;
       }
-      msg += `📲 *Tap to Pay (Google Pay / PhonePe / Paytm):*\n${webPayUrl}\n\n`;
-      msg += `(Or Direct App Intent: ${upiUri})\n\n`;
+      msg += `📲 *Please scan the attached "Scan to Pay" QR Card with Google Pay, PhonePe, or Paytm to complete your transfer.*\n\n`;
       msg += `⚠️ *Note:* After transferring, please reply with your 12-digit UTR reference number or receipt screenshot so your official trip pass gets verified in the squad ledger!\n`;
       msg += `━━━━━━━━━━━━━━━━━━━━━`;
 
-      return { msg, upiUri, webPayUrl, rawMobile, memberName, memberRole, totalBudgetVal, shareAmountVal, upiId, payeeName, tripName, purpose };
+      return { msg, upiUri, rawMobile, memberName, memberRole, totalBudgetVal, shareAmountVal, upiId, payeeName, tripName, purpose };
     }
 
     function updateWhatsAppPreview() {
@@ -3086,11 +3045,11 @@
       const payload = generateTreasuryPayload();
       previewBox.innerText = payload.msg;
 
-      // Update hero card DOM preview
+      // Update light theme hero card DOM preview
       const heroTrip = document.getElementById('heroCardTripName');
       if (heroTrip) heroTrip.innerText = payload.tripName.toUpperCase();
       const heroMember = document.getElementById('heroCardMember');
-      if (heroMember) heroMember.innerHTML = `For: <span class="text-white font-black">${payload.memberName} ${payload.memberRole ? '(' + payload.memberRole + ')' : ''}</span>`;
+      if (heroMember) heroMember.innerHTML = `For: <span class="text-slate-900 font-black">${payload.memberName} ${payload.memberRole ? '(' + payload.memberRole + ')' : ''}</span>`;
       const heroAmount = document.getElementById('heroCardAmount');
       if (heroAmount) heroAmount.innerText = `₹${payload.shareAmountVal.toLocaleString('en-IN')}`;
       const heroBudget = document.getElementById('heroCardBudget');
@@ -3116,12 +3075,12 @@
               text: payload.upiUri,
               width: 150,
               height: 150,
-              colorDark: "#090d16",
+              colorDark: "#000000",
               colorLight: "#ffffff",
               correctLevel: QRCode.CorrectLevel.M
             });
 
-            // Schedule drawing the Hero Card Canvas once the QR is rendered
+            // Schedule drawing the Light Theme Hero Card Canvas once the QR is rendered
             setTimeout(() => {
               renderHeroCardCanvas(payload);
             }, 100);
@@ -3132,119 +3091,122 @@
       }
     }
 
-    // Draws a high-resolution "SCAN TO PAY" Hero Card onto heroCardExportCanvas
+    // Draws a high-resolution LIGHT THEME "SCAN TO PAY" Hero Card onto heroCardExportCanvas
     function renderHeroCardCanvas(payload) {
       const canvas = document.getElementById('heroCardExportCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const width = canvas.width;  // 600
+      const width = canvas.width;   // 600
       const height = canvas.height; // 780
 
-      // 1. Background gradient
+      // 1. Light Theme Background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
       const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
-      bgGrad.addColorStop(0, '#090d16');
-      bgGrad.addColorStop(0.5, '#0f172a');
-      bgGrad.addColorStop(1, '#061325');
+      bgGrad.addColorStop(0, '#ffffff');
+      bgGrad.addColorStop(0.7, '#f8fafc');
+      bgGrad.addColorStop(1, '#f1f5f9');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // Card border
-      ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+      // Outer crisp dark border
+      ctx.strokeStyle = '#0f172a';
       ctx.lineWidth = 4;
       ctx.strokeRect(6, 6, width - 12, height - 12);
 
-      // 2. Top Header Bar
+      // Top green accent bar
       ctx.fillStyle = '#10b981';
       ctx.fillRect(6, 6, width - 12, 6);
 
       // Subtitle
-      ctx.fillStyle = '#818cf8';
-      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.fillStyle = '#4f46e5';
+      ctx.font = 'bold 12px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.letterSpacing = '2px';
       ctx.fillText('BHARAT WAY EXPEDITION TREASURY', width / 2, 45);
 
-      // Trip Name
-      ctx.fillStyle = '#ffffff';
+      // Trip Name in Bold Dark Slate
+      ctx.fillStyle = '#0f172a';
       ctx.font = '900 24px Inter, sans-serif';
       ctx.fillText(payload.tripName.toUpperCase(), width / 2, 78);
 
-      // 3. Glowing "SCAN TO PAY" Badge
-      const badgeY = 100;
-      ctx.fillStyle = 'rgba(16, 185, 129, 0.18)';
+      // 2. "SCAN TO PAY" Badge (Light Theme: Emerald Pill)
+      const badgeY = 98;
+      ctx.fillStyle = '#ecfdf5';
       ctx.beginPath();
-      ctx.roundRect((width / 2) - 130, badgeY, 260, 36, 18);
+      ctx.roundRect((width / 2) - 140, badgeY, 280, 38, 19);
       ctx.fill();
       ctx.strokeStyle = '#10b981';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.stroke();
 
-      ctx.fillStyle = '#34d399';
-      ctx.font = '900 15px Inter, sans-serif';
-      ctx.fillText('⚡ SCAN TO PAY VIA ANY UPI APP', width / 2, badgeY + 23);
+      ctx.fillStyle = '#047857';
+      ctx.font = '900 14px Inter, sans-serif';
+      ctx.fillText('⚡ SCAN TO PAY VIA ANY UPI APP', width / 2, badgeY + 24);
 
-      // 4. Draw QR Code Frame
+      // 3. QR Code Box WITH DISTINCT 4px DARK BORDER
       const qrBoxSize = 300;
       const qrBoxX = (width - qrBoxSize) / 2;
       const qrBoxY = 155;
 
+      // Outer frame with distinct dark border (4px)
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.roundRect(qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 20);
       ctx.fill();
-      ctx.strokeStyle = '#e2e8f0';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#0f172a'; // Distinct dark border
+      ctx.lineWidth = 4;
       ctx.stroke();
 
-      // Draw the QR image onto the white frame
+      // Draw the QR image inside
       const qrElement = document.querySelector('#treasuryQrCode canvas') || document.querySelector('#treasuryQrCode img');
       if (qrElement) {
         try {
-          ctx.drawImage(qrElement, qrBoxX + 25, qrBoxY + 25, qrBoxSize - 50, qrBoxSize - 50);
+          ctx.drawImage(qrElement, qrBoxX + 22, qrBoxY + 22, qrBoxSize - 44, qrBoxSize - 44);
         } catch(e) {
           console.warn('QR draw to hero canvas failed', e);
         }
       }
 
-      // 5. Payment Details Below QR
+      // 4. Payment Details Below QR (Crisp Dark Typography)
       let textY = qrBoxY + qrBoxSize + 38;
 
-      // Your Share Amount (Big & Bold Emerald)
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = 'bold 14px Inter, sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.font = 'bold 13px Inter, sans-serif';
       ctx.fillText('YOUR SHARE AMOUNT', width / 2, textY);
 
       textY += 34;
-      ctx.fillStyle = '#10b981';
+      ctx.fillStyle = '#059669'; // Rich emerald
       ctx.font = '900 36px Inter, sans-serif';
       ctx.fillText(`₹${payload.shareAmountVal.toLocaleString('en-IN')}`, width / 2, textY);
 
       textY += 26;
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '600 13px Inter, sans-serif';
+      ctx.fillStyle = '#475569';
+      ctx.font = 'bold 14px Inter, sans-serif';
       ctx.fillText(`Total Trip Budget: ₹${payload.totalBudgetVal.toLocaleString('en-IN')}`, width / 2, textY);
 
       textY += 28;
-      ctx.fillStyle = '#e2e8f0';
-      ctx.font = '600 15px Inter, sans-serif';
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 15px Inter, sans-serif';
       ctx.fillText(`Receiving Account: ${payload.payeeName}`, width / 2, textY);
 
       textY += 24;
-      ctx.fillStyle = '#38bdf8';
+      ctx.fillStyle = '#4338ca';
       ctx.font = 'bold 15px monospace';
       ctx.fillText(`UPI ID: ${payload.upiId}`, width / 2, textY);
 
       textY += 26;
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = 'bold 14px Inter, sans-serif';
+      ctx.fillStyle = '#334155';
+      ctx.font = '600 14px Inter, sans-serif';
       ctx.fillText(`Member: ${payload.memberName} ${payload.memberRole ? '(' + payload.memberRole + ')' : ''}`, width / 2, textY);
 
-      // 6. Bottom Brand Banner
-      const footerY = height - 32;
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
-      ctx.fillRect(10, height - 52, width - 20, 44);
+      // 5. Bottom Brand Banner
+      const footerY = height - 28;
+      ctx.fillStyle = '#f1f5f9';
+      ctx.fillRect(8, height - 52, width - 16, 44);
 
       ctx.fillStyle = '#64748b';
       ctx.font = 'bold 12px Inter, sans-serif';
