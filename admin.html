@@ -11,6 +11,8 @@
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QRCode.js for WhatsApp Payment QR generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -695,12 +697,16 @@
     <section id="section-finance" class="category-section hidden space-y-4">
 
       <!-- Responsive Subtabs -->
-      <div class="grid grid-cols-2 gap-1.5 bg-slate-900/90 border border-slate-800/80 p-1 rounded-2xl w-full">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 bg-slate-900/90 border border-slate-800/80 p-1 rounded-2xl w-full">
         <button onclick="switchFinSubTab('ledger')" id="finSubBtn-ledger" class="w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider bg-indigo-600 text-white transition text-center shadow-sm">
           Expense Ledger
         </button>
         <button onclick="switchFinSubTab('budget')" id="finSubBtn-budget" class="w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center">
           Budget Allocations
+        </button>
+        <button onclick="switchFinSubTab('request')" id="finSubBtn-request" class="w-full py-2.5 px-2 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition text-center flex items-center justify-center gap-1.5">
+          <i data-lucide="send" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Request Money (WhatsApp)</span>
         </button>
       </div>
 
@@ -743,7 +749,188 @@
           </button>
         </div>
 
+        <!-- Quick Shortcut to Treasury Request Tool -->
+        <button type="button" onclick="switchFinSubTab('request')" class="w-full p-3 rounded-2xl bg-gradient-to-r from-emerald-950/30 via-slate-900 to-indigo-950/30 border border-emerald-500/20 flex items-center justify-between text-left hover:border-emerald-500/40 transition group">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-black uppercase tracking-wider text-white flex items-center gap-1.5 truncate">
+                Request Member Treasury Contribution
+                <span class="px-1.5 py-0.2 rounded text-[8px] bg-emerald-500/20 text-emerald-400 font-bold uppercase shrink-0">WhatsApp Tool</span>
+              </p>
+              <p class="text-[11px] text-slate-400 truncate">Generate 1-tap UPI deep links and QR codes to request pool funds or top-ups</p>
+            </div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-emerald-400 transition-transform group-hover:translate-x-0.5 shrink-0 ml-2"></i>
+        </button>
+
         <div id="budgetAdminCards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5"></div>
+      </div>
+
+      <!-- FIN SUB-VIEW 3: TREASURY MONEY REQUEST (WHATSAPP & QR GENERATOR) -->
+      <div id="finSubView-request" class="fin-subview hidden space-y-4">
+        <!-- Sub-view Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-sm font-black uppercase tracking-wider text-white flex items-center gap-2">
+              <i data-lucide="send" class="w-4 h-4 text-emerald-400"></i>
+              Request Money from Member (WhatsApp & UPI QR)
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Select a member, enter amount and UPI details, and launch WhatsApp directly with an automated payment message</p>
+          </div>
+          <button type="button" onclick="resetTreasuryRequestForm()" class="text-[11px] font-bold text-slate-400 hover:text-indigo-400 transition flex items-center gap-1 self-start sm:self-auto">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Form
+          </button>
+        </div>
+
+        <!-- Grid Container: Form (Left) & Preview/QR (Right) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          <!-- LEFT: Input Configuration (7 cols) -->
+          <div class="lg:col-span-7 bg-slate-900/90 border border-slate-800/80 p-4 sm:p-5 rounded-2xl space-y-3.5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-black uppercase tracking-widest text-slate-300 flex items-center gap-1.5">
+                <i data-lucide="sliders" class="w-3.5 h-3.5 text-indigo-400"></i> Request Configuration
+              </h3>
+              <span class="text-[10px] text-emerald-400 font-bold uppercase">No Gateway • 0% Fee</span>
+            </div>
+
+            <!-- 1. Squad Member Dropdown (Name, Position, Mobile) -->
+            <div class="space-y-1.5">
+              <label for="treasuryMemberSelect" class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                Squad Member (Select to Auto-Fill)
+              </label>
+              <div class="relative">
+                <select id="treasuryMemberSelect" onchange="onTreasuryMemberChange()" 
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs font-medium text-slate-200 focus:outline-none focus:border-indigo-500 transition appearance-none cursor-pointer">
+                  <option value="">-- Choose Member from Squad Roster --</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Member Name, Position, WhatsApp Mobile -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div class="space-y-1">
+                <label for="treasuryMemberName" class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Member Name</label>
+                <input type="text" id="treasuryMemberName" oninput="updateWhatsAppPreview()" placeholder="Member Name"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 transition font-medium">
+              </div>
+              <div class="space-y-1">
+                <label for="treasuryMemberRole" class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Position / Role</label>
+                <input type="text" id="treasuryMemberRole" oninput="updateWhatsAppPreview()" placeholder="e.g. Member"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 transition font-medium">
+              </div>
+              <div class="space-y-1">
+                <label for="treasuryMemberMobile" class="block text-[10px] font-black uppercase tracking-wider text-emerald-400">WhatsApp Mobile (Dynamic)</label>
+                <input type="tel" id="treasuryMemberMobile" oninput="updateWhatsAppPreview()" placeholder="e.g. 9876543210"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-emerald-300 font-mono focus:outline-none focus:border-emerald-500 transition font-medium">
+              </div>
+            </div>
+
+            <!-- 3. Amount to Request (Manual Entry - No Autocalculate) -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label for="treasuryAmount" class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                  Amount to Request (₹)
+                </label>
+                <span class="text-[10px] font-bold text-slate-500 uppercase">Manual Entry • No Auto-calc</span>
+              </div>
+              <div class="relative">
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-emerald-400 font-bold text-base">₹</div>
+                <input type="number" id="treasuryAmount" value="5000" min="1" step="any" oninput="updateWhatsAppPreview()" placeholder="Enter amount to collect"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3.5 py-2.5 text-sm font-black text-white font-mono focus:outline-none focus:border-emerald-500 transition">
+              </div>
+            </div>
+
+            <!-- 4. Receiving Payee Details (Manual Entry) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="space-y-1">
+                <label for="treasuryUpiId" class="block text-[10px] font-black uppercase tracking-wider text-slate-300">
+                  Receiving UPI ID <span class="text-indigo-400 font-mono">(Manual Entry)</span>
+                </label>
+                <input type="text" id="treasuryUpiId" oninput="updateWhatsAppPreview()" placeholder="e.g. yourname@upi or mobile@upi"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs font-mono text-emerald-400 focus:outline-none focus:border-indigo-500 transition font-medium">
+              </div>
+              <div class="space-y-1">
+                <label for="treasuryPayeeName" class="block text-[10px] font-black uppercase tracking-wider text-slate-300">
+                  Receiving Account Name <span class="text-slate-500 font-normal">(Manual Entry)</span>
+                </label>
+                <input type="text" id="treasuryPayeeName" oninput="updateWhatsAppPreview()" placeholder="e.g. Chief Treasurer"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 transition font-medium">
+              </div>
+            </div>
+
+            <!-- 5. Purpose & Deadline -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div class="space-y-1">
+                <label for="treasuryPurpose" class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Request Purpose / Category</label>
+                <input type="text" id="treasuryPurpose" value="Pre-Trip Initial Pool Collection" oninput="updateWhatsAppPreview()" placeholder="e.g. Trek Pool or Top-up"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 transition">
+              </div>
+              <div class="space-y-1">
+                <label for="treasuryDeadline" class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Payment Deadline (Optional)</label>
+                <input type="text" id="treasuryDeadline" value="Before Departure (6:00 PM)" oninput="updateWhatsAppPreview()" placeholder="e.g. 24 June, 6:00 PM"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 transition">
+              </div>
+            </div>
+
+            <!-- 6. Action Buttons -->
+            <div class="pt-2 flex flex-col sm:flex-row gap-2.5">
+              <button type="button" onclick="sendWhatsAppRequest()"
+                class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition">
+                <i data-lucide="message-circle" class="w-4 h-4 stroke-[2.5]"></i>
+                <span id="btnSendWaText">Send Request on WhatsApp</span>
+              </button>
+              <button type="button" onclick="copyWhatsAppMessage()"
+                class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 active:scale-95 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-1.5 border border-slate-700 transition">
+                <i data-lucide="copy" class="w-4 h-4"></i> Copy Text
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT: Live WhatsApp Preview & QR Code (5 cols) -->
+          <div class="lg:col-span-5 space-y-4">
+            
+            <!-- WhatsApp Bubble Mockup -->
+            <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 shadow-sm space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                  <h4 class="text-xs font-black uppercase tracking-wider text-slate-300">WhatsApp Message Preview</h4>
+                </div>
+                <span class="text-[10px] font-mono text-slate-500">Auto-formatted</span>
+              </div>
+
+              <!-- Message preview container (WhatsApp chat bubble styling) -->
+              <div class="bg-[#0b141a] p-3.5 rounded-xl border border-emerald-500/20 text-xs font-mono leading-relaxed text-slate-200 whitespace-pre-wrap select-all max-h-80 overflow-y-auto" id="whatsappPreviewBox">
+                <!-- Injected via updateWhatsAppPreview() -->
+              </div>
+            </div>
+
+            <!-- Dynamic QR Code Card -->
+            <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col items-center text-center space-y-3">
+              <div class="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-slate-300">
+                <i data-lucide="qr-code" class="w-4 h-4 text-emerald-400"></i>
+                <span>Direct Payment QR Code</span>
+              </div>
+
+              <div class="p-3 bg-white rounded-xl shadow inline-block">
+                <div id="treasuryQrCode" class="w-[140px] h-[140px] flex items-center justify-center"></div>
+              </div>
+
+              <p class="text-[10px] text-slate-400 leading-normal">
+                Encodes the exact <code class="text-indigo-400 font-mono">upi://pay</code> link. Squad members can scan this directly using Google Pay, PhonePe, or Paytm.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
       </div>
 
     </section>
@@ -1426,7 +1613,7 @@
       const target = document.getElementById(`finSubView-${tab}`);
       if (target) target.classList.remove('hidden');
 
-      ['ledger', 'budget'].forEach(t => {
+      ['ledger', 'budget', 'request'].forEach(t => {
         const btn = document.getElementById(`finSubBtn-${t}`);
         if (!btn) return;
         if (t === tab) {
@@ -1436,6 +1623,9 @@
         }
       });
       lucide.createIcons();
+      if (tab === 'request') {
+        updateWhatsAppPreview();
+      }
     }
 
     // Sub-Tabs: Media
@@ -2040,6 +2230,7 @@
     // SQUAD MEMBERS ENGINE
     // ==========================================
     function renderMembers(mems) {
+      populateTreasuryMemberSelect(mems);
       const grid = document.getElementById('membersAdminGrid');
       grid.innerHTML = mems.map(m => `
         <div class="bg-slate-900/90 border border-slate-800/80 p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-sm hover:border-slate-700 transition min-w-0">
@@ -2659,6 +2850,217 @@
         loadAdminDashboard();
       }
     };
+  
+    // ==========================================
+    // TREASURY MONEY REQUEST & WHATSAPP GENERATOR
+    // ==========================================
+    function populateTreasuryMemberSelect(mems) {
+      const select = document.getElementById('treasuryMemberSelect');
+      if (!select || !Array.isArray(mems)) return;
+
+      const currentVal = select.value;
+      let optionsHtml = '<option value="">-- Choose Member from Squad Roster --</option>';
+
+      mems.forEach(m => {
+        const name = (m.rawName || m.name || '').trim();
+        const role = (m.designation || m.role || 'Member').trim();
+        const mobile = (m.mobile || '').trim();
+        const displayPhone = mobile ? `+91 ${mobile}` : 'No Mobile';
+        optionsHtml += `<option value="${m.id}" data-name="${encodeURIComponent(name)}" data-role="${encodeURIComponent(role)}" data-mobile="${encodeURIComponent(mobile)}">${name} — ${role} • ${displayPhone}</option>`;
+      });
+
+      select.innerHTML = optionsHtml;
+      if (currentVal) select.value = currentVal;
+
+      // Set default payee name & UPI ID from coordinator if form is blank
+      const upiInput = document.getElementById('treasuryUpiId');
+      const payeeInput = document.getElementById('treasuryPayeeName');
+      if (upiInput && !upiInput.value.trim()) {
+        const coord = mems.find(m => (m.role || '').toLowerCase().includes('coordinator') || (m.designation || '').toLowerCase().includes('coordinator'));
+        if (coord) {
+          if (coord.mobile) upiInput.value = `${coord.mobile}@upi`;
+          payeeInput.value = coord.rawName || coord.name || 'Chief Coordinator';
+        } else {
+          upiInput.value = 'ambujy474@okaxis';
+          payeeInput.value = 'Ambuj Yadav (Chief Treasurer)';
+        }
+      }
+
+      updateWhatsAppPreview();
+    }
+
+    function onTreasuryMemberChange() {
+      const select = document.getElementById('treasuryMemberSelect');
+      const selectedOption = select.options[select.selectedIndex];
+      const sendBtnText = document.getElementById('btnSendWaText');
+
+      if (!selectedOption || !selectedOption.value) {
+        document.getElementById('treasuryMemberName').value = '';
+        document.getElementById('treasuryMemberRole').value = '';
+        document.getElementById('treasuryMemberMobile').value = '';
+        if (sendBtnText) sendBtnText.innerText = 'Send Request on WhatsApp';
+      } else {
+        const name = decodeURIComponent(selectedOption.getAttribute('data-name') || '');
+        const role = decodeURIComponent(selectedOption.getAttribute('data-role') || '');
+        const mobile = decodeURIComponent(selectedOption.getAttribute('data-mobile') || '');
+
+        document.getElementById('treasuryMemberName').value = name;
+        document.getElementById('treasuryMemberRole').value = role;
+        document.getElementById('treasuryMemberMobile').value = mobile;
+        if (sendBtnText) sendBtnText.innerText = `Send to ${name.split(' ')[0]} on WhatsApp`;
+      }
+      updateWhatsAppPreview();
+    }
+
+    function generateTreasuryPayload() {
+      const memberName = (document.getElementById('treasuryMemberName')?.value || '').trim() || 'Squad Member';
+      const memberRole = (document.getElementById('treasuryMemberRole')?.value || '').trim();
+      const rawMobile = (document.getElementById('treasuryMemberMobile')?.value || '').trim();
+      const amountVal = parseFloat(document.getElementById('treasuryAmount')?.value) || 0;
+      const upiId = (document.getElementById('treasuryUpiId')?.value || '').trim() || 'treasurer@upi';
+      const payeeName = (document.getElementById('treasuryPayeeName')?.value || '').trim() || 'Chief Treasurer';
+      const purpose = (document.getElementById('treasuryPurpose')?.value || '').trim() || 'Expedition Pool Contribution';
+      const deadline = (document.getElementById('treasuryDeadline')?.value || '').trim();
+      const tripName = (globalData && globalData.tripName) ? globalData.tripName.replace(/^[^\w\s]+|[^\w\s]+$/g, '').trim() : 'BHARAT WAY EXPEDITION';
+
+      const formattedAmount = `₹${amountVal.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+      
+      // Standard NPCI P2P UPI URI
+      const upiParams = new URLSearchParams();
+      upiParams.set('pa', upiId);
+      upiParams.set('pn', payeeName);
+      if (amountVal > 0) upiParams.set('am', amountVal.toFixed(2));
+      upiParams.set('cu', 'INR');
+      upiParams.set('tn', `${tripName} - ${purpose}`);
+      const upiUri = `upi://pay?${upiParams.toString()}`;
+
+      // Formatted WhatsApp message with bolding and emojis
+      let msg = `🏔️ *${tripName.toUpperCase()} — TREASURY REQUEST*
+`;
+      msg += `━━━━━━━━━━━━━━━━━━━━━
+`;
+      msg += `Namaste *${memberName}*${memberRole ? ` (${memberRole})` : ''}!
+
+`;
+      msg += `A treasury contribution has been requested for our journey:
+
+`;
+      msg += `💰 *Amount Due:* ${formattedAmount}
+`;
+      msg += `📌 *Purpose:* ${purpose}
+`;
+      msg += `👤 *Payee:* ${payeeName}
+`;
+      msg += `🏦 *UPI ID:* ${upiId}
+
+`;
+      if (deadline) {
+        msg += `⏳ *Deadline:* ${deadline}
+
+`;
+      }
+      msg += `📲 *1-Tap Direct UPI Pay (GPay / PhonePe / Paytm):*
+${upiUri}
+
+`;
+      msg += `⚠️ *Note:* After transferring, please reply with your 12-digit UTR reference number or receipt screenshot so your official trip pass gets verified!
+`;
+      msg += `━━━━━━━━━━━━━━━━━━━━━`;
+
+      return { msg, upiUri, rawMobile, memberName, amountVal, upiId };
+    }
+
+    function updateWhatsAppPreview() {
+      const previewBox = document.getElementById('whatsappPreviewBox');
+      const qrBox = document.getElementById('treasuryQrCode');
+      if (!previewBox) return;
+
+      const { msg, upiUri } = generateTreasuryPayload();
+      previewBox.innerText = msg;
+
+      // Render Dynamic QR Code
+      if (qrBox && typeof QRCode !== 'undefined') {
+        qrBox.innerHTML = '';
+        if (upiUri) {
+          try {
+            new QRCode(qrBox, {
+              text: upiUri,
+              width: 140,
+              height: 140,
+              colorDark: "#090d16",
+              colorLight: "#ffffff",
+              correctLevel: QRCode.CorrectLevel.M
+            });
+          } catch(e) {
+            console.error('QR error', e);
+          }
+        }
+      }
+    }
+
+    function sendWhatsAppRequest() {
+      if (navigator.vibrate) navigator.vibrate(15);
+      const { msg, rawMobile, memberName } = generateTreasuryPayload();
+
+      // Extract only digits
+      const cleanDigits = rawMobile.replace(/\D/g, '');
+      if (!cleanDigits || cleanDigits.length < 10) {
+        showAlert("Missing Mobile Number", `Please select a member with a valid mobile number or type one in the WhatsApp Mobile field for ${memberName}.`, true);
+        const mobileInput = document.getElementById('treasuryMemberMobile');
+        if (mobileInput) mobileInput.focus();
+        return;
+      }
+
+      // Format Indian phone number (10 digits -> prepend 91)
+      const fullPhone = cleanDigits.length === 10 ? `91${cleanDigits}` : cleanDigits;
+      const waUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(msg)}`;
+
+      showToast(`Opening WhatsApp for ${memberName}...`);
+      window.open(waUrl, '_blank');
+    }
+
+    function copyWhatsAppMessage() {
+      if (navigator.vibrate) navigator.vibrate(10);
+      const { msg } = generateTreasuryPayload();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(msg).then(() => {
+          showToast('WhatsApp request message copied!');
+        }).catch(() => {
+          fallbackCopyText(msg);
+        });
+      } else {
+        fallbackCopyText(msg);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('WhatsApp request message copied!');
+      } catch (e) {
+        showAlert("Notice", "Unable to copy automatically. Please copy the message manually from the preview box.");
+      }
+      document.body.removeChild(ta);
+    }
+
+    function resetTreasuryRequestForm() {
+      const select = document.getElementById('treasuryMemberSelect');
+      if (select) select.selectedIndex = 0;
+      document.getElementById('treasuryMemberName').value = '';
+      document.getElementById('treasuryMemberRole').value = '';
+      document.getElementById('treasuryMemberMobile').value = '';
+      document.getElementById('treasuryAmount').value = '5000';
+      document.getElementById('treasuryPurpose').value = 'Pre-Trip Initial Pool Collection';
+      document.getElementById('treasuryDeadline').value = 'Before Departure (6:00 PM)';
+      document.getElementById('btnSendWaText').innerText = 'Send Request on WhatsApp';
+      updateWhatsAppPreview();
+      showToast('Treasury form reset');
+    }
+
   </script>
 </body>
 </html>
