@@ -222,12 +222,18 @@
             </div>
 
             <div>
+              <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Current Trip Code (3 Letters & 4 Digits)</label>
+              <input type="text" id="setTripCode" maxlength="8" placeholder="e.g. CRM1226" onchange="saveSetting(6, 'b', this.value.trim().toUpperCase(), 'Trip code updated')"
+                class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-mono font-bold uppercase outline-none transition">
+            </div>
+
+            <div>
               <label class="text-xs font-bold text-slate-300 uppercase tracking-wide block mb-1">Blue Notice Banner</label>
               <input type="text" id="setNotice" placeholder="Important announcement or gathering point" onchange="saveSetting(7, 'b', this.value, 'Notice banner updated')"
                 class="w-full bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl px-3.5 py-2.5 text-sm text-white font-medium outline-none transition">
             </div>
 
-            <div>
+            <div class="sm:col-span-2">
               <label class="text-xs font-bold text-rose-400 uppercase tracking-wide block mb-1">Red Emergency Alert Banner</label>
               <input type="text" id="setWarning" placeholder="Immediate weather or safety warning" onchange="saveSetting(8, 'b', this.value, 'Alert banner updated')"
                 class="w-full bg-slate-950/80 border border-rose-500/40 focus:border-rose-500 rounded-xl px-3.5 py-2.5 text-sm text-rose-200 font-medium outline-none transition">
@@ -1757,6 +1763,9 @@
       document.getElementById('headerTripName').innerText = d.tripName || 'Admin Control';
       document.getElementById('setTripName').value = d.tripName || '';
       document.getElementById('setTripSub').value = d.secondaryTitle || '';
+      if (document.getElementById('setTripCode')) {
+        document.getElementById('setTripCode').value = d.liveTripCode || d.tripCode || '';
+      }
       document.getElementById('setNotice').value = d.tripNotice || '';
       document.getElementById('setWarning').value = d.warningNotice || '';
 
