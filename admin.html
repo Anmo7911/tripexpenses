@@ -575,21 +575,30 @@
           </div>
         </div>
 
-        <!-- Carousel Photos URLs -->
-        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-2.5">
+        <!-- Showcase Carousel Photos & Titles -->
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3">
           <div class="flex items-center justify-between pb-2 border-b border-slate-800">
             <div>
-              <h2 class="text-sm font-black uppercase tracking-wider text-white">Showcase Carousel Photos</h2>
-              <p class="text-xs text-slate-400">Paste direct image URLs (one per line)</p>
+              <h2 class="text-sm font-black uppercase tracking-wider text-white">Showcase Carousel Photos & Titles</h2>
+              <p class="text-xs text-slate-400">Add separate image URLs and place titles for App Experience Mode</p>
             </div>
-            <span id="carouselImageCount" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">0 Photos</span>
+            <span id="carouselImageCount" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">0 Slides</span>
           </div>
 
-          <textarea id="setCarouselImages" rows="3" placeholder="https://images.unsplash.com/photo-1...&#10;https://images.unsplash.com/photo-2..."
-            oninput="updateCarouselPreview(this.value)" onchange="saveSetting(35, 'b', this.value, 'Carousel photos saved')"
-            class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-xs text-white font-mono outline-none focus:border-indigo-500"></textarea>
+          <!-- Slides List Container -->
+          <div id="carouselSlidesList" class="space-y-2.5">
+            <!-- Dynamically populated rows -->
+          </div>
 
-          <div id="carouselPreviewBox" class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80 min-h-[80px]"></div>
+          <!-- Controls -->
+          <div class="flex items-center justify-between pt-2">
+            <button type="button" onclick="addCarouselSlide()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5 transition active:scale-95">
+              <i data-lucide="plus" class="w-4 h-4"></i> Add Slide
+            </button>
+            <button type="button" onclick="saveAllCarouselSlides(true)" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 transition shadow-sm active:scale-95">
+              <i data-lucide="save" class="w-4 h-4"></i> Save Carousel
+            </button>
+          </div>
         </div>
       </div>
 
@@ -2151,35 +2160,150 @@
       }
     }
 
-    function updateCarouselPreview(text) {
-      const previewBox = document.getElementById('carouselPreviewBox');
-      const countBadge = document.getElementById('carouselImageCount');
-      if (!previewBox) return;
+    let adminCarouselSlides = [];
 
-      const urls = (text || '')
-        .split(/[\n,]+/)
-        .map(u => u.trim())
-        .filter(u => /^https?:\/\//i.test(u));
+    function escapeHtmlAttr(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
 
-      if (countBadge) countBadge.innerText = `${urls.length} Photo${urls.length === 1 ? '' : 's'}`;
+    function parseCarouselData(raw) {
+      if (!raw) return [];
+      if (Array.isArray(raw)) {
+        return raw.map(item => {
+          if (typeof item === 'string') return { url: item.trim(), title: '' };
+          return { url: (item?.url || '').trim(), title: (item?.title || '').trim() };
+        }).filter(s => s.url);
+      }
+      if (typeof raw === 'string') {
+        const trimmed = raw.trim();
+        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) {
+              return parsed.map(item => {
+                if (typeof item === 'string') return { url: item.trim(), title: '' };
+                return { url: (item?.url || '').trim(), title: (item?.title || '').trim() };
+              }).filter(s => s.url);
+            }
+          } catch (e) {}
+        }
+        return trimmed
+          .split(/[\r\n]+/)
+          .map(line => line.trim())
+          .filter(Boolean)
+          .map(line => {
+            if (line.includes('|')) {
+              const [u, ...rest] = line.split('|');
+              return { url: u.trim(), title: rest.join('|').trim() };
+            }
+            return { url: line, title: '' };
+          })
+          .filter(s => /^https?:\/\//i.test(s.url));
+      }
+      return [];
+    }
 
-      if (urls.length === 0) {
-        previewBox.innerHTML = `
-          <div class="col-span-full py-4 text-center text-slate-500 text-xs italic">
-            No image links entered yet. Paste URLs above.
-          </div>`;
+    function renderCarouselSlidesAdmin() {
+      const cont = document.getElementById('carouselSlidesList');
+      const badge = document.getElementById('carouselImageCount');
+      if (!cont) return;
+
+      if (badge) {
+        badge.innerText = `${adminCarouselSlides.length} Slide${adminCarouselSlides.length === 1 ? '' : 's'}`;
+      }
+
+      if (adminCarouselSlides.length === 0) {
+        cont.innerHTML = `
+          <div class="py-6 text-center text-slate-500 text-xs italic bg-slate-950/50 rounded-xl border border-slate-800/60">
+            No carousel slides configured yet. Click "+ Add Slide" below to add an image URL and place title.
+          </div>
+        `;
+        lucide.createIcons();
         return;
       }
 
-      previewBox.innerHTML = urls.map((u, i) => `
-        <div class="relative group aspect-video bg-slate-950 rounded-lg overflow-hidden border border-slate-800">
-          <img src="${u}" alt="Photo #${i+1}" class="w-full h-full object-cover" onerror="this.onerror=null; this.parentElement.classList.add('border-rose-500/50'); this.src='https://placehold.co/400x225/0f172a/94a3b8?text=Broken+Image';">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-1.5 flex flex-col justify-between">
-            <span class="text-[9px] font-black text-white bg-slate-900/80 px-1 py-0.5 rounded self-start border border-white/10">#${i+1}</span>
-            <a href="${u}" target="_blank" class="text-[8px] text-indigo-300 truncate underline">${u}</a>
+      cont.innerHTML = adminCarouselSlides.map((slide, i) => `
+        <div class="carousel-slide-row bg-slate-950/70 border border-slate-800/80 p-3 rounded-xl flex flex-col sm:flex-row items-center gap-3">
+          <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
+            <span class="w-6 h-6 rounded-lg bg-slate-900 border border-slate-800 text-[10px] font-black text-slate-400 flex items-center justify-center shrink-0">#${i+1}</span>
+            <div class="w-12 h-12 rounded-lg overflow-hidden bg-slate-900 border border-slate-800 shrink-0 flex items-center justify-center">
+              <img id="carousel-thumb-${i}" src="${slide.url || 'https://placehold.co/100x100/0f172a/64748b?text=Empty'}" alt="" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0f172a/64748b?text=Invalid';">
+            </div>
           </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 w-full">
+            <div class="space-y-1">
+              <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Image URL</label>
+              <input type="text" value="${escapeHtmlAttr(slide.url || '')}" placeholder="https://images.unsplash.com/..." 
+                oninput="handleCarouselSlideUrlChange(${i}, this.value)" 
+                onchange="saveAllCarouselSlides(false)" 
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono outline-none focus:border-indigo-500">
+            </div>
+            <div class="space-y-1">
+              <label class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Place / Photo Title</label>
+              <input type="text" value="${escapeHtmlAttr(slide.title || '')}" placeholder="e.g. Kedarkantha Basecamp (optional)" 
+                oninput="handleCarouselSlideTitleChange(${i}, this.value)" 
+                onchange="saveAllCarouselSlides(false)" 
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-medium outline-none focus:border-indigo-500">
+            </div>
+          </div>
+
+          <button type="button" onclick="removeCarouselSlide(${i})" class="self-end sm:self-center p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition" title="Delete slide">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
         </div>
       `).join('');
+
+      lucide.createIcons();
+    }
+
+    function handleCarouselSlideUrlChange(index, val) {
+      if (!adminCarouselSlides[index]) return;
+      adminCarouselSlides[index].url = val.trim();
+      const thumb = document.getElementById(`carousel-thumb-${index}`);
+      if (thumb) {
+        thumb.src = val.trim() || 'https://placehold.co/100x100/0f172a/64748b?text=Empty';
+      }
+    }
+
+    function handleCarouselSlideTitleChange(index, val) {
+      if (!adminCarouselSlides[index]) return;
+      adminCarouselSlides[index].title = val.trim();
+    }
+
+    function addCarouselSlide() {
+      adminCarouselSlides.push({ url: '', title: '' });
+      renderCarouselSlidesAdmin();
+      setTimeout(() => {
+        const rows = document.querySelectorAll('#carouselSlidesList input');
+        if (rows.length >= 2) rows[rows.length - 2].focus();
+      }, 50);
+    }
+
+    function removeCarouselSlide(index) {
+      adminCarouselSlides.splice(index, 1);
+      renderCarouselSlidesAdmin();
+      saveAllCarouselSlides(false);
+    }
+
+    async function saveAllCarouselSlides(showToast = true) {
+      const cleanSlides = adminCarouselSlides
+        .map(s => ({ url: (s.url || '').trim(), title: (s.title || '').trim() }))
+        .filter(s => s.url);
+
+      try {
+        const jsonVal = JSON.stringify(cleanSlides);
+        await saveSetting(35, 'b', jsonVal, 'Carousel photos and titles saved');
+        if (showToast) showAlert("Saved", "Carousel slides updated successfully");
+      } catch (err) {
+        showAlert("Failed", err.message, true);
+      }
     }
 
     function renderUpcomingAdminSettings(d) {
@@ -2206,10 +2330,8 @@
       if (document.getElementById('setStatKmVal')) document.getElementById('setStatKmVal').value = cfg.statKmVal || '';
       if (document.getElementById('setStatKmLabel')) document.getElementById('setStatKmLabel').value = cfg.statKmLabel || '';
 
-      if (document.getElementById('setCarouselImages')) {
-        document.getElementById('setCarouselImages').value = cfg.carouselImages || '';
-        updateCarouselPreview(cfg.carouselImages || '');
-      }
+      adminCarouselSlides = parseCarouselData(cfg.carouselSlides || cfg.carouselImages);
+      renderCarouselSlidesAdmin();
     }
 
     // ==========================================
