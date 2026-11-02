@@ -142,7 +142,7 @@ async function dashboard() {
 
   const tripNotice = text(setting(7, 'b'));
   const warningNotice = text(setting(8, 'b'));
-  const liveTripCode = text(setting(6, 'b')) || 'BHW0007';
+  const liveTripCode = text(setting(6, 'b')) || 'CRM1226';
   const startDate = setting(4, 'b') ? new Date(setting(4, 'b')).getTime() : null;
   const endDate = setting(5, 'b') ? new Date(setting(5, 'b')).getTime() : null;
   const eidStampImage = await resolveAsset(setting(12, 'b'));
