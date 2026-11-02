@@ -2860,7 +2860,7 @@
           <div class="carousel-item px-4 pb-1">
             <div
               class="bg-white/95 backdrop-blur-md border border-white/80 shadow-md rounded-full px-3 py-1 lg:px-5 lg:py-2 flex items-center gap-2 lg:gap-2.5 justify-center max-w-md lg:max-w-xl mx-auto">
-              <span class="relative flex h-2 w-2 lg:h-2.5 lg:w-2.5 flex-shrink-0"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 lg:h-2.5 lg:w-2.5 bg-indigo-600"></span></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 lg:h-2.5 lg:w-2.5 bg-indigo-600 flex-shrink-0"></span>
               <p id="ui-trip-notice" class="text-[11px] lg:text-xs font-bold text-indigo-900 truncate text-center"></p>
             </div>
           </div>
@@ -8905,9 +8905,10 @@ function renderNoticesFeed(noticeData) {
       ? n.releaseDate
       : 'OFFICIAL CIRCULAR';
 
-    // 5. Current Trip Pill: Checks if B4 matches CRM1226
+    // 5. Current Trip Pill: Dynamic check against liveTripCode
     const cleanB4 = (n.trackingCode || '').toString().trim().toUpperCase();
-    const isCurrentTrip = cleanB4 === 'CRM1226';
+    const dynamicCode = ((globalActiveDataPayloadBackup && (globalActiveDataPayloadBackup.liveTripCode || globalActiveDataPayloadBackup.tripCode)) || (typeof posLiveTripCode !== 'undefined' ? posLiveTripCode : '') || 'CRM1226').toString().trim().toUpperCase();
+    const isCurrentTrip = cleanB4 === dynamicCode;
     const currentTripPill = isCurrentTrip
       ? `<span class="bg-indigo-600 text-white text-[8.5px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider shadow-xs">
           CURRENT TRIP
