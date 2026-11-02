@@ -167,6 +167,36 @@ async function dashboard() {
   const rawTerms = setting(31, 'b') || '';
 
   const tripMode = text(setting(32, 'b')).toUpperCase() || 'LIVE';
+  let carouselSlides = [];
+  const rawCarousel = text(setting(35, 'b'));
+  if (rawCarousel) {
+    if (rawCarousel.startsWith('[') || rawCarousel.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(rawCarousel);
+        if (Array.isArray(parsed)) {
+          carouselSlides = parsed.map(item => {
+            if (typeof item === 'string') return { url: text(item), title: '' };
+            return { url: text(item?.url), title: text(item?.title) };
+          }).filter(s => s.url);
+        }
+      } catch (e) {}
+    }
+    if (carouselSlides.length === 0) {
+      carouselSlides = rawCarousel
+        .split(/[\r\n]+/)
+        .map(u => u.trim())
+        .filter(Boolean)
+        .map(line => {
+          if (line.includes('|')) {
+            const [u, ...rest] = line.split('|');
+            return { url: text(u), title: text(rest.join('|')) };
+          }
+          return { url: text(line), title: '' };
+        })
+        .filter(s => /^https?:\/\//i.test(s.url));
+    }
+  }
+
   const upcomingConfig = {
     tripMode,
     nextTripName: text(setting(32, 'c')) || 'Kedarkantha Winter Expedition',
@@ -182,7 +212,8 @@ async function dashboard() {
     statStatesLabel: text(setting(34, 'e')) || 'States Traversed',
     statKmVal: text(setting(34, 'f')) || '12,500',
     statKmLabel: text(setting(34, 'g')) || 'Kilometers Covered',
-    carouselImages: setting(35, 'b') || ''
+    carouselImages: rawCarousel,
+    carouselSlides
   };
 
   const popupType = text(setting(28, 'b')).toUpperCase() || 'NOTIFICATION';
