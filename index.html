@@ -38,6 +38,7 @@
 <!-- Import Ultra-Bold Display Fonts (Anton, Bebas Neue, Teko) and Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.cdnfonts.com/css/avenir-next-lt-pro" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Teko:wght@700&family=Inter:wght@400;600;800;900&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
   
   
@@ -48,6 +49,12 @@
 
 
   <style>
+    /* Experience mode carousel place title styling */
+    .carousel-place-title {
+      font-family: 'Avenir Next LT Pro', 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+      font-weight: 400 !important;
+    }
+
     /* iOS notch and status-bar safe padding for curved header (Home & Countdown page) */
     #app-header {
       padding-top: env(safe-area-inset-top, 0px);
@@ -9505,11 +9512,8 @@ window.addEventListener('resize', autoScaleNoticeA4);
           <img src="${url}" class="w-full h-full object-cover pointer-events-none select-none" alt="${title || 'Showcase Media ' + (i+1)}">
           <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none"></div>
           ${title ? `
-            <div class="absolute bottom-0 inset-x-0 px-4 py-3 sm:px-6 sm:py-4 bg-gradient-to-t from-black/90 via-black/55 to-transparent flex items-center justify-between pointer-events-none transition-opacity duration-300">
-              <div class="flex items-center gap-2 max-w-[90%]">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400 shrink-0"></i>
-                <span class="text-white text-xs sm:text-sm font-bold tracking-wide truncate drop-shadow-md">${title}</span>
-              </div>
+            <div class="absolute bottom-0 inset-x-0 px-4 py-3 sm:px-6 sm:py-4 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-center justify-center text-center pointer-events-none transition-opacity duration-300">
+              <span class="carousel-place-title text-white text-xs sm:text-sm md:text-base font-normal tracking-wide truncate drop-shadow-md" style="font-family: 'Avenir Next LT Pro', 'Avenir Next', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 400;">${title}</span>
             </div>
           ` : ''}
         </div>
