@@ -9373,26 +9373,51 @@ window.addEventListener('resize', autoScaleNoticeA4);
         document.getElementById('showcase-stat-km-lbl').innerText = cfg.statKmLabel || stats.km?.label || 'Kilometers Covered';
       }
 
-      // 4. Safely Parse Carousel Images (Strings or Arrays)
-      const defaultImages = [
-        'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80'
+      // 4. Safely Parse Carousel Slides (Strings, Arrays or Objects with URL & Title)
+      const defaultSlides = [
+        { url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80', title: 'Kedarkantha Peak' },
+        { url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80', title: 'Juda Ka Talab' },
+        { url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80', title: 'Sankri Basecamp' }
       ];
 
-      const rawImages = cfg.carouselImages;
-      let parsedImages = [];
+      const rawSlides = cfg.carouselSlides || cfg.carouselImages;
+      let parsedSlides = [];
 
-      if (Array.isArray(rawImages)) {
-        parsedImages = rawImages.filter(u => typeof u === 'string' && u.trim().startsWith('http'));
-      } else if (typeof rawImages === 'string') {
-        parsedImages = rawImages
-          .split(/[\r\n,]+/)
-          .map(u => u.trim())
-          .filter(u => /^https?:\/\//i.test(u));
+      if (Array.isArray(rawSlides)) {
+        parsedSlides = rawSlides.map(item => {
+          if (typeof item === 'string') return { url: item.trim(), title: '' };
+          return { url: (item?.url || '').trim(), title: (item?.title || '').trim() };
+        }).filter(s => /^https?:\/\//i.test(s.url));
+      } else if (typeof rawSlides === 'string') {
+        const trimmed = rawSlides.trim();
+        if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+          try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) {
+              parsedSlides = parsed.map(item => {
+                if (typeof item === 'string') return { url: item.trim(), title: '' };
+                return { url: (item?.url || '').trim(), title: (item?.title || '').trim() };
+              }).filter(s => /^https?:\/\//i.test(s.url));
+            }
+          } catch (e) {}
+        }
+        if (parsedSlides.length === 0) {
+          parsedSlides = trimmed
+            .split(/[\r\n]+/)
+            .map(line => line.trim())
+            .filter(Boolean)
+            .map(line => {
+              if (line.includes('|')) {
+                const [u, ...rest] = line.split('|');
+                return { url: u.trim(), title: rest.join('|').trim() };
+              }
+              return { url: line, title: '' };
+            })
+            .filter(s => /^https?:\/\//i.test(s.url));
+        }
       }
 
-      showcaseImagesList = parsedImages.length > 0 ? parsedImages : defaultImages;
+      showcaseImagesList = parsedSlides.length > 0 ? parsedSlides : defaultSlides;
       buildShowcaseCarousel(showcaseImagesList);
 
       lucide.createIcons();
@@ -9466,24 +9491,37 @@ window.addEventListener('resize', autoScaleNoticeA4);
       showcaseCountdownTimer = setInterval(updateTicker, 1000);
     }
 
-    function buildShowcaseCarousel(images) {
+    function buildShowcaseCarousel(slides) {
       const track = document.getElementById('showcaseCarouselTrack');
-      if (!track || !images || images.length === 0) return;
+      if (!track || !slides || slides.length === 0) return;
 
       showcaseCurrentSlide = 0;
       // Sized larger with curved corners; behind images touch screen sides
-      track.innerHTML = images.map((url, i) => `
+      track.innerHTML = slides.map((slide, i) => {
+        const url = typeof slide === 'string' ? slide : (slide?.url || '');
+        const title = typeof slide === 'object' ? (slide?.title || '').trim() : '';
+        return `
         <div class="carousel-slide-item absolute top-1/2 left-1/2 w-[86%] sm:w-[80%] md:w-[76%] aspect-video rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] select-none cursor-grab active:cursor-grabbing" data-slide="${i}" onclick="handleShowcaseSlideClick(${i})">
-          <img src="${url}" class="w-full h-full object-cover pointer-events-none select-none" alt="Showcase Media ${i+1}">
+          <img src="${url}" class="w-full h-full object-cover pointer-events-none select-none" alt="${title || 'Showcase Media ' + (i+1)}">
           <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none"></div>
+          ${title ? `
+            <div class="absolute bottom-0 inset-x-0 px-4 py-3 sm:px-6 sm:py-4 bg-gradient-to-t from-black/90 via-black/55 to-transparent flex items-center justify-between pointer-events-none transition-opacity duration-300">
+              <div class="flex items-center gap-2 max-w-[90%]">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400 shrink-0"></i>
+                <span class="text-white text-xs sm:text-sm font-bold tracking-wide truncate drop-shadow-md">${title}</span>
+              </div>
+            </div>
+          ` : ''}
         </div>
-      `).join('');
+      `;
+      }).join('');
 
       goToShowcaseSlide(0);
       attachShowcaseTouch();
+      lucide.createIcons();
 
       if (showcaseCarouselTimer) clearInterval(showcaseCarouselTimer);
-      if (images.length > 1) {
+      if (slides.length > 1) {
         showcaseCarouselTimer = setInterval(() => {
           nextShowcaseSlide();
         }, 4000);
